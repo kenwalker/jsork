@@ -1,0 +1,45 @@
+{
+  "name": "jsork",
+  "description": "JavaScript access to the Amtgard ORK3 APIs",
+  "homepage": "https://github.com/kenwalker/jsork",
+  "keywords": [
+    "util",
+    "amtgard",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "Ken Walker (ken_walker@me.com)",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kenwalker/jsork.git"
+  },
+  "main": "jsork.js",
+  "version": "0.0.1",
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "docco": "*",
+    "eslint": "1.10.x",
+    "gzip-size-cli": "^1.0.0",
+    "karma": "^0.13.13",
+    "karma-qunit": "~0.1.4",
+    "nyc": "^2.1.3",
+    "pretty-bytes-cli": "^1.0.0",
+    "qunit-cli": "~0.2.0",
+    "qunitjs": "^1.18.0",
+    "uglify-js": "2.4.x"
+  },
+  "scripts": {
+    "lint": "eslint jsork.js",
+    "minify": "uglifyjs jsork.js -c \"evaluate=false\" --comments \"/    .*/\" -m",
+    "build": "npm run minify -- --source-map jsork-min.map --source-map-url \" \" -o jsork-min.js",
+    "weight": "npm run minify | gzip-size | pretty-bytes"
+  },
+  "license": "MIT",
+  "files": [
+    "jsork.js",
+    "jsork-min.js",
+    "jsork-min.map"
+  ]
+}
