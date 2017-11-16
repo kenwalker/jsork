@@ -1,5 +1,6 @@
 # jsork
-##(Pronounced J-Sork) JSON APIs to the Amtgard ORK
+
+## (Pronounced J-Sork) JSON APIs to the Amtgard ORK ##
 
 This is work in progress so not all APIs have been implemented yet.
 
@@ -48,6 +49,6 @@ jsork.player.getAwards(43232, jsork.awardIDs.ORDER_OF_THE_SMITH, function(data) 
 
 Would print out _Ken has 3 Orders of the Smith_
 
-##More examples to come
+## More examples to come ##
 
 This page has the APIs loaded in it so you can open up the console and try them.
