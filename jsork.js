@@ -242,8 +242,15 @@
 		},
 		function(data) {
 			if (data.Status.Status === 0 || data.Status === true) {
-				var result = {};
-				$.each(data.Classes, function(index, item) { result[item.ClassName] = levelForCredits(item.Credits);} );
+				var result = [];
+				$.each(data.Classes, function(index, item) {
+					var nextClass = {
+						class: item.ClassName,
+						level: levelForCredits(item.Credits),
+						credits: item.Credits || 0
+					};
+					result.push(nextClass);
+				});
 				callback(result);
 			} else {
 				console.log(JSON.stringify(data));
