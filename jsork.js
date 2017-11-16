@@ -118,7 +118,7 @@
 		});  	
   }
 
-  jsork.kingdom.getKingdomDetails = function(kingdomId, callback) {
+  jsork.kingdom.getInfo = function(kingdomId, callback) {
 	$.getJSON( ork + "?request=",
 		{
 			call: "Kingdom/GetKingdomDetails",
@@ -211,7 +211,7 @@
   // Define all the Player applicable APIs
   jsork.player = {};
 
-  jsork.player.getPlayer = function(mundaneID, callback) {
+  jsork.player.getInfo = function(mundaneID, callback) {
   	var request = 
   		{
 			MundaneId: mundaneID
@@ -224,6 +224,27 @@
 		function(data) {
 			if (data.Status.Status === 0 || data.Status === true) {
 				callback(data.Player);
+			} else {
+				console.log(JSON.stringify(data));
+			}
+		});  	
+  }
+
+  jsork.player.getClasses = function(mundaneID, callback) {
+  	var request = 
+  		{
+			MundaneId: mundaneID
+		};
+	$.getJSON( ork + "?request=",
+		{
+			call: "Player/GetPlayerClasses",
+			request: request
+		},
+		function(data) {
+			if (data.Status.Status === 0 || data.Status === true) {
+				var result = {};
+				$.each(data.Classes, function(index, item) { result[item.ClassName] = levelForCredits(item.Credits);} );
+				callback(result);
 			} else {
 				console.log(JSON.stringify(data));
 			}
@@ -314,6 +335,23 @@
   addFilterToAwardRequest = function(request, filter) {
   	// This might get written like player request above but for now just pass through the filter
   	return $.extend(request, { AwardsId: filter });
+  }
+
+  levelForCredits = function(credits) {
+  	switch (true) {
+  		case (credits === null || credits < 5):
+  			return 1;
+  		case (credits < 12):
+  			return 2;
+		case (credits < 21):
+			return 3;
+		case (credits < 34):
+			return 4;
+		case (credits < 53):
+			return 5;
+		default:
+			return 6;
+  	}
   }
 
   jsork.awardIDs = {"ALL":9999,"MASTER_ROSE":1,"MASTER_SMITH":2,"MASTER_LION":3,"MASTER_OWL":4,"MASTER_DRAGON":5,"MASTER_GARBER":6,
