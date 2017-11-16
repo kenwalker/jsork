@@ -1,5 +1,5 @@
 # jsork
-##(Pronounced J-Sork) JSON APIs to the Amtgard ORK##
+##(Pronounced J-Sork) JSON APIs to the Amtgard ORK
 
 This is work in progress so not all APIs have been implemented yet.
 
@@ -33,7 +33,7 @@ Would print out _There are 26 Kingdoms in Amtgard_
 
 ```javascript
 jsork.player.getInfo(43232, function(data) {
-  console.log("Ken's persona is " + data.Persona);}
+    console.log("Ken's persona is " + data.Persona);}
 );
 ```
 Would print out _Ken's persona is Lord Kismet Shenchu_
@@ -42,12 +42,12 @@ Some APIs have additional parameters like getting a players awards.  You can ask
 
 ```javascript
 jsork.player.getAwards(43232, jsork.awardIDs.ORDER_OF_THE_SMITH, function(data) {
-	console.log("Ken has " + data.length + " Orders of the Smith");}
+    console.log("Ken has " + data.length + " Orders of the Smith");}
 );
 ```
 
 Would print out _Ken has 3 Orders of the Smith_
 
-##More examples to come##
+##More examples to come
 
 This page has the APIs loaded in it so you can open up the console and try them.
