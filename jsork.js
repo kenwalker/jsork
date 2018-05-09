@@ -171,6 +171,28 @@
 			});
 	};
 
+	jsork.kingdom.getParagons = function (kingdomId, callback) {
+		var request =
+			{
+				KingdomId: kingdomId
+			};
+		$.getJSON(ork + '?request=',
+			{
+				call: 'Report/ClassMasters',
+				request: request
+			},
+			function (data) {
+				if (data.Status.Status === 0 || data.Status === true) {
+					callback(data.Awards);
+				} else {
+					console.log(JSON.stringify(data));
+				}
+			});
+	};
+
+	// Define all the Report applicable APIs
+	jsork.reports = {};
+
 	// Define all the Park applicable APIs
 	jsork.park = {};
 
