@@ -298,10 +298,11 @@
 				if (data.Status.Status === 0 || data.Status === true) {
 					var result = [];
 					$.each(data.Classes, function (index, item) {
+						var reconciledCredits = item.Credits + item.Reconciled;
 						var nextClass = {
 							class: item.ClassName,
-							level: levelForCredits(item.Credits),
-							credits: item.Credits || 0
+							level: levelForCredits(reconciledCredits),
+							credits: reconciledCredits || 0
 						};
 						result.push(nextClass);
 					});
@@ -436,6 +437,25 @@
 				return 5;
 			default:
 				return 6;
+		}
+	};
+
+	jsork.aboutToLevelTo = function (credits) {
+		switch (true) {
+			case credits === null:
+				return 0;
+			case credits === 4:
+				return 2;
+			case credits === 11:
+				return 3;
+			case credits === 20:
+				return 4;
+			case credits === 33:
+				return 5;
+			case credits === 52:
+				return 6;
+			default:
+				return 0;
 		}
 	};
 
