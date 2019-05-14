@@ -38,9 +38,12 @@
 
   // Current version.
   jsork.VERSION = '0.1';
+  jsork.TOKEN = null;
 
 
-  var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
+  // var ork = 'http://localhost/ork/orkservice/Json/index.php';
+  var ork = 'http://192.168.2.21/ork/orkservice/Json/index.php';
+  // var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
 
   jsork.filters = {
     ACTIVE: 0,
@@ -51,6 +54,120 @@
     SUSPENDED: 5,
     DUESPAID: 6,
     ROSE: ''
+  };
+
+
+  jsork.login = function(username, password) {
+    $.ajaxSetup({timeout:5000});
+    jsork.TOKEN = null;
+    username = username.trim();
+    password = password.trim();
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?request=',
+        { 
+          call: 'Authorization/Authorize',
+          request: {
+                  UserName: username,
+                  Password: password
+              }
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            jsork.TOKEN = data.Token;
+            jsork.player.getInfo(data.UserId).then(function(player) {
+              player.Timeout = data.Timeout;
+              player.Token = data.Token;
+              // window.ken = jsork;
+              // window.ken.TOKEN = data.Token;
+              resolve(player);
+            });
+          } else {
+            reject(data);
+          }
+        }).fail(function(error, textStatus) {
+          reject(textStatus);
+        });
+      });
+    return promise;
+  };
+
+  jsork.logout = function() {
+    var promise = new Promise(function(resolve, reject) {
+      jsork.TOKEN = null;
+      resolve();
+    });
+    return promise;
+  }
+
+  jsork.getAuthorizations = function(mundaneId) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Authorization/GetAuthorizations',
+            request: {
+              Token: jsork.TOKEN,
+              MundaneId: mundaneId
+            }
+          },
+      function(data) {
+        resolve(data);
+      });
+    });
+    return promise;
+  };
+
+  jsork.removeParkAttendance = function (attendanceId) {
+    var promise = new Promise(function (resolve, reject) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Attendance/RemoveAttendance',
+          request: {
+            Token: jsork.TOKEN,
+            AttendanceId: attendanceId
+          }
+        },
+        function (data) {
+          if (data.Status === 0) {
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        }).fail(function (error, textStatus) {
+          reject(textStatus);
+        });
+    });
+    return promise;
+  };
+
+  jsork.addParkAttendance = function (mundane_id, persona, class_id, date, credits, flavor, park_id, calendar_event_id) {
+    var promise = new Promise(function (resolve, reject) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Attendance/AddAttendance',
+          request: {
+            Token: jsork.TOKEN,
+            MundaneId: mundane_id,
+            Persona: persona,
+            ClassId: class_id,
+            Date: date,
+            Credits: credits,
+            Flavor: flavor,
+            Note: null,
+            ParkId: park_id,
+            EventCalendarDetailId: calendar_event_id
+          }
+        },
+        function (data) {
+          if (data.Status === 0) {
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        }).fail(function (error, textStatus) {
+          reject(textStatus);
+        });
+    });
+    return promise;
   };
 
   // Define all the Kingdom applicable APIs
@@ -72,6 +189,8 @@
           } else {
             reject(Error('Call failed ' + JSON.stringify(data)));
           }
+        }).fail(function(error, textStatus) {
+          reject(textStatus);
         });
     });
     return promise;
@@ -97,7 +216,7 @@
   };
 
   jsork.kingdom.getParks = function(kingdomID) {
-    var promise = new Promise(function(resolve) {
+    var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
           {
             call: 'Kingdom/GetParks',
@@ -110,6 +229,8 @@
             // on error just assume no parks
             resolve([]);
           }
+        }).fail(function(error, textStatus) {
+          reject(textStatus);
         });
     });
     return promise;
@@ -152,7 +273,7 @@
   };
 
   jsork.kingdom.getInfo = function(kingdomId) {
-    var promise = new Promise(function(resolve) {
+    var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
           {
             call: 'Kingdom/GetKingdomDetails',
@@ -164,6 +285,8 @@
         } else {
           resolve([]);
         }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
       });
     });
     return promise;
@@ -319,7 +442,7 @@
   };
 
   jsork.park.getInfo = function(parkID) {
-    var promise = new Promise(function(resolve) {
+    var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
           {
             call: 'Park/GetParkDetails',
@@ -331,6 +454,8 @@
         } else {
           resolve([]);
         }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
       });
     });
     return promise;
@@ -354,13 +479,91 @@
     return promise;
   };
 
+  jsork.park.getAttendance = function(parkID, date) {
+    var promise = new Promise(function(resolve, reject) {
+      var month = date.getMonth() + 1; //months from 1-12
+      var day = date.getDate();
+      var year = date.getFullYear();
+      var requestDate = year + '-' + month + '-' + day;
+      var request =
+          {
+            ParkId: parkID,
+            Date: requestDate
+          };
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Report/AttendanceForDate',
+            request: request
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.Attendance);
+        } else {
+          resolve([]);
+        }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.park.getParkDays = function(parkID) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Park/GetParkDays',
+            request: {ParkId: parkID}
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.ParkDays);
+        } else {
+          resolve([]);
+        }
+      });
+    });
+    return promise;
+  };
+
+  jsork.park.createPlayer = function(parkID, userName, givenName, surname, persona, email, waivered) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Player/CreatePlayer',
+            request: {
+              Token: jsork.TOKEN,
+              ParkId: parkID,
+              UserName: userName,
+              GivenName: givenName,
+              Surname: surname,
+              Persona: persona,
+              Email: email,
+              Waivered: waivered ? 1:0,
+              IsActive: 1
+            }
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+    return promise;
+  };
+
+
+
   // Define all the Player applicable APIs
   jsork.player = {};
 
   jsork.player.getInfo = function(mundaneID) {
-    var promise = new Promise(function(resolve) {
+    var promise = new Promise(function(resolve, reject) {
       var request =
           {
+            Token: jsork.TOKEN,
             MundaneId: mundaneID
           };
       $.getJSON(ork + '?request=',
@@ -374,13 +577,37 @@
         } else {
           resolve([]);
         }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.player.setImage = function(mundaneID, base64Image) {
+    var promise = new Promise(function(resolve, reject) {
+      $.post(
+        ork + '?request=Player/SetImage',
+        {
+          call: 'Player/SetImage',
+          request: {
+            Token: jsork.TOKEN,
+            MundaneId: mundaneID,
+            Image: base64Image,
+            ImageMimeType: 'image/jpeg'
+          }
+        },
+      function(data) {
+        resolve(data);
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
       });
     });
     return promise;
   };
 
   jsork.player.getClasses = function(mundaneID) {
-    var promise = new Promise(function(resolve) {
+    var promise = new Promise(function(resolve, reject) {
       var request =
           {
             MundaneId: mundaneID
@@ -398,6 +625,7 @@
             var nextClass = {
               class: item.ClassName,
               level: jsork._priv.levelForCredits(reconciledCredits),
+              aboutToLevel: jsork.aboutToLevelTo(reconciledCredits),
               credits: reconciledCredits || 0
             };
             result.push(nextClass);
@@ -406,34 +634,75 @@
         } else {
           resolve([]);
         }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
       });
     });
     return promise;
   };
 
   jsork.player.getAwards = function(mundaneID, filter) {
-    var promise = new Promise(function(resolve) {
-      var request =
-          {
-            MundaneId: mundaneID
-          };
-      jsork._priv.addFilterToAwardRequest(request, filter);
+    var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
           {
             call: 'Player/AwardsForPlayer',
-            request: request
+            request: {
+              MundaneId: mundaneID,
+              AwardsId: filter
+            }
           },
       function(data) {
         if (data.Status.Status === 0 || data.Status === true) {
-          if (filter !== jsork.awardIDs.ALL) {
-            data.Awards = data.Awards.filter(function(award) {
-              return award.AwardId === filter;
-            });
-          }
+          data.Awards = data.Awards.filter(function(award) {
+            var includeAward = true;
+            if (filter !== jsork.awardIDs.ALL) {
+              includeAward = award.AwardId === filter;
+            }
+            return includeAward && award.MundaneId === mundaneID;
+          });
           resolve(data.Awards);
         } else {
           resolve([]);
         }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.player.awardLevel = function(mundaneID, awardId) {
+    var promise = new Promise(function(resolve, reject) {
+      // jsork._priv.addFilterToAwardRequest(request, filter);
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Player/AwardsForPlayer',
+            request: {
+              MundaneId: mundaneID,
+              AwardsId: awardId
+            }
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          var maxLevel = 0, countLevel = 0;
+          data.Awards = data.Awards.filter(function(award) {
+            return award.AwardId === awardId;
+          });
+          data.Awards.forEach(function(award) {
+            if (award.Rank > maxLevel) {
+              maxLevel = award.Rank;
+            }
+            countLevel++;
+          });
+          if (countLevel > maxLevel) {
+            maxLevel = countLevel;
+          }
+          resolve(maxLevel);
+        } else {
+          resolve([]);
+        }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
       });
     });
     return promise;
@@ -457,6 +726,81 @@
           resolve([]);
         }
       });
+    });
+    return promise;
+  };
+
+  jsork.player.getLastAttendance = function(mundaneID) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            MundaneId: mundaneID,
+            limit: 1
+          };
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Player/AttendanceForPlayer',
+            request: request
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.Attendance);
+        } else {
+          resolve([]);
+        }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.player.updatePlayer = function(mundaneId, userName, givenName, surname, persona, email, waivered, active, duesDate, semesters) {
+    var promise = new Promise(function(resolve) {
+      $.post(
+        ork + '?request=Player/UpdatePlayer',
+        {
+          call: 'Player/UpdatePlayer',
+          request: {
+            Token: jsork.TOKEN,
+            MundaneId: mundaneId,
+            UserName: userName,
+            GivenName: givenName,
+            Surname: surname,
+            Persona: persona,
+            Email: email,
+            Waivered: waivered ? 1:0,
+            Active: active ? 1:0,
+            DuesDate: duesDate,
+            DuesSemesters: semesters
+          }
+        },
+        function(data) {
+          resolve(data);
+        }).fail(function(error, textStatus) {
+          reject(textStatus);
+        });
+      });
+    return promise;
+  };
+
+  jsork.player.revokeDues = function(mundaneId) {
+    var promise = new Promise(function(resolve) {
+      $.post(
+        ork + '?request=Player/UpdatePlayer',
+        {
+          call: 'Player/UpdatePlayer',
+          request: {
+            Token: jsork.TOKEN,
+            MundaneId: mundaneId,
+            RemoveDues: "Revoke Dues"
+          }
+        },
+        function(data) {
+          resolve(data);
+        }).fail(function(error, textStatus) {
+          reject(textStatus);
+        });
     });
     return promise;
   };
@@ -485,9 +829,7 @@
     return promise;
   };
 
-
   jsork.award = {};
-
   jsork.award.getAwardList = function() {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
@@ -532,7 +874,223 @@
     return promise;
   };
 
+  jsork.kingdom.getEvents = function(kingdomId) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            KingdomId: kingdomId
+          };
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Event/GetEvents',
+            request: request
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data);
+        } else {
+          resolve([]);
+        }
+      });
+    });
+    return promise;
+  };
+
+  jsork.event.getEvent = function(eventId) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            EventId: eventId
+          };
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Event/GetEvent',
+            request: request
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data);
+        } else {
+          resolve([]);
+        }
+      });
+    });
+    return promise;
+  };
+
+  jsork.event.getEventDetail = function(eventId) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            EventId: eventId,
+            Current: true
+          };
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Event/GetEventDetails',
+            request: request
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data);
+        } else {
+          resolve([]);
+        }
+      }).fail(function (error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.event.getAttendance = function(eventId, eventCalendarDetailId) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            EventId: eventId,
+            EventCalendarDetailId: eventCalendarDetailId
+          };
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Report/AttendanceForEvent',
+            request: request
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.Attendance);
+        } else {
+          resolve([]);
+        }
+      }).fail(function (error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.event.addAttendance = function(mundane_id, persona, class_id, credits, date, flavor, calendar_event_id) {  
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?request=',
+          {
+            call: 'Attendance/AddAttendance',
+            request: {
+                    Token: jsork.TOKEN,
+					          MundaneId: mundane_id,
+					          Persona: persona,
+					          ClassId: class_id,
+                    Credits: credits,
+					          Date: date,
+					          Flavor: flavor,
+					          Note: null,
+					          ParkId: 0,
+					          EventCalendarDetailId: calendar_event_id
+				        }
+          },
+      function(data) {
+				        if (data.Status === 0) {
+  resolve(data);
+				} else {
+					  reject(data);
+				}
+      });
+    });
+    return promise;
+  };
+
+
   jsork.searchservice = {};
+
+  jsork.searchservice.searchPlayer = function(searchTerm) {
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?',
+          {
+            call: 'SearchService/Player',
+            type: "All",
+            search: searchTerm,
+            limit: "20",
+            Token: jsork.TOKEN
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.Result);
+        } else {
+          reject(Error('Call failed ' + JSON.stringify(data)));
+        }
+      }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.searchservice.searchPlayerUsername = function(userName) {
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?',
+          {
+            call: 'SearchService/Player',
+            type: 'USER',
+            search: userName,
+            limit: '2000',
+            Token: jsork.TOKEN
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.Result);
+        } else {
+          reject(Error('Call failed ' + JSON.stringify(data)));
+        }
+      });
+    });
+    return promise;
+  };
+
+  jsork.searchservice.searchKingdomEvent = function(kingdomId, searchTerm) {
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?',
+          {
+            call: 'SearchService/Event', 
+            kingdom_id: kingdomId,
+            date_order: "true",
+            name: searchTerm,
+            limit: "200",
+            Token: jsork.TOKEN
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.Result);
+        } else {
+          reject(Error('Call failed ' + JSON.stringify(data)));
+        }
+      }).fail(function (error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.searchservice.searchParkEvent = function(parkId, searchTerm) {
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?',
+          {
+            call: 'SearchService/Event',
+            park_id: parkId,
+            date_order: "true",
+            name: searchTerm,
+            limit: "200",
+            Token: jsork.TOKEN
+          },
+      function(data) {
+        if (data.Status.Status === 0 || data.Status === true) {
+          resolve(data.Result);
+        } else {
+          reject(Error('Call failed ' + JSON.stringify(data)));
+        }
+      }).fail(function (error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
 
   jsork._priv = {};
   jsork._priv.addFilterToPlayerRequest = function(request, filter) {
