@@ -37,14 +37,19 @@
   }
 
   // Current version.
-  jsork.VERSION = '0.1';
+  jsork.VERSION = '1.0';
   jsork.TOKEN = null;
 
 
+  // If using the DOCKER instructions from the ORK 3 Github
+  // https://github.com/amtgard/ORK3
   // var ork = 'http://localhost/ork/orkservice/Json/index.php';
-  var ork = 'http://192.168.2.21/ork/orkservice/Json/index.php';
-  // var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
 
+  // Production site
+  var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
+
+  // Staging site
+  // var ork = 'https://staging.amtgard.com/ork/orkservice/Json/index.php';
   jsork.filters = {
     ACTIVE: 0,
     INACTIVE: 1,
@@ -58,7 +63,7 @@
 
 
   jsork.login = function(username, password) {
-    $.ajaxSetup({timeout:5000});
+    $.ajaxSetup({timeout:10000});
     jsork.TOKEN = null;
     username = username.trim();
     password = password.trim();
@@ -575,7 +580,7 @@
         if (data.Status.Status === 0 || data.Status === true) {
           resolve(data.Player);
         } else {
-          resolve([]);
+          reject("Error retrieving player");
         }
       }).fail(function(error, textStatus) {
         reject(textStatus);
