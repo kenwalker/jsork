@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>jsork - API Usage</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/kingdomAwards.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header" class="noprint">
+									<a href="index.html" class="logo"><strong>jsork</strong> API Usage</a>
+									<ul class="icons">
+                      <li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span class="label">Github</span></a></li>
+                      <li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                    </ul>
+								</header>
+
+							<!-- Content -->
+								<section>
+                  <div class="noprint">
+									<header class="main">
+										<h2>jsork - API Usage</h2>
+									</header>
+                  <p>jsork supports javascript API calls to the Amtgard ORK.  The mobile application <b>mORK</b> was written using these APIs for example.</p>
+                  <p>To utilize jsork the API file and the jquery library must be included in the web page as follows: </p>
+                  <pre><code>&lt;script src="jsork.js"&gt;&lt;/script&gt
+&lt;script src="jquery.js"&gt;&lt;/script&gt</code></pre>
+
+                  <p>Then within any other javascript you utilize the promised based APIs. So to retrieve all the Kingdoms run the following:</p>
+<pre><code>jsork.kingdom.getKingdoms().then(function(allKingdoms) {
+    console.log("There are " + allKingdoms.length + " Kingdoms in Amtgard");
+})</code></pre>
+
+                  <p>Or to see Ken Walker's persona run the following:</p>
+<pre><code>jsork.player.getInfo(43232).then(function(player) {
+    console.log("Ken's persona is " + player.Persona);
+})</code></pre>
+                  </section>
+                  
+          </div>
+          </div>
+
+				<!-- Sidebar -->
+        <div id="sidebar" class="noprint">
+						<div class="inner">
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="index.html">Homepage</a></li>
+										<li>
+											<span class="opener">Reports</span>
+											<ul>
+												<li><a href="kingdomAwards.html">Kingdom Reports</a></li>
+												<li><a href="#">(more to come)</a></li>
+											</ul>
+										</li>
+										<li><a href="api.html">API Usage</a></li>
+									</ul>
+								</nav>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">jsork was written by Ken Walker.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery-ui/external/jquery/jquery.js"></script>
+			<script src="assets/js/jquery-ui/jquery-ui.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+      <script src="assets/js/jsork.js"></script>
+      <script src="assets/js/moment.js"></script>
+      <script src="assets/js/kingdomAwards.js"></script>  
+	</body>
+</html>
