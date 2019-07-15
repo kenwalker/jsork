@@ -8,7 +8,6 @@ var serpentContent, flameContent, swordContent;
 window.remembered = remembered;
 
 function resetAwards() {
-  $( '#progressbar' ).progressbar( 'option', 'value', 0 );
   $('#allawards').empty();
 }
 
@@ -18,6 +17,7 @@ function kingdomSelect(event, ui) {
   if (event.target.value === '0') {
     return;
   }
+  $('.working').attr('hidden', false);
   $('#kingdom').selectmenu('option', 'disabled', true);
   getAwards(parseInt(event.target.value, 10));
   $('.printtitle').text($('#kingdom option:selected').text());
@@ -44,7 +44,6 @@ function initKingdoms() {
 function startUp() {
   $('#kingdom').selectmenu();
   $('#kingdom').on('change', kingdomSelect);
-  $('#progressbar').progressbar();
   initKingdoms();
 }
 
@@ -301,6 +300,7 @@ function getAwards(kingdomId) {
     swordContent = content;
     $('#swordTable').append(htmlContent);
 
+    $('.working').attr('hidden', true);
     $('.allresults').attr('hidden', false);
     $('#kingdom').selectmenu('option', 'disabled', false);
   
