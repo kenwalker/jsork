@@ -50,6 +50,18 @@ th, td {
   background-color: #93B3F1;
 }
 
+.gold {
+  background-color: goldenrod;
+}
+
+.lightgold {
+  background-color:rgb(245, 220, 138);
+}
+
+.smallbottommargin {
+  margin: 0 0 .1em 0;
+}
+
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;

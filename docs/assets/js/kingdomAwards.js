@@ -3,7 +3,8 @@
 
 var remembered = [];
 var numberOfPlayers = 0;
-var serpentContent, flameContent, swordContent;
+var minimumRank = 0;
+var crownContent, serpentContent, flameContent, swordContent;
 
 window.remembered = remembered;
 
@@ -12,6 +13,7 @@ function resetAwards() {
 }
 
 function kingdomSelect(event, ui) {
+  minimumRank = parseInt($('#level option:selected').text(), 10);
   $('.allresults').attr('hidden', true);
   $('table').find('tr:gt(0)').remove();
   if (event.target.value === '0') {
@@ -21,6 +23,7 @@ function kingdomSelect(event, ui) {
   $('#kingdom').selectmenu('option', 'disabled', true);
   getAwards(parseInt(event.target.value, 10));
   $('.printtitle').text($('#kingdom option:selected').text());
+  $('.generateddate').text('Generated on ' + new Date().toDateString());
 }
 
 function initKingdoms() {
@@ -85,30 +88,81 @@ function getAwards(kingdomId) {
       return a.Persona.localeCompare(b.Persona);
     });
 
-    // do the serpents
+    // do the crowns
     var content = '';
     var htmlContent = '';
+    var crownCandidates = allPlayers.filter(function(player) {
+      return player['Master Crown'] ||
+        player['Order of the Crown'] && player['Order of the Crown'].Rank >= minimumRank ||
+        player['Knight of the Crown'];
+    });
+    crownCandidates.forEach(function(player) {
+      var playerLine =
+          player.ParkName + '\t' +
+          (player.Persona || 'No persona for ID ' + player.MundaneId) + '\t';
+      var playerHTMLLine = '<tr><td>' +
+        player.ParkName + '</td><td>' +
+        '<a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+        player.MundaneId + '">' +
+        (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
+      if (player['Master Crown']) {
+        playerLine = playerLine + 'Master\t';
+        playerHTMLLine = playerHTMLLine + '<td class="middle gold">Master</td>';
+      } else if (player['Order of the Crown'] && player['Order of the Crown'].Rank >= minimumRank) {
+        playerLine = playerLine + player['Order of the Crown'].Rank + '\t';
+        playerHTMLLine = playerHTMLLine + '<td class="middle';
+        if (player['Order of the Crown'].Rank > 7) {
+          playerHTMLLine = playerHTMLLine + ' lightgold">' + player['Order of the Crown'].Rank + '</td>';
+        } else {
+          playerHTMLLine = playerHTMLLine + '">' + player['Order of the Crown'].Rank + '</td>';
+        }
+      } else {
+        playerLine = playerLine + '\t';
+        playerHTMLLine = playerHTMLLine + '<td class=middle></td>';
+      }
+      playerLine = playerLine + (player['Knight of the Crown'] ? 'TRUE\t' : 'FALSE\t');
+      if (player['Knight of the Crown']) {
+        playerHTMLLine = playerHTMLLine + '<td class="middle gold">Yes</td>';
+      } else {
+        playerHTMLLine = playerHTMLLine + '<td class="middle lightgold">No</td>';
+      }
+      playerLine = playerLine + (player['Knight of the Flame'] ? 'TRUE\t' : 'FALSE\t');
+      playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Flame'] ? 'Yes' : 'No') + '</td>';
+      playerLine = playerLine + (player['Knight of the Serpent'] ? 'TRUE\t' : 'FALSE\t');
+      playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Serpent'] ? 'Yes' : 'No') + '</td>';
+      playerLine = playerLine + (player['Knight of the Sword'] ? 'TRUE' : 'FALSE');
+      playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Sword'] ? 'Yes' : 'No') + '</td>';
+      content = content + playerLine + '\r\n';
+      htmlContent = htmlContent + playerHTMLLine + '</tr>';
+    });
+    crownContent = content;
+    $('#crownTable').append(htmlContent);
+
+    // do the serpents
+    content = '';
+    htmlContent = '';
     var serpentCandidates = allPlayers.filter(function(player) {
       return player['Master Dragon'] ||
-        (player['Order of the Dragon'] && player['Order of the Dragon'].Rank > 6) ||
+        (player['Order of the Dragon'] && player['Order of the Dragon'].Rank >= minimumRank) ||
         player['Master Garber'] ||
-        (player['Order of the Garber'] && player['Order of the Garber'].Rank > 6) ||
+        (player['Order of the Garber'] && player['Order of the Garber'].Rank >= minimumRank) ||
         player['Master Owl'] ||
-        (player['Order of the Owl'] && player['Order of the Owl'].Rank > 6);
+        (player['Order of the Owl'] && player['Order of the Owl'].Rank >= minimumRank) ||
+        player['Knight of the Serpent'];
     });
     serpentCandidates.forEach(function(player) {
       var playerLine =
           player.ParkName + '\t' +
-          player.Persona + '\t';
-      var playerHTMLLine = '<tr><td>' + 
-        player.ParkName + '</td><td>' + 
-        '<a href="https://amtgard.com/ork/orkui/index.php?Route=Player/index/' +
+          (player.Persona || 'No persona for ID ' + player.MundaneId) + '\t';
+      var playerHTMLLine = '<tr><td>' +
+        player.ParkName + '</td><td>' +
+        '<a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
         player.MundaneId + '">' +
-        player.Persona + '</a></td>';
+        (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
       if (player['Master Dragon']) {
         playerLine = playerLine + 'Master\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle green">Master</td>';
-      } else if (player['Order of the Dragon'] && player['Order of the Dragon'].Rank > 6) {
+      } else if (player['Order of the Dragon'] && player['Order of the Dragon'].Rank >= minimumRank) {
         playerLine = playerLine + player['Order of the Dragon'].Rank + '\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle';
         if (player['Order of the Dragon'].Rank > 7) {
@@ -123,7 +177,7 @@ function getAwards(kingdomId) {
       if (player['Master Garber']) {
         playerLine = playerLine + 'Master\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle green">Master</td>';
-      } else if (player['Order of the Garber'] && player['Order of the Garber'].Rank > 6) {
+      } else if (player['Order of the Garber'] && player['Order of the Garber'].Rank >= minimumRank) {
         playerLine = playerLine + player['Order of the Garber'].Rank + '\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle';
         if (player['Order of the Garber'].Rank > 7) {
@@ -138,7 +192,7 @@ function getAwards(kingdomId) {
       if (player['Master Owl']) {
         playerLine = playerLine + 'Master\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle green">Master</td>';
-      } else if (player['Order of the Owl'] && player['Order of the Owl'].Rank > 6) {
+      } else if (player['Order of the Owl'] && player['Order of the Owl'].Rank >= minimumRank) {
         playerLine = playerLine + player['Order of the Owl'].Rank + '\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle';
         if (player['Order of the Owl'].Rank > 7) {
@@ -173,24 +227,26 @@ function getAwards(kingdomId) {
     htmlContent = '';
     var flameCandidates = allPlayers.filter(function(player) {
       return player['Master Lion'] ||
-        (player['Order of the Lion'] && player['Order of the Lion'].Rank > 6) ||
+        (player['Order of the Lion'] && player['Order of the Lion'].Rank >= minimumRank) ||
         player['Master Rose'] ||
-        (player['Order of the Rose'] && player['Order of the Rose'].Rank > 6) ||
+        (player['Order of the Rose'] && player['Order of the Rose'].Rank >= minimumRank) ||
         player['Master Smith'] ||
-        (player['Order of the Smith'] && player['Order of the Smith'].Rank > 6);
+        (player['Order of the Smith'] && player['Order of the Smith'].Rank >= minimumRank) ||
+        player['Knight of the Flame'];
     });
     flameCandidates.forEach(function(player) {
       var playerLine =
-          player.Persona + '\t';
+          player.ParkName + '\t' +
+          (player.Persona || 'No persona for ID ' + player.MundaneId) + '\t';
       var playerHTMLLine = '<tr><td>' +
         player.ParkName + '</td><td>' +
-        '<a href="https://amtgard.com/ork/orkui/index.php?Route=Player/index/' +
+        '<a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
         player.MundaneId + '">' +
-        player.Persona + '</a></td>';
+        (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
       if (player['Master Lion']) {
         playerLine = playerLine + 'Master\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle red">Master</td>';
-      } else if (player['Order of the Lion'] && player['Order of the Lion'].Rank > 6) {
+      } else if (player['Order of the Lion'] && player['Order of the Lion'].Rank >= minimumRank) {
         playerLine = playerLine + player['Order of the Lion'].Rank + '\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle';
         if (player['Order of the Lion'].Rank > 7) {
@@ -205,7 +261,7 @@ function getAwards(kingdomId) {
       if (player['Master Rose']) {
         playerLine = playerLine + 'Master\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle red">Master</td>';
-      } else if (player['Order of the Rose'] && player['Order of the Rose'].Rank > 6) {
+      } else if (player['Order of the Rose'] && player['Order of the Rose'].Rank >= minimumRank) {
         playerLine = playerLine + player['Order of the Rose'].Rank + '\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle';
         if (player['Order of the Rose'].Rank > 7) {
@@ -220,7 +276,7 @@ function getAwards(kingdomId) {
       if (player['Master Smith']) {
         playerLine = playerLine + 'Master\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle red">Master</td>';
-      } else if (player['Order of the Smith'] && player['Order of the Smith'].Rank > 6) {
+      } else if (player['Order of the Smith'] && player['Order of the Smith'].Rank >= minimumRank) {
         playerLine = playerLine + player['Order of the Smith'].Rank + '\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle';
         if (player['Order of the Smith'].Rank > 7) {
@@ -255,21 +311,22 @@ function getAwards(kingdomId) {
     htmlContent = '';
     var swordCandidates = allPlayers.filter(function(player) {
       return player.Warlord ||
-        (player['Order of the Warrior'] && player['Order of the Warrior'].Rank > 6);
+        player['Order of the Warrior'] && player['Order of the Warrior'].Rank >= minimumRank ||
+        player['Knight of the Sword'];
     });
     swordCandidates.forEach(function(player) {
       var playerLine =
           player.ParkName + '\t' +
-          (player.Persona || player.MundaneId) + '\t';
+          (player.Persona || 'No persona for ID ' + player.MundaneId) + '\t';
       var playerHTMLLine = '<tr><td>' +
         player.ParkName + '</td><td>' +
-        '<a href="https://amtgard.com/ork/orkui/index.php?Route=Player/index/' +
+        '<a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
         player.MundaneId + '">' +
-        player.Persona + '</a></td>';
+        (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
       if (player.Warlord) {
         playerLine = playerLine + 'Warlord\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle blue">Warlord</td>';
-      } else if (player['Order of the Warrior'] && player['Order of the Warrior'].Rank > 6) {
+      } else if (player['Order of the Warrior'] && player['Order of the Warrior'].Rank >= minimumRank) {
         playerLine = playerLine + player['Order of the Warrior'].Rank + '\t';
         playerHTMLLine = playerHTMLLine + '<td class="middle';
         if (player['Order of the Warrior'].Rank > 7) {
@@ -303,7 +360,6 @@ function getAwards(kingdomId) {
     $('.working').attr('hidden', true);
     $('.allresults').attr('hidden', false);
     $('#kingdom').selectmenu('option', 'disabled', false);
-  
 
     window.output = Object.values(allPlayers);
   });
@@ -311,6 +367,7 @@ function getAwards(kingdomId) {
 
 function ladderAwards() {
   return {
+    'Order of the Crown': jsork.awardIDs.ORDER_OF_THE_CROWN,
     'Order of the Dragon': jsork.awardIDs.ORDER_OF_THE_DRAGON,
     'Order of the Garber': jsork.awardIDs.ORDER_OF_THE_GARBER,
     'Order of the Owl': jsork.awardIDs.ORDER_OF_THE_OWL,
@@ -322,6 +379,7 @@ function ladderAwards() {
 }
 function ladderAwardMasterhoods() {
   return {
+    'Order of the Crown': jsork.awardIDs.MASTER_CROWN,
     'Order of the Dragon': jsork.awardIDs.MASTER_DRAGON,
     'Order of the Garber': jsork.awardIDs.MASTER_GARBER,
     'Order of the Owl': jsork.awardIDs.MASTER_OWL,
@@ -361,8 +419,28 @@ function copyTextToClipboard(str) {
   document.body.removeChild(el);
 }
 
-function copySerpent() {
-  copyTextToClipboard(serpentContent);
+function copyCrownToClipboard() {
+  var allCSV = 'Park\tPersona\tCrown Order\tCrown\tFlame\tSerpent\tSword\r\n';
+  allCSV += crownContent;
+  copyTextToClipboard(allCSV);
+}
+
+function copyFlameToClipboard() {
+  var allCSV = 'Park\tPersona\tLion\tRose\tSmith\tCrown\tFlame\tSerpent\tSword\r\n';
+  allCSV += flameContent;
+  copyTextToClipboard(allCSV);
+}
+
+function copySerpentToClipboard() {
+  var allCSV = 'Park\tPersona\tDragon\tGarber\tOwl\tCrown\tFlame\tSerpent\tSword\r\n';
+  allCSV += serpentContent;
+  copyTextToClipboard(allCSV);
+}
+
+function copySwordToClipboard() {
+  var allCSV = 'Park\tPersona\tWarrior\tCrown\tFlame\tSerpent\tSword\r\n';
+  allCSV += swordContent;
+  copyTextToClipboard(allCSV);
 }
 
 $(document).ready(function() {

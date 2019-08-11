@@ -23,7 +23,7 @@
 
 							<!-- Header -->
 								<header id="header" class="noprint">
-									<a href="index.html" class="logo noprint"><strong>jsork</strong> Kingdom Ladder Awards</a>
+									<a href="kingdomAwards.html" class="logo noprint"><strong>jsork</strong> Kingdom Ladder Awards</a>
 									<ul class="icons noprint">
                       <li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span class="label">Github</span></a></li>
                       <li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
@@ -36,39 +36,57 @@
 									<header class="main">
 										<h2>Kingdom Ladder Candidates</h2>
 									</header>
-                  <p>The intention of this document is to keep a record of who has met, or
+                  <p class="smallbottommargin">The intention of this document is to keep a record of who has met, or
                       is near meeting, the minimum qualifications for knighthood as described in the 
-                      Amtgard Rules of Play. This document is not intended to be a replacement for accurate 
-                      record keeping on the ORK and will need regular maintenance.
-                    </p>
-                  <p><b>Flame: </b>A player may be eligible for Knight of the Flame after obtaining Masterhood in Rose, Smith, or Lion.
+                      Amtgard Rules of Play. This document relies on award entries in the ORK. If an entry doesn't seem accurate,
+                      check the player on the ORK. Each player has a link to the ORK proper. By default the report only includes
+                      players who have reached level 7 or higher.
+                  </p>
+                  <p><b>Crown: </b>A player may be eligible for Knight of the Crown after obtaining Masterhood in the Crown.
+                  <br><b>Flame: </b>A player may be eligible for Knight of the Flame after obtaining Masterhood in Rose, Smith, or Lion.
                   <br><b>Serpent: </b>A player may be eligible for Knight of the Serpent after obtaining Masterhood in Owl, Dragon, or Garber.
                   <br><b>Sword: </b>A player may be eligible for Knight of the Sword after obtaining Masterhood of the Order of the Warrior, known as a Warlord.</p>
-                  <p>You can print the results from the browser after the query has been completed.</p>
-                  
+                  <p>You can print the results from the browser after the query has been completed.<br>
+                  You can copy each individual ladder to the clipboard for pasting into a spreadsheet.</p>
+                  <label for="level"><h2>Choose a minimum Order level (default 7)</h2></label>
+                  <select name="level" id="level" default="7">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7" selected>7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                  </select>
                   <label for="kingdom"><h2>Choose a Kingdom or Principality</h2></label>
                   <select name="kingdom" id="kingdom"></select>
                   <h2 class="working" hidden>Generating report.....</h2>
                   </div>
                   <div class="allresults" hidden>
-                      <h2 class="printtitle"></h2>
-                          
-                          <h2>Serpent candidates</h2>
-                    <table id="serpentTable" style="width:100%">
+                      <h2 class="printtitle smallbottommargin"></h2>
+                      <div class="generateddate"></div>
+                       
+                    <h2 class="smallbottommargin">Crown candidates</h2>
+                    <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyCrownToClipboard()">Copy Crown candidates to CSV</button>
+                    <table id="crownTable" style="width:100%">
                       <tr>
                         <th class='left'>Park</th>
-                        <th class='left'>Persona</th> 
-                        <th class='middle'>Dragon</th>
-                        <th class='middle'>Garber</th>
-                        <th class='middle'>Owl</th>
+                        <th class='left'>Persona</th>
+                        <th class='middle'>Crown Order</th>
                         <th class='middle'>Crown</th>
                         <th class='middle'>Flame</th>
                         <th class='middle'>Serpent</th>
                         <th class='middle'>Sword</th>
                       </tr>
                     </table>
-                    
-                    <h2>Flame candidates</h2>
+                  
+               
+                    <h2 class="smallbottommargin">Flame candidates</h2>
+                    <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyFlameToClipboard()">Copy Flame candidates to CSV</button>
                     <table id="flameTable" style="width:100%">
                       <tr>
                         <th class='left'>Park</th>
@@ -82,8 +100,25 @@
                         <th class='middle'>Sword</th>
                       </tr>
                     </table>
-                    
-                    <h2>Sword candidates</h2>
+
+                    <h2 class="smallbottommargin">Serpent candidates</h2>
+                    <button class="noprint smallbottommargin primary icon fa-copy" onclick="copySerpentToClipboard()">Copy Serpent candidates to CSV</button>
+                    <table id="serpentTable" style="width:100%">
+                      <tr>
+                        <th class='left'>Park</th>
+                        <th class='left'>Persona</th> 
+                        <th class='middle'>Dragon</th>
+                        <th class='middle'>Garber</th>
+                        <th class='middle'>Owl</th>
+                        <th class='middle'>Crown</th>
+                        <th class='middle'>Flame</th>
+                        <th class='middle'>Serpent</th>
+                        <th class='middle'>Sword</th>
+                      </tr>
+                    </table>
+     
+                    <h2 class="smallbottommargin">Sword candidates</h2>
+                    <button class="noprint smallbottommargin primary icon fa-copy" onclick="copySwordToClipboard()">Copy Sword candidates to CSV</button>
                     <table id="swordTable" style="width:100%">
                       <tr>
                         <th class='left'>Park</th>
@@ -117,6 +152,7 @@
 											<span class="opener">Reports</span>
 											<ul>
 												<li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
+												<li><a href="upcomingEvents.html">Upcoming Events</a></li>
 												<li><a href="#">(more to come)</a></li>
 											</ul>
 										</li>

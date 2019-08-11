@@ -61,7 +61,7 @@
 
 
   jsork.login = function(username, password) {
-    $.ajaxSetup({timeout:10000});
+    $.ajaxSetup({timeout: 20000});
     jsork.TOKEN = null;
     username = username.trim();
     password = password.trim();
@@ -70,9 +70,9 @@
         { 
           call: 'Authorization/Authorize',
           request: {
-                  UserName: username,
-                  Password: password
-              }
+            UserName: username,
+            Password: password
+          }
         },
         function(data) {
           if (data.Status.Status === 0) {
@@ -80,17 +80,15 @@
             jsork.player.getInfo(data.UserId).then(function(player) {
               player.Timeout = data.Timeout;
               player.Token = data.Token;
-              // window.ken = jsork;
-              // window.ken.TOKEN = data.Token;
               resolve(player);
             });
           } else {
             reject(data);
           }
         }).fail(function(error, textStatus) {
-          reject(textStatus);
-        });
+        reject(textStatus);
       });
+    });
     return promise;
   };
 
@@ -105,16 +103,16 @@
   jsork.getAuthorizations = function(mundaneId) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Authorization/GetAuthorizations',
-            request: {
-              Token: jsork.TOKEN,
-              MundaneId: mundaneId
-            }
-          },
-      function(data) {
-        resolve(data);
-      });
+        {
+          call: 'Authorization/GetAuthorizations',
+          request: {
+            Token: jsork.TOKEN,
+            MundaneId: mundaneId
+          }
+        },
+        function(data) {
+          resolve(data);
+        });
     });
     return promise;
   };
@@ -136,8 +134,8 @@
             reject(data);
           }
         }).fail(function (error, textStatus) {
-          reject(textStatus);
-        });
+        reject(textStatus);
+      });
     });
     return promise;
   };
@@ -167,8 +165,8 @@
             reject(data);
           }
         }).fail(function (error, textStatus) {
-          reject(textStatus);
-        });
+        reject(textStatus);
+      });
     });
     return promise;
   };
@@ -179,10 +177,10 @@
   jsork.kingdom.getKingdoms = function() {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Kingdom/GetKingdoms',
-            request: {}
-          },
+        {
+          call: 'Kingdom/GetKingdoms',
+          request: {}
+        },
         function(data) {
           if (data.Status.Status === 0) {
             var kingdomArray = $.map(data.Kingdoms, function(value, index) {
@@ -193,8 +191,8 @@
             reject(Error('Call failed ' + JSON.stringify(data)));
           }
         }).fail(function(error, textStatus) {
-          reject(textStatus);
-        });
+        reject(textStatus);
+      });
     });
     return promise;
   };
@@ -221,10 +219,10 @@
   jsork.kingdom.getParks = function(kingdomID) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Kingdom/GetParks',
-            request: {KingdomId: kingdomID}
-          },
+        {
+          call: 'Kingdom/GetParks',
+          request: {KingdomId: kingdomID}
+        },
         function(data) {
           if (data.Status.Status === 0) {
             resolve(data.Parks);
@@ -233,8 +231,8 @@
             resolve([]);
           }
         }).fail(function(error, textStatus) {
-          reject(textStatus);
-        });
+        reject(textStatus);
+      });
     });
     return promise;
   };
@@ -242,10 +240,10 @@
   jsork.kingdom.getOfficers = function(kingdomId) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Kingdom/GetOfficers',
-            request: {KingdomId: kingdomId}
-          },
+        {
+          call: 'Kingdom/GetOfficers',
+          request: {KingdomId: kingdomId}
+        },
         function(data) {
           if (data.Status.Status === 0) {
             resolve(data.Officers);
@@ -260,17 +258,17 @@
   jsork.kingdom.getParkTitles = function(kingdomId) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Kingdom/GetKingdomParkTitles',
-            request: {KingdomId: kingdomId}
-          },
-      function(data) {
-        if (data.Status.Status === 0) {
-          resolve(data.ParkTitles);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Kingdom/GetKingdomParkTitles',
+          request: {KingdomId: kingdomId}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.ParkTitles);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -278,17 +276,17 @@
   jsork.kingdom.getInfo = function(kingdomId) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Kingdom/GetKingdomDetails',
-            request: {KingdomId: kingdomId}
-          },
-      function(data) {
-        if (data.Status.Status === 0) {
-          resolve(data.KingdomInfo);
-        } else {
-          resolve([]);
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'Kingdom/GetKingdomDetails',
+          request: {KingdomId: kingdomId}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.KingdomInfo);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -298,17 +296,17 @@
   jsork.kingdom.getPrincipalities = function(kingdomId, callback) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Kingdom/GetPrincipalities',
-            request: {KingdomId: kingdomId}
-          },
-      function(data) {
-        if (data.Status.Status === 0) {
-          resolve(data.Principalities);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Kingdom/GetPrincipalities',
+          request: {KingdomId: kingdomId}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.Principalities);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -322,17 +320,17 @@
           };
       jsork._priv.addFilterToPlayerRequest(request, filter);
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/GetPlayerRoster',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Roster);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Report/GetPlayerRoster',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Roster);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -344,17 +342,17 @@
             KingdomId: kingdomId
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/ClassMasters',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Awards);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Report/ClassMasters',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Awards);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -362,10 +360,10 @@
   jsork.kingdom.getKnights = function(kingdomID) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Reports/knights_list',
-            request: {KingdomId: kingdomID}
-          },
+        {
+          call: 'Reports/knights_list',
+          request: {KingdomId: kingdomID}
+        },
         function(data) {
           if (data.Status.Status === 0) {
             resolve(data.Parks);
@@ -381,17 +379,17 @@
   jsork.kingdom.playerAwards = function(kingdomID, minLadder) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/PlayerAwards',
-            request: {
-              KingdomId: kingdomID,
-              Ladder: minLadder,
-              IncludeKnights: 1,
-              IncludeMasters: 1,
-              IncludeLadder: 1,
-              LadderMinimum: minLadder
-            }
-          },
+        {
+          call: 'Report/PlayerAwards',
+          request: {
+            KingdomId: kingdomID,
+            Ladder: minLadder,
+            IncludeKnights: 1,
+            IncludeMasters: 1,
+            IncludeLadder: 1,
+            LadderMinimum: minLadder
+          }
+        },
         function(data) {
           if (data.Status.Status === 0) {
             resolve(data.Awards);
@@ -419,17 +417,17 @@
           };
       jsork._priv.addFilterToPlayerRequest(request, filter);
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/GetPlayerRoster',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Roster);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Report/GetPlayerRoster',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Roster);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -440,17 +438,17 @@
     };
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/GetActivePlayers',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.ActivePlayerSummary);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Report/GetActivePlayers',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.ActivePlayerSummary);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -458,17 +456,17 @@
   jsork.park.getOfficers = function(parkID) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Park/GetOfficers',
-            request: {ParkId: parkID}
-          },
-      function(data) {
-        if (data.Status.Status === 0) {
-          resolve(data.Officers);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Park/GetOfficers',
+          request: {ParkId: parkID}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.Officers);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -476,17 +474,17 @@
   jsork.park.getInfo = function(parkID) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Park/GetParkDetails',
-            request: {ParkId: parkID}
-          },
-      function(data) {
-        if (data.Status.Status === 0) {
-          resolve(data);
-        } else {
-          resolve([]);
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'Park/GetParkDetails',
+          request: {ParkId: parkID}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -496,17 +494,17 @@
   jsork.park.getShortInfo = function(parkID) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Park/GetParkShortInfo',
-            request: {ParkId: parkID}
-          },
-      function(data) {
-        if (data.Status.Status === 0) {
-          resolve(data.ParkInfo);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Park/GetParkShortInfo',
+          request: {ParkId: parkID}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.ParkInfo);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -523,17 +521,17 @@
             Date: requestDate
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/AttendanceForDate',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Attendance);
-        } else {
-          resolve([]);
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'Report/AttendanceForDate',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -543,17 +541,17 @@
   jsork.park.getParkDays = function(parkID) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Park/GetParkDays',
-            request: {ParkId: parkID}
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.ParkDays);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Park/GetParkDays',
+          request: {ParkId: parkID}
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.ParkDays);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -561,27 +559,27 @@
   jsork.park.createPlayer = function(parkID, userName, givenName, surname, persona, email, waivered) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Player/CreatePlayer',
-            request: {
-              Token: jsork.TOKEN,
-              ParkId: parkID,
-              UserName: userName,
-              GivenName: givenName,
-              Surname: surname,
-              Persona: persona,
-              Email: email,
-              Waivered: waivered ? 1:0,
-              IsActive: 1
-            }
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data);
-        } else {
-          resolve(data);
-        }
-      });
+        {
+          call: 'Player/CreatePlayer',
+          request: {
+            Token: jsork.TOKEN,
+            ParkId: parkID,
+            UserName: userName,
+            GivenName: givenName,
+            Surname: surname,
+            Persona: persona,
+            Email: email,
+            Waivered: waivered ? 1:0,
+            IsActive: 1
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data);
+          } else {
+            resolve(data);
+          }
+        });
     });
     return promise;
   };
@@ -599,17 +597,17 @@
             MundaneId: mundaneID
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Player/GetPlayer',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Player);
-        } else {
-          reject("Error retrieving player");
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'Player/GetPlayer',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Player);
+          } else {
+            reject("Error retrieving player");
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -629,9 +627,9 @@
             ImageMimeType: 'image/jpeg'
           }
         },
-      function(data) {
-        resolve(data);
-      }).fail(function(error, textStatus) {
+        function(data) {
+          resolve(data);
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -645,28 +643,28 @@
             MundaneId: mundaneID
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Player/GetPlayerClasses',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          var result = [];
-          $.each(data.Classes, function(index, item) {
-            var reconciledCredits = item.Credits + item.Reconciled;
-            var nextClass = {
-              class: item.ClassName,
-              level: jsork._priv.levelForCredits(reconciledCredits),
-              aboutToLevel: jsork.aboutToLevelTo(reconciledCredits),
-              credits: reconciledCredits || 0
-            };
-            result.push(nextClass);
-          });
-          resolve(result);
-        } else {
-          resolve([]);
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'Player/GetPlayerClasses',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            var result = [];
+            $.each(data.Classes, function(index, item) {
+              var reconciledCredits = item.Credits + item.Reconciled;
+              var nextClass = {
+                class: item.ClassName,
+                level: jsork._priv.levelForCredits(reconciledCredits),
+                aboutToLevel: jsork.aboutToLevelTo(reconciledCredits),
+                credits: reconciledCredits || 0
+              };
+              result.push(nextClass);
+            });
+            resolve(result);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -676,27 +674,27 @@
   jsork.player.getAwards = function(mundaneID, filter) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Player/AwardsForPlayer',
-            request: {
-              MundaneId: mundaneID,
-              AwardsId: filter
-            }
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          data.Awards = data.Awards.filter(function(award) {
-            var includeAward = true;
-            if (filter !== jsork.awardIDs.ALL) {
-              includeAward = award.AwardId === filter;
-            }
-            return includeAward && award.MundaneId === mundaneID;
-          });
-          resolve(data.Awards);
-        } else {
-          resolve([]);
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'Player/AwardsForPlayer',
+          request: {
+            MundaneId: mundaneID,
+            AwardsId: filter
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            data.Awards = data.Awards.filter(function(award) {
+              var includeAward = true;
+              if (filter !== jsork.awardIDs.ALL) {
+                includeAward = award.AwardId === filter;
+              }
+              return includeAward && award.MundaneId === mundaneID;
+            });
+            resolve(data.Awards);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -707,33 +705,33 @@
     var promise = new Promise(function(resolve, reject) {
       // jsork._priv.addFilterToAwardRequest(request, filter);
       $.getJSON(ork + '?request=',
-          {
-            call: 'Player/AwardsForPlayer',
-            request: {
-              MundaneId: mundaneID,
-              AwardsId: awardId
-            }
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          var maxLevel = 0, countLevel = 0;
-          data.Awards = data.Awards.filter(function(award) {
-            return award.AwardId === awardId;
-          });
-          data.Awards.forEach(function(award) {
-            if (award.Rank > maxLevel) {
-              maxLevel = award.Rank;
-            }
-            countLevel++;
-          });
-          if (countLevel > maxLevel) {
-            maxLevel = countLevel;
+        {
+          call: 'Player/AwardsForPlayer',
+          request: {
+            MundaneId: mundaneID,
+            AwardsId: awardId
           }
-          resolve(maxLevel);
-        } else {
-          resolve([]);
-        }
-      }).fail(function(error, textStatus) {
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            var maxLevel = 0, countLevel = 0;
+            data.Awards = data.Awards.filter(function(award) {
+              return award.AwardId === awardId;
+            });
+            data.Awards.forEach(function(award) {
+              if (award.Rank > maxLevel) {
+                maxLevel = award.Rank;
+              }
+              countLevel++;
+            });
+            if (countLevel > maxLevel) {
+              maxLevel = countLevel;
+            }
+            resolve(maxLevel);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -747,17 +745,17 @@
             MundaneId: mundaneID
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Player/AttendanceForPlayer',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Attendance);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Player/AttendanceForPlayer',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -770,17 +768,17 @@
             limit: 1
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Player/AttendanceForPlayer',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Attendance);
-        } else {
-          resolve([]);
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'Player/AttendanceForPlayer',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -810,9 +808,9 @@
         function(data) {
           resolve(data);
         }).fail(function(error, textStatus) {
-          reject(textStatus);
-        });
+        reject(textStatus);
       });
+    });
     return promise;
   };
 
@@ -831,8 +829,8 @@
         function(data) {
           resolve(data);
         }).fail(function(error, textStatus) {
-          reject(textStatus);
-        });
+        reject(textStatus);
+      });
     });
     return promise;
   };
@@ -847,17 +845,17 @@
             ActiveOnly: 1
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/UnitSummary',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Units);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Report/UnitSummary',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Units);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -871,17 +869,17 @@
             Type: type
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Heraldry/GetHeraldryUrl',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Result.Url);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Heraldry/GetHeraldryUrl',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Result.Url);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -890,16 +888,16 @@
   jsork.award.getAwardList = function() {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Award/GetAwardList'
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Awards);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Award/GetAwardList'
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Awards);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -938,17 +936,38 @@
             KingdomId: kingdomId
           };
       $.getJSON(ork + '?request=',
+        {
+          call: 'Event/GetEvents',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.event.getEvents = function() {
+    var promise = new Promise(function(resolve) {
+      var request =
           {
-            call: 'Event/GetEvents',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data);
-        } else {
-          resolve([]);
-        }
-      });
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Event/GetEvents',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -960,17 +979,17 @@
             EventId: eventId
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Event/GetEvent',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data);
-        } else {
-          resolve([]);
-        }
-      });
+        {
+          call: 'Event/GetEvent',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -983,17 +1002,17 @@
             Current: true
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Event/GetEventDetails',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data);
-        } else {
-          resolve([]);
-        }
-      }).fail(function (error, textStatus) {
+        {
+          call: 'Event/GetEventDetails',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data);
+          } else {
+            resolve([]);
+          }
+        }).fail(function (error, textStatus) {
         reject(textStatus);
       });
     });
@@ -1008,17 +1027,17 @@
             EventCalendarDetailId: eventCalendarDetailId
           };
       $.getJSON(ork + '?request=',
-          {
-            call: 'Report/AttendanceForEvent',
-            request: request
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Attendance);
-        } else {
-          resolve([]);
-        }
-      }).fail(function (error, textStatus) {
+        {
+          call: 'Report/AttendanceForEvent',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function (error, textStatus) {
         reject(textStatus);
       });
     });
@@ -1028,28 +1047,28 @@
   jsork.event.addAttendance = function(mundane_id, persona, class_id, credits, date, flavor, calendar_event_id) {  
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?request=',
-          {
-            call: 'Attendance/AddAttendance',
-            request: {
-                    Token: jsork.TOKEN,
+        {
+          call: 'Attendance/AddAttendance',
+          request: {
+            Token: jsork.TOKEN,
 					          MundaneId: mundane_id,
 					          Persona: persona,
 					          ClassId: class_id,
-                    Credits: credits,
+            Credits: credits,
 					          Date: date,
 					          Flavor: flavor,
 					          Note: null,
 					          ParkId: 0,
 					          EventCalendarDetailId: calendar_event_id
 				        }
-          },
-      function(data) {
+        },
+        function(data) {
 				        if (data.Status === 0) {
-  resolve(data);
-				} else {
+            resolve(data);
+          } else {
 					  reject(data);
-				}
-      });
+          }
+        });
     });
     return promise;
   };
@@ -1060,20 +1079,20 @@
   jsork.searchservice.searchPlayer = function(searchTerm) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?',
-          {
-            call: 'SearchService/Player',
-            type: "All",
-            search: searchTerm,
-            limit: "20",
-            Token: jsork.TOKEN
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Result);
-        } else {
-          reject(Error('Call failed ' + JSON.stringify(data)));
-        }
-      }).fail(function(error, textStatus) {
+        {
+          call: 'SearchService/Player',
+          type: "All",
+          search: searchTerm,
+          limit: "20",
+          Token: jsork.TOKEN
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Result);
+          } else {
+            reject(Error('Call failed ' + JSON.stringify(data)));
+          }
+        }).fail(function(error, textStatus) {
         reject(textStatus);
       });
     });
@@ -1083,20 +1102,20 @@
   jsork.searchservice.searchPlayerUsername = function(userName) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?',
-          {
-            call: 'SearchService/Player',
-            type: 'USER',
-            search: userName,
-            limit: '2000',
-            Token: jsork.TOKEN
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Result);
-        } else {
-          reject(Error('Call failed ' + JSON.stringify(data)));
-        }
-      });
+        {
+          call: 'SearchService/Player',
+          type: 'USER',
+          search: userName,
+          limit: '2000',
+          Token: jsork.TOKEN
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Result);
+          } else {
+            reject(Error('Call failed ' + JSON.stringify(data)));
+          }
+        });
     });
     return promise;
   };
@@ -1104,21 +1123,21 @@
   jsork.searchservice.searchKingdomEvent = function(kingdomId, searchTerm) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?',
-          {
-            call: 'SearchService/Event', 
-            kingdom_id: kingdomId,
-            date_order: "true",
-            name: searchTerm,
-            limit: "200",
-            Token: jsork.TOKEN
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Result);
-        } else {
-          reject(Error('Call failed ' + JSON.stringify(data)));
-        }
-      }).fail(function (error, textStatus) {
+        {
+          call: 'SearchService/Event', 
+          kingdom_id: kingdomId,
+          date_order: "true",
+          name: searchTerm,
+          limit: "200",
+          Token: jsork.TOKEN
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Result);
+          } else {
+            reject(Error('Call failed ' + JSON.stringify(data)));
+          }
+        }).fail(function (error, textStatus) {
         reject(textStatus);
       });
     });
@@ -1128,21 +1147,44 @@
   jsork.searchservice.searchParkEvent = function(parkId, searchTerm) {
     var promise = new Promise(function(resolve, reject) {
       $.getJSON(ork + '?',
-          {
-            call: 'SearchService/Event',
-            park_id: parkId,
-            date_order: "true",
-            name: searchTerm,
-            limit: "200",
-            Token: jsork.TOKEN
-          },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.Result);
-        } else {
-          reject(Error('Call failed ' + JSON.stringify(data)));
-        }
-      }).fail(function (error, textStatus) {
+        {
+          call: 'SearchService/Event',
+          park_id: parkId,
+          date_order: "true",
+          name: searchTerm,
+          limit: "200",
+          Token: jsork.TOKEN
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Result);
+          } else {
+            reject(Error('Call failed ' + JSON.stringify(data)));
+          }
+        }).fail(function (error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.searchservice.allEvents = function() {
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?',
+        {
+          call: 'SearchService/Event',
+          date_order: "true",
+          limit: "10000",
+          date_start: new Date().toISOString(),
+          Token: jsork.TOKEN
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Result);
+          } else {
+            reject(Error('Call failed ' + JSON.stringify(data)));
+          }
+        }).fail(function (error, textStatus) {
         reject(textStatus);
       });
     });
@@ -1216,12 +1258,12 @@
 
   jsork.awardIDs = {
     ALL: 9999, MASTER_ROSE: 1, MASTER_SMITH: 2, MASTER_LION: 3, MASTER_OWL: 4, MASTER_DRAGON: 5, MASTER_GARBER: 6,
-    MASTER_JOVIUS: 7, MASTER_ZODIAC: 8, MASTER_MASK: 9, MASTER_HYDRA: 10, MASTER_GRIFFIN: 11, WARLORD: 12, LORDS_PAGE: 13,
+    MASTER_JOVIUS: 7, MASTER_ZODIAC: 8, MASTER_MASK: 9, MASTER_HYDRA: 10, MASTER_GRIFFIN: 11, WARLORD: 12, MASTER_CROWN: 240, LORDS_PAGE: 13,
     MANATARMS: 14, PAGE: 15, SQUIRE: 16, KNIGHT_OF_THE_FLAME: 17, KNIGHT_OF_THE_CROWN: 18, KNIGHT_OF_THE_SERPENT: 19,
     KNIGHT_OF_THE_SWORD: 20, ORDER_OF_THE_ROSE: 21, ORDER_OF_THE_SMITH: 22, ORDER_OF_THE_LION: 23, ORDER_OF_THE_OWL: 24,
     ORDER_OF_THE_DRAGON: 25, ORDER_OF_THE_GARBER: 26, ORDER_OF_THE_WARRIOR: 27, ORDER_OF_THE_JOVIUS: 28, ORDER_OF_THE_MASK: 29,
     ORDER_OF_THE_ZODIAC: 30, ORDER_OF_THE_WALKER_IN_THE_MIDDLE: 31, ORDER_OF_THE_HYDRA: 32, ORDER_OF_THE_GRIFFIN: 33,
-    ORDER_OF_THE_FLAME: 34, DEFENDER: 35, WEAPONMASTER: 36, PARAGON_ANTIPALADIN: 37, PARAGON_ARCHER: 38, PARAGON_ASSASSIN: 39,
+    ORDER_OF_THE_FLAME: 34, ORDER_OF_THE_CROWN: 239, DEFENDER: 35, WEAPONMASTER: 36, PARAGON_ANTIPALADIN: 37, PARAGON_ARCHER: 38, PARAGON_ASSASSIN: 39,
     PARAGON_BARBARIAN: 40, PARAGON_BARD: 41, PARAGON_DRUID: 42, PARAGON_HEALER: 43, PARAGON_MONK: 44, PARAGON_MONSTER: 45,
     PARAGON_PALADIN: 46, PARAGON_PEASANT: 47, PARAGON_RAIDER: 48, PARAGON_SCOUT: 49, PARAGON_WARRIOR: 50, PARAGON_WIZARD: 51,
     LORD: 52, LADY: 53, BARONET: 54, BARONETESS: 55, BARON: 56, BARONESS: 57, VISCOUNT: 58, VISCOUNTESS: 59, COUNT: 60,
