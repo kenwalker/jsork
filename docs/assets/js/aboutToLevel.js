@@ -19,6 +19,9 @@ function kingdomSelect(event, ui) {
     select.options[i] = null;
   }
   jsork.kingdom.getParks(parseInt(event.target.value, 10)).then(function(data) {
+    data.sort(function(a, b) {
+      return a.Name.toLowerCase().localeCompare(b.Name.toLowerCase());
+    });
     var kSelect = $('#park');
     var emptyOption = $('<option>');
     emptyOption.html('Choose a Park');
