@@ -6,11 +6,11 @@
 -->
 <html>
 	<head>
-		<title>jsork - Upcoming Events</title>
+		<title>jsork - About to Level</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<link rel="stylesheet" href="assets/css/upcomingEvents.css" />
+		<link rel="stylesheet" href="assets/css/aboutToLevel.css" />
 	</head>
 	<body class="is-preload">
 
@@ -23,7 +23,7 @@
 
 							<!-- Header -->
 								<header id="header" class="noprint">
-									<a href="upcomingEvents.html" class="logo noprint"><strong>jsork</strong> Upcoming Events</a>
+									<a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong> About to Level</a>
 									<ul class="icons noprint">
                       <li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span class="label">Github</span></a></li>
                       <li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
@@ -34,21 +34,34 @@
 								<section class="noprintpadding">
                   <div class="noprint">
 									<header class="main">
-										<h2>Upcoming Amtgard events</h2>
+										<h2>About to level</h2>
                   </header>
-                  <h2 class="working">Generating event list.....</h2>
+                  <p class="smallbottommargin">This report will generate a list of players who
+                    are 1 point away from levelling a class. You can copy the results to the clipboard
+                    or print it and only the relevant information will be printed.
+                </p>
+                <label for="kingdom"><h2>Choose a Kingdom or Principality</h2></label>
+                  <select name="kingdom" id="kingdom"></select>
+                  <div id="parkselect" hidden="hidden">
+                  <label for="park"><h2>Choose a Park</h2></label>
+                  <select name="park" id="park"></select>
                   </div>
+                  <h2 class="working" hidden="hidden">Generating player list.....</h2>
+                  </div>
+                  <h2 class="noplayers"></h2>
                   <div class="allresults" hidden>
-                    <table id="eventTable" style="width:100%">
+                    <h3 class="printtitle smallbottommargin"></h3>
+                    <div class="generateddate"></div>
+                    <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy to CSV</button>
+                    <table id="playerTable" style="width:100%">
                       <tr>
-                        <th class='left'>Kingdom</th>
-                        <th class='left'>Park</th>
-                        <th class='middle'>Event</th>
-                        <th class='middle'>Date</th>
-                        <th class='middle'>Description</th>
+                        <th class='left'>Player</th>
+                        <th class='left'>Class</th>
+                        <th class='middle'>1 Away from Level</th>
                       </tr>
                     </table>
-								</section>
+                  </div>
+                  </section>
 						</div>
 					</div>
 
@@ -95,6 +108,6 @@
 			<script src="assets/js/main.js"></script>
       <script src="assets/js/jsork.js"></script>
       <script src="assets/js/moment.js"></script>
-      <script src="assets/js/upcomingEvents.js"></script>  
+      <script src="assets/js/aboutToLevel.js"></script>  
 	</body>
 </html>

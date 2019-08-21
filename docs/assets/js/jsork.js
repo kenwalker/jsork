@@ -432,7 +432,7 @@
     return promise;
   };
 
-  jsork.park.getActivePlayers = function(parkID, numMonths, minCredits, monthlyMax, homeParkOnly) {
+  jsork.park.getActivePlayers = function(parkID) {
     var request = {
       ParkId: parkID
     };
