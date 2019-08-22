@@ -584,7 +584,30 @@
     return promise;
   };
 
-
+  jsork.park.findParkNear = function(latitude, longitude, start, end, distance, limit) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Park/PlayAmtgard',
+          request: {
+            latitude: latitude,
+            longitude: longitude,
+            distance: distance,
+            start: start,
+            end: end,
+            limit: limit
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.ParkDays);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
 
   // Define all the Player applicable APIs
   jsork.player = {};
@@ -605,7 +628,7 @@
           if (data.Status.Status === 0 || data.Status === true) {
             resolve(data.Player);
           } else {
-            reject("Error retrieving player");
+            reject('Error retrieving player');
           }
         }).fail(function(error, textStatus) {
         reject(textStatus);
@@ -823,7 +846,7 @@
           request: {
             Token: jsork.TOKEN,
             MundaneId: mundaneId,
-            RemoveDues: "Revoke Dues"
+            RemoveDues: 'Revoke Dues'
           }
         },
         function(data) {
@@ -904,27 +927,27 @@
 
   jsork.event = {};
 
-  jsork.event.playAmtgard = function(latitude, longitude) {
+  jsork.event.findEventNear = function(latitude, longitude, start, end, distance, limit) {
     var promise = new Promise(function(resolve) {
-      var request =
-          {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Event/PlayAmtgard',
+          request: {
             latitude: latitude,
             longitude: longitude,
-            start: '2018-10-30',
-            end: '2019-11-30',
-            distance: '5000'
-          };
-      $.getJSON(ork + '?request=', {
-        call: 'Park/PlayAmtgard',
-        request: request
-      },
-      function(data) {
-        if (data.Status.Status === 0 || data.Status === true) {
-          resolve(data.ParkDays);
-        } else {
-          resolve([]);
-        }
-      });
+            distance: distance,
+            start: start,
+            end: end,
+            limit: limit
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.ParkDays);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
@@ -1081,9 +1104,9 @@
       $.getJSON(ork + '?',
         {
           call: 'SearchService/Player',
-          type: "All",
+          type: 'All',
           search: searchTerm,
-          limit: "20",
+          limit: '20',
           Token: jsork.TOKEN
         },
         function(data) {
@@ -1126,9 +1149,9 @@
         {
           call: 'SearchService/Event', 
           kingdom_id: kingdomId,
-          date_order: "true",
+          date_order: 'true',
           name: searchTerm,
-          limit: "200",
+          limit: '200',
           Token: jsork.TOKEN
         },
         function(data) {
@@ -1150,9 +1173,9 @@
         {
           call: 'SearchService/Event',
           park_id: parkId,
-          date_order: "true",
+          date_order: 'true',
           name: searchTerm,
-          limit: "200",
+          limit: '200',
           Token: jsork.TOKEN
         },
         function(data) {
@@ -1173,8 +1196,8 @@
       $.getJSON(ork + '?',
         {
           call: 'SearchService/Event',
-          date_order: "true",
-          limit: "10000",
+          date_order: 'true',
+          limit: '10000',
           date_start: new Date().toISOString(),
           Token: jsork.TOKEN
         },
@@ -1286,24 +1309,24 @@
   };
 
   jsork.awardIDsToString = {};
-  jsork.awardIDsToString[jsork.awardIDs.LORD] = "Lord";
-  jsork.awardIDsToString[jsork.awardIDs.LADY] = "Lady";
-  jsork.awardIDsToString[jsork.awardIDs.BARONET] = "Baronet";
-  jsork.awardIDsToString[jsork.awardIDs.BARONETESS] = "Baronetess";
-  jsork.awardIDsToString[jsork.awardIDs.BARON] = "Baron";
-  jsork.awardIDsToString[jsork.awardIDs.BARONESS] = "Baroness";
-  jsork.awardIDsToString[jsork.awardIDs.VISCOUNT] = "Viscount";
-  jsork.awardIDsToString[jsork.awardIDs.VISCOUNTESS] = "Viscountess";
-  jsork.awardIDsToString[jsork.awardIDs.COUNT] = "Count";
-  jsork.awardIDsToString[jsork.awardIDs.COUNTESS] = "Countess";
-  jsork.awardIDsToString[jsork.awardIDs.MARQUIS] = "Marquis";
-  jsork.awardIDsToString[jsork.awardIDs.MARQUESS] = "Marquess";
-  jsork.awardIDsToString[jsork.awardIDs.DUKE] = "Duke";
-  jsork.awardIDsToString[jsork.awardIDs.DUCHESS] = "Duchess";
-  jsork.awardIDsToString[jsork.awardIDs.ARCHDUKE] = "Archduke";
-  jsork.awardIDsToString[jsork.awardIDs.ARCHDUCHESS] = "Archduchess";
-  jsork.awardIDsToString[jsork.awardIDs.GRAND_DUKE] = "Grand Duke";
-  jsork.awardIDsToString[jsork.awardIDs.GRAND_DUCHESS] = "Grand Duchess";
+  jsork.awardIDsToString[jsork.awardIDs.LORD] = 'Lord';
+  jsork.awardIDsToString[jsork.awardIDs.LADY] = 'Lady';
+  jsork.awardIDsToString[jsork.awardIDs.BARONET] = 'Baronet';
+  jsork.awardIDsToString[jsork.awardIDs.BARONETESS] = 'Baronetess';
+  jsork.awardIDsToString[jsork.awardIDs.BARON] = 'Baron';
+  jsork.awardIDsToString[jsork.awardIDs.BARONESS] = 'Baroness';
+  jsork.awardIDsToString[jsork.awardIDs.VISCOUNT] = 'Viscount';
+  jsork.awardIDsToString[jsork.awardIDs.VISCOUNTESS] = 'Viscountess';
+  jsork.awardIDsToString[jsork.awardIDs.COUNT] = 'Count';
+  jsork.awardIDsToString[jsork.awardIDs.COUNTESS] = 'Countess';
+  jsork.awardIDsToString[jsork.awardIDs.MARQUIS] = 'Marquis';
+  jsork.awardIDsToString[jsork.awardIDs.MARQUESS] = 'Marquess';
+  jsork.awardIDsToString[jsork.awardIDs.DUKE] = 'Duke';
+  jsork.awardIDsToString[jsork.awardIDs.DUCHESS] = 'Duchess';
+  jsork.awardIDsToString[jsork.awardIDs.ARCHDUKE] = 'Archduke';
+  jsork.awardIDsToString[jsork.awardIDs.ARCHDUCHESS] = 'Archduchess';
+  jsork.awardIDsToString[jsork.awardIDs.GRAND_DUKE] = 'Grand Duke';
+  jsork.awardIDsToString[jsork.awardIDs.GRAND_DUCHESS] = 'Grand Duchess';
 
   // AMD registration happens at the end for compatibility with AMD loaders
   // that may not enforce next-turn semantics on modules. Even though general
