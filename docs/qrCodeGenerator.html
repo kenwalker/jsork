@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>jsork - mORK QR Code Generator</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+      user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/qrCodeGenerator.css" />
+  </head>
+  <body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+      <!-- Main -->
+      <div id="main">
+        <div class="inner">
+
+          <!-- Header -->
+          <header id="header" class="noprint">
+            <a href="qrCodeGenerator.html" class="logo noprint"><strong>jsork</strong>
+              mORK QR Code Generator</a>
+            <ul class="icons noprint">
+              <li><a href="https://github.com/kenwalker/jsork" class="icon
+                  brands fa-github"><span class="label">Github</span></a></li>
+              <li><a href="https://www.facebook.com/mORKmobile" class="icon
+                  brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            </ul>
+          </header>
+
+          <!-- Content -->
+          <section class="noprintpadding">
+            <div class="noprint">
+              <header class="main">
+                <h2>mORK QR Code Generator</h2>
+              </header>
+              <p class="smallbottommargin">You can search for a player and have
+                the QR code generated
+                for the player selected. Some hints for searching that apply to
+                the ORK itself, mORK, and
+                this page. You can prefix a search with a Kingdom abreviation to
+                narrow a player search to
+                just that kingdom. So if you searched for "nb: kismet" only the
+                Nine Blades would return results.
+                You can also print this page once the QRCode is generated and
+                just the relevant information
+                will be included.
+              </p>
+              <section id="search" class="alt">
+                <input type="text" name="query" id="query" placeholder="Search"
+                  />
+              </section>
+              <ul class="actions" id="backToSearch" style="display: none;">
+                  <li><a href="#" class="button" onClick="backToSearch()">Back to search</a></li>
+              </ul>
+              <button class="button" id="copyToClipboard" onClick="copyPlayerCard()" style="display: none;">Copy card image to clipboard</button>
+            </div>
+            <div class="searchResults" hidden>
+              <table id="playerList" style="width:100%">
+                <tr>
+                  <th class='left'>Persona</th>
+                  <th class='left'>Username</th>
+                  <th class='middle'>Park</th>
+                  <th class='middle'>Kingdom/Principality</th>
+                </tr>
+              </table>
+            </div>
+            <div class="playerInfo" id="playerBox" style="display: none;">
+              <div id="borderdiv">
+              <img class="smallbottommarginagain" id="playerImg" src="" alt="Player Image" style="width:100px;height:100px;">
+              <p class="smallbottommargin" id="playerDetails"></p>
+              <div id="qrcode" class="smallbottommarginagain" ></div>
+              </div>
+            </div>
+            <div class="searchResults" hidden>
+            </section>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="noprint">
+          <div class="inner">
+
+            <!-- Menu -->
+            <nav id="menu">
+              <header class="major">
+                <h2>Menu</h2>
+              </header>
+              <ul>
+                <li><a href="index.html">Homepage</a></li>
+                <li>
+                  <span class="opener">Reports</span>
+                  <ul>
+                    <li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
+                    <li><a href="upcomingEvents.html">Upcoming Events</a></li>
+                    <li><a href="aboutToLevel.html">About to Level</a></li>
+                    <li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
+                    <li><a href="#">(more to come)</a></li>
+                  </ul>
+                </li>
+                <li><a href="api.html">API Usage</a></li>
+              </ul>
+            </nav>
+
+            <!-- Footer -->
+            <footer id="footer">
+              <p class="copyright">jsork was written by Ken Walker.</p>
+            </footer>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scripts -->
+      <script src="assets/js/jquery-ui/external/jquery/jquery.js"></script>
+      <script src="assets/js/jquery-ui/jquery-ui.js"></script>
+      <script src="assets/js/browser.min.js"></script>
+      <script src="assets/js/breakpoints.min.js"></script>
+      <script src="assets/js/util.js"></script>
+      <script src="assets/js/main.js"></script>
+      <script src="assets/js/jsork.js"></script>
+      <script src="assets/js/moment.js"></script>
+      <script src="assets/js/qrcode.min.js"></script>
+      <script src="assets/js/dom-to-image.js"></script>
+      <script src="assets/js/qrCodeGenerator.js"></script>
+    </body>
+  </html>
