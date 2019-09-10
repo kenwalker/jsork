@@ -6,11 +6,11 @@
 -->
 <html>
 	<head>
-		<title>jsork - About to Level</title>
+		<title>jsork - Top 10 Average Parks</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<link rel="stylesheet" href="assets/css/aboutToLevel.css" />
+		<link rel="stylesheet" href="assets/css/topTenAverageParks.css" />
 	</head>
 	<body class="is-preload">
 
@@ -23,7 +23,7 @@
 
 							<!-- Header -->
 								<header id="header" class="noprint">
-									<a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong> About to Level</a>
+									<a href="upcomingEvents.html" class="logo noprint"><strong>jsork</strong> Top 10 Average Parks</a>
 									<ul class="icons noprint">
                       <li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span class="label">Github</span></a></li>
                       <li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
@@ -34,34 +34,23 @@
 								<section class="noprintpadding">
                   <div class="noprint">
 									<header class="main">
-										<h2>About to level</h2>
+										<h2>Top 10 Average Parks</h2>
                   </header>
-                  <p class="smallbottommargin">This report will generate a list of <i>active</i> players who
-                    are 1 point away from levelling a class. You can copy the results to the clipboard
-                    or print it and only the relevant information will be printed.
-                </p>
-                <label for="kingdom"><h2>Choose a Kingdom or Principality</h2></label>
-                  <select name="kingdom" id="kingdom"></select>
-                  <div id="parkselect" hidden="hidden">
-                  <label for="park"><h2>Choose a Park</h2></label>
-                  <select name="park" id="park"></select>
+                  <p class="smallbottommargin">This report will generate a list of the top 10 parks
+                    based on attendance averaged over the last 6 months from today.
+                  </p>
+                  <h2 class="working">Generating top ten.....</h2>
                   </div>
-                  <h2 class="working" hidden="hidden">Generating player list.....</h2>
-                  </div>
-                  <h2 class="noplayers"></h2>
                   <div class="allresults" hidden>
-                    <h3 class="printtitle smallbottommargin"></h3>
-                    <div class="generateddate"></div>
-                    <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy to CSV</button>
-                    <table id="playerTable" style="width:100%">
+                    <table id="topTenTable" style="width:100%">
                       <tr>
-                        <th class='left'>Player</th>
-                        <th class='left'>Class</th>
-                        <th class='middle'>1 Away from Level</th>
+                        <th class='middle'>Rank</th>
+                        <th class='middle'>6th Month Weekly Average</th>
+                        <th class='left'>Park</th>
+                        <th class='left'>Kingdom</th>
                       </tr>
                     </table>
-                  </div>
-                  </section>
+								</section>
 						</div>
 					</div>
 
@@ -83,7 +72,6 @@
 												<li><a href="upcomingEvents.html">Upcoming Events</a></li>
 												<li><a href="aboutToLevel.html">About to Level</a></li>
                         <li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
-                        <li><a href="topTenAverageParks.html">Top 10 Parks by attendance</a></li>
 												<li><a href="#">(more to come)</a></li>
 											</ul>
 										</li>
@@ -110,6 +98,6 @@
 			<script src="assets/js/main.js"></script>
       <script src="assets/js/jsork.js"></script>
       <script src="assets/js/moment.js"></script>
-      <script src="assets/js/aboutToLevel.js"></script>  
+      <script src="assets/js/topTenAverageParks.js"></script>  
 	</body>
 </html>

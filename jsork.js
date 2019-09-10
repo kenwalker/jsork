@@ -402,6 +402,28 @@
     return promise;
   };
 
+  jsork.kingdom.parkAverages = function(kingdomId) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            KingdomId: kingdomId
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/GetKingdomParkAverages',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.KingdomParkAveragesSummary);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
   // Define all the Report applicable APIs
   jsork.reports = {};
 
