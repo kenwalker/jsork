@@ -783,6 +783,29 @@
     return promise;
   };
 
+  jsork.player.getAttendanceFrom = function(mundaneID, dateStart) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            MundaneId: mundaneID,
+            date_start: dateStart
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Player/AttendanceForPlayer',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
   jsork.player.getAttendance = function(mundaneID) {
     var promise = new Promise(function(resolve) {
       var request =
