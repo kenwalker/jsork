@@ -56,7 +56,8 @@ function parkSelect(event, ui) {
   $('.generateddate').text('Generated on ' + new Date().toDateString());
 
   $('.working').attr('hidden', false);
-  jsork.park.getActivePlayers(parseInt(event.target.value, 10)).then(function(data) {
+  $('.working').text('Getting players....');
+  jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.ACTIVE).then(function(data) {
     var playersLeft = data.length;
     if (playersLeft === 0) {
       document.getElementById('kingdom').disabled = false;
@@ -66,49 +67,63 @@ function parkSelect(event, ui) {
       return;
     }
     data.forEach(function(player) {
-      jsork.player.getClasses(player.MundaneId).then(function(classes) {
-        classes.forEach(function(aClass) {
-          if (aClass.aboutToLevel !== 0) {
-            playerList.push({Persona: this.Persona, MundaneId: player.MundaneId, Class: aClass.class, Level: aClass.aboutToLevel});
-          }
-        }.bind(player));
-        if (--playersLeft <= 0) {
-          if (playerList.length === 0) {
-            document.getElementById('kingdom').disabled = false;
-            document.getElementById('park').disabled = false;        
-            // $('.noplayers').text('Generated on ' + new Date().toDateString());
-            $('.working').attr('hidden', true);
-            $('.noplayers').text('There are no players about to level soon');
-            return;
-          }
-          playerList.sort(function(a, b) {
-            return a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-          });
-          var lastPlayer = null;
-          playerList.forEach(function(aPlayer) {
-            var playerHTMLLine = '';
-            var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
-            if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
-              playerHTMLLine += '<tr><td></td>';
-            } else {
-              playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
-              aPlayer.MundaneId + '">' +
-              (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
+      jsork.player.getLastAttendance(player.MundaneId).then(function(lastAttendance) {
+        if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) > moment().subtract(6, 'months')) {
+          jsork.player.getClasses(player.MundaneId).then(function(classes) {
+            $('.working').text('Number of players left to check ' + playersLeft);
+            classes.forEach(function(aClass) {
+              if (aClass.aboutToLevel !== 0) {
+                playerList.push({Persona: this.Persona, MundaneId: player.MundaneId, Class: aClass.class, Level: aClass.aboutToLevel});
+              }
+            }.bind(player));
+            if (--playersLeft <= 0) {
+              donePlayers();  
             }
-            playerLine += aPlayer.Class + '\t' + aPlayer.Level;
-            playerHTMLLine += '<td class="middle">' + aPlayer.Class + '</td><td class="middle">' + aPlayer.Level + '</td><tr>';
-            $('#playerTable').append(playerHTMLLine);
-            playerContent += playerLine + '\r\n';
-            lastPlayer = aPlayer;
-          });
-          $('.working').attr('hidden', true);
-          $('.allresults').attr('hidden', false);
-          document.getElementById('kingdom').disabled = false;
-          document.getElementById('park').disabled = false;
+          }.bind(player));
+        } else {
+          $('.working').text('Number of players left to check ' + playersLeft);
+          if (--playersLeft <= 0) {
+            donePlayers();
+          }
         }
-      }.bind(player));
+      });
     });
   });
+}
+
+function donePlayers() {
+  if (playerList.length === 0) {
+    document.getElementById('kingdom').disabled = false;
+    document.getElementById('park').disabled = false;        
+    // $('.noplayers').text('Generated on ' + new Date().toDateString());
+    $('.working').attr('hidden', true);
+    $('.noplayers').text('There are no players about to level soon');
+    return;
+  }
+  playerList.sort(function(a, b) {
+    return a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
+  });
+  var lastPlayer = null;
+  playerList.forEach(function(aPlayer) {
+    var playerHTMLLine = '';
+    var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
+    if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
+      playerHTMLLine += '<tr><td></td>';
+    } else {
+      playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+      aPlayer.MundaneId + '">' +
+      (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
+    }
+    playerLine += aPlayer.Class + '\t' + aPlayer.Level;
+    playerHTMLLine += '<td class="middle">' + aPlayer.Class + '</td><td class="middle">' + aPlayer.Level + '</td><tr>';
+    $('#playerTable').append(playerHTMLLine);
+    playerContent += playerLine + '\r\n';
+    lastPlayer = aPlayer;
+  });
+  $('.working').attr('hidden', true);
+  $('.allresults').attr('hidden', false);
+  document.getElementById('kingdom').disabled = false;
+  document.getElementById('park').disabled = false;
 }
 
 function initKingdoms() {
