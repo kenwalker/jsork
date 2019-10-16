@@ -6,7 +6,7 @@ var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
 var today = moment();
-var startDate = moment(today).subtract(6, 'months').isoWeekday('Monday').startOf('isoWeek');
+var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
 
 function initParks() {
   playerList = [];
@@ -84,10 +84,10 @@ function parkSelect(event, ui) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
                 if (attendance.KingdomId === 31 || attendance.EventKingdomId === 31) {
-                  if (!playerWeeks[moment(attendance.Date).week()]) {
-                    playerWeeks[moment(attendance.Date).week()] = [];
+                  if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
+                    playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
                   }
-                  playerWeeks[moment(attendance.Date).week()].push(attendance);
+                  playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
                 }
               }
             });
