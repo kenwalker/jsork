@@ -1,16 +1,11 @@
 <!DOCTYPE HTML>
-<!--
-	Editorial by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 	<head>
-		<title>jsork - About to Level</title>
+		<title>jsork - Kingdom Officers</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<link rel="stylesheet" href="assets/css/aboutToLevel.css" />
+		<link rel="stylesheet" href="assets/css/kingdomAwards.css" />
 	</head>
 	<body class="is-preload">
 
@@ -23,7 +18,7 @@
 
 							<!-- Header -->
 								<header id="header" class="noprint">
-									<a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong> About to Level</a>
+									<a href="kingdomOfficers.html" class="logo noprint"><strong>jsork</strong> All Kingdom Officers</a>
 									<ul class="icons noprint">
                       <li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span class="label">Github</span></a></li>
                       <li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
@@ -34,35 +29,21 @@
 								<section class="noprintpadding">
                   <div class="noprint">
 									<header class="main">
-										<h2>About to level</h2>
-                  </header>
-                  <p class="smallbottommargin">This report will generate a list of <i>marked active</i> players who have played
-                    in the last six months and who
-                    are 1 point away from levelling a class. You can copy the results to the clipboard
-                    or print it and only the relevant information will be printed.
-                </p>
-                <label for="kingdom"><h2>Choose a Kingdom or Principality</h2></label>
+										<h2>All Kingdom Officers</h2>
+									</header>
+                  <p class="smallbottommargin">This report will show all the officers within a Kingdom/Principality. If you see
+                    an error in the officers, then tell either the Kingdom/Principality or the local Park and get them to update it.
+                  </p>
+                  <label for="kingdom"><h2>Choose a Kingdom or Principality</h2></label>
                   <select name="kingdom" id="kingdom"></select>
-                  <div id="parkselect" hidden="hidden">
-                  <label for="park"><h2>Choose a Park</h2></label>
-                  <select name="park" id="park"></select>
+                  <h2 class="working" hidden>Generating report.....</h2>
                   </div>
-                  <h2 class="working" hidden="hidden">Checking players.....</h2>
-                  </div>
-                  <h2 class="noplayers"></h2>
                   <div class="allresults" hidden>
-                    <h3 class="printtitle smallbottommargin"></h3>
-                    <div class="generateddate"></div>
-                    <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy to CSV</button>
-                    <table id="playerTable" style="width:100%">
-                      <tr>
-                        <th class='left'>Player</th>
-                        <th class='left'>Class</th>
-                        <th class='middle'>1 Away from Level</th>
-                      </tr>
-                    </table>
+                    
                   </div>
-                  </section>
+
+								</section>
+
 						</div>
 					</div>
 
@@ -114,6 +95,6 @@
 			<script src="assets/js/main.js"></script>
       <script src="assets/js/jsork.js"></script>
       <script src="assets/js/moment.js"></script>
-      <script src="assets/js/aboutToLevel.js"></script>  
+      <script src="assets/js/kingdomOfficers.js"></script>  
 	</body>
 </html>
