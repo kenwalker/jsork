@@ -84,10 +84,11 @@ function parkSelect(event, ui) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
                 if (attendance.KingdomId === 25 || attendance.EventKingdomId === 25) {
-                  if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
-                    playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
-                  }
-                  playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
+                  playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+                  // if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
+                  //   playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
+                  // }
+                  // playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
                 }
               }
             });
@@ -135,8 +136,8 @@ function donePlayers() {
   }
   playerList.sort(function(a, b) {
     var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-    var canVoteA = a.Waivered && a.DuesPaid && Object.keys(a.attendance).length >= 6;
-    var canVoteB = b.Waivered && b.DuesPaid && Object.keys(b.attendance).length >= 6;
+    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6;
+    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -146,7 +147,7 @@ function donePlayers() {
   playerList.forEach(function(aPlayer) {
     var playerHTMLLine = '';
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
-    var canVote = aPlayer.Waivered && aPlayer.DuesPaid && attendanceNumber >= 6;
+    var canVote = aPlayer.DuesPaid && attendanceNumber >= 6;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -161,17 +162,8 @@ function donePlayers() {
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
     playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t';
-    var firstTime = true;
-    Object.keys(aPlayer.attendance).forEach(function(aWeek) {
-      if (firstTime) {
-        firstTime = false;
-      } else {
-        playerLine += ' ';
-      }
-      playerLine += aWeek;
-    });
     playerHTMLLine += '<td class="middle">' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td><tr>';
     $('#playerTable').append(playerHTMLLine);
@@ -218,7 +210,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tWeeks of Attendance\tThe Week numbers of attendance\r\n';
+  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tDays of Attendance\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
