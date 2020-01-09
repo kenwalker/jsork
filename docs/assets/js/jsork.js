@@ -402,6 +402,33 @@
     return promise;
   };
 
+  jsork.kingdom.playerAwardsPark = function(kingdomID, parkID, minLadder) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/PlayerAwards',
+          request: {
+            KingdomId: kingdomID,
+            ParkId: parkID,
+            Ladder: minLadder,
+            IncludeKnights: 1,
+            IncludeMasters: 1,
+            IncludeLadder: 1,
+            LadderMinimum: minLadder
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.Awards);
+          } else {
+            // on error just assume no parks
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
   jsork.kingdom.parkAverages = function(kingdomId) {
     var promise = new Promise(function(resolve) {
       var request =
