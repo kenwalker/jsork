@@ -2,7 +2,7 @@
 
 ## (Pronounced J-Sork) JSON APIs to the Amtgard ORK ##
 
-See the Github pages document as that is where more doc and examples will be added.
+See the Github pages document as that is where more doc and examples will be added. 
 
 [jsork Github Pages](https://kenwalker.github.io/jsork)
 
