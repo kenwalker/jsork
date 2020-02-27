@@ -1,131 +1,140 @@
 <!DOCTYPE HTML>
 
 <html>
-  <head>
-    <title>jsork - Nine Blades Voting</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1,
+
+<head>
+  <title>jsork - Nine Blades Voting</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1,
       user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="assets/css/nineBladesVoting.css" />
-  </head>
-  <body class="is-preload">
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/nineBladesVoting.css" />
+</head>
 
-    <!-- Wrapper -->
-    <div id="wrapper">
+<body class="is-preload">
 
-      <!-- Main -->
-      <div id="main">
-        <div class="inner">
+  <!-- Wrapper -->
+  <div id="wrapper">
 
-          <!-- Header -->
-          <header id="header" class="noprint">
-            <a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong>
-              Nine Blades Voting</a>
-            <ul class="icons noprint">
-              <li><a href="https://github.com/kenwalker/jsork" class="icon
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+
+        <!-- Header -->
+        <header id="header" class="noprint">
+          <a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong>
+            Nine Blades Voting</a>
+          <ul class="icons noprint">
+            <li><a href="https://github.com/kenwalker/jsork" class="icon
                   brands fa-github"><span class="label">Github</span></a></li>
-              <li><a href="https://www.facebook.com/mORKmobile" class="icon
+            <li><a href="https://www.facebook.com/mORKmobile" class="icon
                   brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-            </ul>
-          </header>
+          </ul>
+        </header>
 
-          <!-- Content -->
-          <section class="noprintpadding">
-            <div class="noprint">
-              <header class="main">
-                <h2>Nine Blades Voting</h2>
-              </header>
-              <p class="smallbottommargin"><b>!! Experimental !!</b> This report will generate a list of
-                players within a Nine Blades park that can vote. A player must be 16 years or older, have a waiver signed (membership requirement), attended 6 different weeks
-                in the last 6 months anywhere in the Nine Blades, be dues paid and not have joined within the
-                last six months. The Nine Blades Week starts on Monday and ends on Sunday.<br>
-                If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
-                <b>Does not mark false any players who have played less than 6 months yet! So if you're unsure, please verify by clicking on
-                  their persona and looking in their ORK attendance.
-                </b><br>
-                <b>Does not mark false for age less than 16 because the ORK does not track age</b>
-                <br><br>
-                The whole list is provided here but the CSV export provides the week numbers that a person has attended for verification.
-              </p>
-              <div id="parkselect" hidden="hidden">
-                <label for="park"><h2>Choose a Park</h2></label>
-                <select name="park" id="park"></select>
-              </div>
-              <h2 class="working" hidden="hidden">Generating player list.....</h2>
-            </div>
-            <h2 class="noplayers"></h2>
-            <div class="allresults" hidden>
-              <h3 class="printtitle smallbottommargin"></h3>
-              <div class="generateddate"></div>
-              <button class="noprint smallbottommargin primary icon fa-copy"
-                onclick="copyToClipboard()">Copy to CSV</button>
-              <table id="playerTable" style="width:100%">
-                <tr>
-                  <th class='left'>Player</th>
-                  <th class='middle'>Can Vote</th>
-                  <th class='middle'>Signed Waiver</th>
-                  <th class='middle'>Dues Paid</th>
-                  <th class='middle'>Weeks of attendance</th>
-                </tr>
-              </table>
-            </div>
-          </section>
-        </div>
-      </div>
-
-      <!-- Sidebar -->
-      <div id="sidebar" class="noprint">
-        <div class="inner">
-
-          <!-- Menu -->
-          <nav id="menu">
-            <header class="major">
-              <h2>Menu</h2>
+        <!-- Content -->
+        <section class="noprintpadding">
+          <div class="noprint">
+            <header class="main">
+              <h2>Nine Blades Voting</h2>
             </header>
-            <ul>
-              <li><a href="index.html">Homepage</a></li>
-              <li>
-                <span class="opener">Reports</span>
-                <ul>
-                  <li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
-                  <li><a href="upcomingEvents.html">Upcoming Events</a></li>
-                  <li><a href="aboutToLevel.html">About to Level</a></li>
-                  <li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
-                  <li><a href="topTenAverageParks.html">Top 10 Parks by
-                      attendance</a></li>
-                  <li><a href="whereDoYouPlay.html">Where do you play?</a></li>
-                  <li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
-                  <li><a href="voVoting.html">Viridian Outlands Voting</a></li>
-                  <li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
-                  <li><a href="kingdomTitles.html">Kingdom Titles</a></li>
-                  <li><a href="recentAwards.html">Recent Awards</a></li>
-            <li><a href="#">(more to come)</a></li>
-                </ul>
-              </li>
-              <li><a href="api.html">API Usage</a></li>
-            </ul>
-          </nav>
-
-          <!-- Footer -->
-          <footer id="footer">
-            <p class="copyright">jsork was written by Ken Walker.</p>
-          </footer>
-
-        </div>
+            <p class="smallbottommargin"><b>!! Experimental !!</b> This report will generate a list of
+              players within a Nine Blades park that can vote. A player must be 16 years or older, have a waiver signed
+              (membership requirement), attended 6 different weeks
+              in the last 6 months anywhere in the Nine Blades, be dues paid and not have joined within the
+              last six months. The Nine Blades Week starts on Monday and ends on Sunday.<br>
+              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
+              <b>Does not mark false any players who have played less than 6 months yet! So if you're unsure, please
+                verify by clicking on
+                their persona and looking in their ORK attendance.
+              </b><br>
+              <b>Does not mark false for age less than 16 because the ORK does not track age</b>
+              <br><br>
+              The whole list is provided here but the CSV export provides the week numbers that a person has attended
+              for verification.
+            </p>
+            <div id="parkselect" hidden="hidden">
+              <label for="park">
+                <h2>Choose a Park</h2>
+              </label>
+              <select name="park" id="park"></select>
+            </div>
+            <h2 class="working" hidden="hidden">Generating player list.....</h2>
+          </div>
+          <h2 class="noplayers"></h2>
+          <div class="allresults" hidden>
+            <h3 class="printtitle smallbottommargin"></h3>
+            <div class="generateddate"></div>
+            <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy to
+              CSV</button>
+            <table id="playerTable" style="width:100%">
+              <tr>
+                <th class='left'>Player</th>
+                <th class='middle'>Can Vote</th>
+                <th class='middle'>Signed Waiver</th>
+                <th class='middle'>Dues Paid</th>
+                <th class='middle'>Weeks of attendance</th>
+              </tr>
+            </table>
+          </div>
+        </section>
       </div>
-
     </div>
 
-    <!-- Scripts -->
-    <script src="assets/js/jquery-ui/external/jquery/jquery.js"></script>
-    <script src="assets/js/jquery-ui/jquery-ui.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/jsork.js"></script>
-    <script src="assets/js/moment.js"></script>
-    <script src="assets/js/nineBladesVoting.js"></script>
-  </body>
+    <!-- Sidebar -->
+    <div id="sidebar" class="noprint">
+      <div class="inner">
+
+        <!-- Menu -->
+        <nav id="menu">
+          <header class="major">
+            <h2>Menu</h2>
+          </header>
+          <ul>
+            <li><a href="index.html">Homepage</a></li>
+            <li>
+              <span class="opener">Reports</span>
+              <ul>
+                <li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
+                <li><a href="upcomingEvents.html">Upcoming Events</a></li>
+                <li><a href="aboutToLevel.html">About to Level</a></li>
+                <li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
+                <li><a href="topTenAverageParks.html">Top 10 Parks by
+                    attendance</a></li>
+                <li><a href="whereDoYouPlay.html">Where do you play?</a></li>
+                <li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
+                <li><a href="voVoting.html">Viridian Outlands Voting</a></li>
+                <li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
+                <li><a href="kingdomTitles.html">Kingdom Titles</a></li>
+                <li><a href="recentAwards.html">Recent Awards</a></li>
+                <li><a href="uniqueAttendance.html">Unique Attendance</a></li>
+                <li><a href="#">(more to come)</a></li>
+              </ul>
+            </li>
+            <li><a href="api.html">API Usage</a></li>
+          </ul>
+        </nav>
+
+        <!-- Footer -->
+        <footer id="footer">
+          <p class="copyright">jsork was written by Ken Walker.</p>
+        </footer>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/jquery-ui/external/jquery/jquery.js"></script>
+  <script src="assets/js/jquery-ui/jquery-ui.js"></script>
+  <script src="assets/js/browser.min.js"></script>
+  <script src="assets/js/breakpoints.min.js"></script>
+  <script src="assets/js/util.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/jsork.js"></script>
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/nineBladesVoting.js"></script>
+</body>
+
 </html>
