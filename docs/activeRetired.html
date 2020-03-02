@@ -1,12 +1,17 @@
 <!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html>
 
 <head>
-	<title>jsork - Kingdom Officers</title>
+	<title>jsork - Active but Retired</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
-	<link rel="stylesheet" href="assets/css/kingdomAwards.css" />
+	<link rel="stylesheet" href="assets/css/aboutToLevel.css" />
 </head>
 
 <body class="is-preload">
@@ -20,7 +25,7 @@
 
 				<!-- Header -->
 				<header id="header" class="noprint">
-					<a href="kingdomOfficers.html" class="logo noprint"><strong>jsork</strong> All Kingdom Officers</a>
+					<a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong> Active but Retired</a>
 					<ul class="icons noprint">
 						<li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span
 									class="label">Github</span></a></li>
@@ -33,25 +38,39 @@
 				<section class="noprintpadding">
 					<div class="noprint">
 						<header class="main">
-							<h2>All Kingdom Officers</h2>
+							<h2>Active but Retired</h2>
 						</header>
-						<p class="smallbottommargin">This report will show all the officers within a
-							Kingdom/Principality. If you see
-							an error in the officers, then tell either the Kingdom/Principality or the local Park and
-							get them to update it.
+						<p class="smallbottommargin">This report gets the list of players marked INACTIVE and checks to
+                            see if they have actually played in the last 8 months. If they have, then they should likely be marked
+                            as ACTIVE. If the report is empty for your park, all good. If there are players in the results,
+                            follow the link to the ORK player and toggle their status to ACTIVE vs. RETIRED.<br><br>
+                            Maybe the players were marked INACTIVE for another reason. But, any INACTIVE players will NOT
+                            appear in various ORK or jSORK reports.  For example all the VOTING reports.<br><br>
 						</p>
 						<label for="kingdom">
 							<h2>Choose a Kingdom or Principality</h2>
 						</label>
 						<select name="kingdom" id="kingdom"></select>
-						<h2 class="working" hidden>Generating report.....</h2>
+						<div id="parkselect" hidden="hidden">
+							<label for="park">
+								<h2>Choose a Park</h2>
+							</label>
+							<select name="park" id="park"></select>
+						</div>
+						<h2 class="working" hidden="hidden">Checking players.....</h2>
 					</div>
+					<h2 class="noplayers"></h2>
 					<div class="allresults" hidden>
-
+						<h3 class="printtitle smallbottommargin"></h3>
+						<div class="generateddate"></div>
+						<table id="playerTable" style="width:100%">
+							<tr>
+								<th class='left'>Player</th>
+								<th class='left'>Last Played</th>
+							</tr>
+						</table>
 					</div>
-
 				</section>
-
 			</div>
 		</div>
 
@@ -81,8 +100,8 @@
 								<li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
 								<li><a href="kingdomTitles.html">Kingdom Titles</a></li>
 								<li><a href="recentAwards.html">Recent Awards</a></li>
-								<li><a href="uniqueAttendance.html">Unique Attendance</a></li>
-								<li><a href="activeRetired.html">Retired but Active</a></li>
+                                <li><a href="uniqueAttendance.html">Unique Attendance</a></li>
+                                <li><a href="activeRetired.html">Retired but Active</a></li>
 								<li><a href="#">(more to come)</a></li>
 							</ul>
 						</li>
@@ -109,7 +128,7 @@
 	<script src="assets/js/main.js"></script>
 	<script src="assets/js/jsork.js"></script>
 	<script src="assets/js/moment.js"></script>
-	<script src="assets/js/kingdomOfficers.js"></script>
+	<script src="assets/js/activeRetired.js"></script>
 </body>
 
 </html>
