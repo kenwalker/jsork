@@ -1,14 +1,13 @@
 <!DOCTYPE HTML>
-
 <html>
 
 <head>
-  <title>jsork - Nine Blades Voting</title>
+  <title>jsork - Consolidate Credits</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1,
       user-scalable=no" />
   <link rel="stylesheet" href="assets/css/main.css" />
-  <link rel="stylesheet" href="assets/css/nineBladesVoting.css" />
+  <link rel="stylesheet" href="assets/css/consolidateCredits.css" />
 </head>
 
 <body class="is-preload">
@@ -22,8 +21,8 @@
 
         <!-- Header -->
         <header id="header" class="noprint">
-          <a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong>
-            Nine Blades Voting</a>
+          <a href="whereDoYouPlay.html" class="logo noprint"><strong>jsork</strong>
+            Consolidate Credits</a>
           <ul class="icons noprint">
             <li><a href="https://github.com/kenwalker/jsork" class="icon
                   brands fa-github"><span class="label">Github</span></a></li>
@@ -36,44 +35,39 @@
         <section class="noprintpadding">
           <div class="noprint">
             <header class="main">
-              <h2>Nine Blades Voting</h2>
+              <h2>Consolidate Credits</h2>
             </header>
-            <p class="smallbottommargin"><b>!! Experimental !!</b> This report will generate a list of
-              players within a Nine Blades park that can vote. A player must be 16 years or older, have a waiver signed
-              (membership requirement), attended 6 different weeks
-              in the last 6 months anywhere in the Nine Blades, be dues paid and not have joined within the
-              last six months. The Nine Blades Week starts on Monday and ends on Sunday.<br>
-              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
-              <b>Does not mark false any players who have played less than 6 months yet! So if you're unsure, please
-                verify by clicking on
-                their persona and looking in their ORK attendance.
-              </b><br>
-              <b>Does not mark false for age less than 16 because the ORK does not track age</b>
-              <br><br>
-              The whole list is provided here but the CSV export provides the week numbers that a person has attended
-              for verification.
+            <p class="smallbottommargin">You can search for a player and a
+              computed list of all their credits vs. what is listed as their credits is displayed.<br><br>
+              If there is a descrepency, maybe due to multiple class credits for an event, you can reconsile their
+              credits on the Admin page for a player.
             </p>
-            <div id="parkselect" hidden="hidden">
-              <label for="park">
-                <h2>Choose a Park</h2>
-              </label>
-              <select name="park" id="park"></select>
-            </div>
-            <h2 class="working" hidden="hidden">Generating player list.....</h2>
+            <section id="search" class="alt">
+              <input type="text" name="query" id="query" placeholder="Search" />
+            </section>
+            <ul class="actions" id="backToSearch" style="display: none;">
+              <li><a href="#" class="button" onClick="backToSearch()">Back to
+                  search</a></li>
+            </ul>
           </div>
-          <h2 class="noplayers"></h2>
-          <div class="allresults" hidden>
+          <div class="searchResults" hidden>
+            <table id="playerList" style="width:100%">
+              <tr>
+                <th class='left'>Persona</th>
+                <th class='left'>Username</th>
+                <th class='middle'>Park</th>
+                <th class='middle'>Kingdom/Principality</th>
+              </tr>
+            </table>
+          </div>
+          <div class="allResults" hidden>
             <h3 class="printtitle smallbottommargin"></h3>
             <div class="generateddate"></div>
-            <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy to
-              CSV</button>
             <table id="playerTable" style="width:100%">
               <tr>
-                <th class='left'>Player</th>
-                <th class='middle'>Can Vote</th>
-                <th class='middle'>Signed Waiver</th>
-                <th class='middle'>Dues Paid</th>
-                <th class='middle'>Weeks of attendance</th>
+                <th class='left'>Class</th>
+                <th class='left'>Computed Credits</th>
+                <th class='left'>Credits Listed</th>
               </tr>
             </table>
           </div>
@@ -104,7 +98,7 @@
                 <li><a href="whereDoYouPlay.html">Where do you play?</a></li>
                 <li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
                 <li><a href="rwVoting.html">Rising Window Voting</a></li>
-                <li><a href="voVoting.html">Viridian Outlands Voting</a></li>
+								<li><a href="voVoting.html">Viridian Outlands Voting</a></li>
                 <li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
                 <li><a href="kingdomTitles.html">Kingdom Titles</a></li>
                 <li><a href="recentAwards.html">Recent Awards</a></li>
@@ -137,7 +131,9 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jsork.js"></script>
   <script src="assets/js/moment.js"></script>
-  <script src="assets/js/nineBladesVoting.js"></script>
+  <script src="assets/js/qrcode.min.js"></script>
+  <script src="assets/js/dom-to-image.js"></script>
+  <script src="assets/js/consolidateCredits.js"></script>
 </body>
 
 </html>

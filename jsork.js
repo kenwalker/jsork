@@ -728,7 +728,8 @@
                 class: item.ClassName,
                 level: jsork._priv.levelForCredits(reconciledCredits),
                 aboutToLevel: jsork.aboutToLevelTo(reconciledCredits),
-                credits: reconciledCredits || 0
+                credits: reconciledCredits || 0,
+                reconciled: item.Reconciled || 0
               };
               result.push(nextClass);
             });
@@ -860,6 +861,32 @@
       var request =
           {
             MundaneId: mundaneID,
+            limit: 1
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Player/AttendanceForPlayer',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.player.getFirstAttendance = function(mundaneID) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            MundaneId: mundaneID,
+            order: 'asc',
             limit: 1
           };
       $.getJSON(ork + '?request=',
