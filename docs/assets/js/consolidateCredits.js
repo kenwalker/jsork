@@ -40,7 +40,7 @@ function doPlayer(mundaneId, element) {
   jsork.player.getClasses(mundaneId).then(function(classes) { 
     allClasses = classes;
     allClasses.forEach(function(aClass) {
-        aClass.consolidatedCredits = aClass.reconciled;
+        aClass.consolidatedCredits = 0;
     });
     jsork.player.getAttendance(mundaneId).then(function(attendance) {
         attendance.forEach(function(anAttendance) {
@@ -51,7 +51,7 @@ function doPlayer(mundaneId, element) {
         });
         allClasses.forEach(function(aClass) {
             var classHTMLLine = '<tr>';
-            var warning = (aClass.consolidatedCredits !== aClass.credits);
+            var warning = (aClass.consolidatedCredits > aClass.credits);
             classHTMLLine = classHTMLLine + '<td>' + aClass.class + '</td>';
             classHTMLLine = classHTMLLine + (warning ? '<td class="lightred">' : '<td>') + aClass.consolidatedCredits + '</td>';
             classHTMLLine = classHTMLLine + (warning ? '<td class="lightred">' : '<td>') + aClass.credits + '</td>';
