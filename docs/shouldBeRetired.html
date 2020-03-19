@@ -7,7 +7,7 @@
 <html>
 
 <head>
-	<title>jsork - Recent Awards</title>
+	<title>jsork - Should be Retired</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
@@ -25,7 +25,7 @@
 
 				<!-- Header -->
 				<header id="header" class="noprint">
-					<a href="recentAwards.html" class="logo noprint"><strong>jsork</strong> Recent Awards</a>
+					<a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong> Should be Retired</a>
 					<ul class="icons noprint">
 						<li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span
 									class="label">Github</span></a></li>
@@ -38,18 +38,15 @@
 				<section class="noprintpadding">
 					<div class="noprint">
 						<header class="main">
-							<h2>Recent Awards (within 8 months)</h2>
+							<h2>Should be Retired</h2>
 						</header>
-						<p class="smallbottommargin">This report will generate a list of recent awards for the players
-							of the selected park. Recent, in this case, was chosen to be within 8 months. Long enough to
-							span a whole term
-							and a bit for the Park Chancellor/Prime Minister. If you don't see a recently received
-							award, within a reasonable
-							amount of time for the Chancellor/Prime Minister to enter it, simply reach out politely to
-							them. <i>I have spoken</i>
-							<br>
-							You can copy the results to the clipboard
-							or print it and only the relevant information will be printed.
+						<p class="smallbottommargin">This report gets the list of players from a park and checks to
+                            see if they have actually played in the last 14 months. If they have not, then they should likely be marked
+                            as RETIRED. If the report is empty for your park, all good. If there are players in the results,
+                            follow the link to the ORK player and toggle their status to RETIRED vs. VISIBLE. If you are logged in to the ORK
+                            already, this should be extremely easy.<br><br>
+                            This will clean up all sorts of other report with players that are not actively playing. You can always
+                            mark them back ACTIVE when they return, and there's another report for checking that <a href="https://kenwalker.github.io/jsork/activeRetired.html">HERE</a></a>.<br><br>
 						</p>
 						<label for="kingdom">
 							<h2>Choose a Kingdom or Principality</h2>
@@ -67,14 +64,10 @@
 					<div class="allresults" hidden>
 						<h3 class="printtitle smallbottommargin"></h3>
 						<div class="generateddate"></div>
-						<button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy
-							to CSV</button>
 						<table id="playerTable" style="width:100%">
 							<tr>
 								<th class='left'>Player</th>
-								<th class='left'>Award Date</th>
-								<th class='left'>Award</th>
-								<th class='middle'>Award Rank if present</th>
+								<th class='left'>Last Played</th>
 							</tr>
 						</table>
 					</div>
@@ -108,10 +101,10 @@
 								<li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
 								<li><a href="kingdomTitles.html">Kingdom Titles</a></li>
 								<li><a href="recentAwards.html">Recent Awards</a></li>
-								<li><a href="uniqueAttendance.html">Unique Attendance</a></li>
+                                <li><a href="uniqueAttendance.html">Unique Attendance</a></li>
 								<li><a href="activeRetired.html">Retired but Active</a></li>
-								<li><a href="consolidateCredits.html">Consolidate Credits</a></li>
-								<li><a href="shouldBeRetired.html">Should be retired</a></li>
+                                <li><a href="consolidateCredits.html">Consolidate Credits</a></li>
+                                <li><a href="shouldBeRetired.html">Should be retired</a></li>
 								<li><a href="#">(more to come)</a></li>
 							</ul>
 						</li>
@@ -138,7 +131,7 @@
 	<script src="assets/js/main.js"></script>
 	<script src="assets/js/jsork.js"></script>
 	<script src="assets/js/moment.js"></script>
-	<script src="assets/js/recentAwards.js"></script>
+	<script src="assets/js/shouldBeRetired.js"></script>
 </body>
 
 </html>

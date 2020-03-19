@@ -57,7 +57,7 @@ function parkSelect(event, ui) {
 
   $('.working').attr('hidden', false);
   $('.working').text('Getting players....');
-  jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.INACTIVE).then(function(data) {
+  jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.ACTIVE).then(function(data) {
     var playersLeft = data.length;
     if (playersLeft === 0) {
       document.getElementById('kingdom').disabled = false;
@@ -68,7 +68,7 @@ function parkSelect(event, ui) {
     }
     data.forEach(function(player) {
       jsork.player.getLastAttendance(player.MundaneId).then(function(lastAttendance) {
-        if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) > moment().subtract(8, 'months')) {
+        if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) < moment().subtract(14, 'months')) {
             player.lastAttendance = lastAttendance[0].Date;
             playerList.push(player);
             $('.working').text('Number of players left to check ' + playersLeft);
@@ -92,7 +92,7 @@ function donePlayers() {
     document.getElementById('park').disabled = false;        
     // $('.noplayers').text('Generated on ' + new Date().toDateString());
     $('.working').attr('hidden', true);
-    $('.noplayers').text('There are no players marked INACTIVE that have played in the last 8 months');
+    $('.noplayers').text('There are no players marked ACTIVE that haven\'t played in 14 months');
     return;
   }
   playerList.sort(function(a, b) {
@@ -105,8 +105,8 @@ function donePlayers() {
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
     } else {
-      playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
-      aPlayer.MundaneId + '">' +
+      playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Admin/player/' +
+      aPlayer.MundaneId + '" target="_blank">' +
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
     playerHTMLLine += "<td>" + aPlayer.lastAttendance + "</td></tr>";
