@@ -105,7 +105,7 @@ function donePlayers() {
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
     } else {
-      playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+      playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Admin/player/' +
       aPlayer.MundaneId + '">' +
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
