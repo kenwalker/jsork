@@ -99,25 +99,48 @@ function parkSelect(event, ui) {
                 });
                 $('.working').text('Number of players left to check ' + playersLeft);
                 if (--playersLeft <= 0) {
-                  donePlayers();
+                  checkFirstAttendance();
                 }
               });
             } else {
               $('.working').text('Number of players left to check ' + playersLeft);
               if (--playersLeft <= 0) {
-                donePlayers();
+                checkFirstAttendance();
               }
             }
           })
         } else {
           $('.working').text('Number of players left to check ' + playersLeft);
           if (--playersLeft <= 0) {
-            donePlayers();
+            checkFirstAttendance();
           }
         }
       });
     });
   });
+}
+
+function checkFirstAttendance() {
+  var playersLeft = playerList.length;
+  if (playerList.length === 0) {
+    donePlayers();
+  } else {
+    $('.working').text('Checking first attendance date....');
+    playerList.forEach(function(aPlayer) {
+      jsork.player.getFirstAttendance(aPlayer.MundaneId).then(function(attendance) {
+        if (moment(attendance[0].Date) <= startDate) {
+          aPlayer.sixMonthsPlayed = true;
+        } else {
+          aPlayer.sixMonthsPlayed = false;
+        }
+        aPlayer.firstAttendance = attendance[0].Date;
+        $('.working').text('Number of players left to check first attendance ' + playersLeft);
+        if (--playersLeft <= 0) {
+          donePlayers();
+        }
+      });
+    });
+  }
 }
 
 function donePlayers() {
@@ -141,7 +164,7 @@ function donePlayers() {
   playerList.forEach(function(aPlayer) {
     var playerHTMLLine = '';
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
-    var canVote = aPlayer.DuesPaid && attendanceNumber >= 7;
+    var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -155,11 +178,12 @@ function donePlayers() {
       aPlayer.MundaneId + '">' +
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
-    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t';
+    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t'+ aPlayer.sixMonthsPlayed + '\t' + aPlayer.firstAttendance;
     playerHTMLLine += '<td class="middle">' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td><tr>';
+    playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;
@@ -184,7 +208,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tDays of Attendance\r\n';
+  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tDays of Attendance\tSix Months Played\tFirst Attendance\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
