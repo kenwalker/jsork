@@ -96,7 +96,7 @@ function donePlayers() {
     return;
   }
   playerList.sort(function(a, b) {
-    return a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
+    return a.Persona.toString().toLowerCase().localeCompare(b.Persona.toString().toLowerCase());
   });
   var lastPlayer = null;
   playerList.forEach(function(aPlayer) {
