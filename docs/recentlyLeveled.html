@@ -7,11 +7,11 @@
 <html>
 
 <head>
-	<title>jsork - Upcoming Events</title>
+	<title>jsork - Recently leveled</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
-	<link rel="stylesheet" href="assets/css/upcomingEvents.css" />
+	<link rel="stylesheet" href="assets/css/aboutToLevel.css" />
 </head>
 
 <body class="is-preload">
@@ -25,7 +25,7 @@
 
 				<!-- Header -->
 				<header id="header" class="noprint">
-					<a href="upcomingEvents.html" class="logo noprint"><strong>jsork</strong> Upcoming Events</a>
+					<a href="aboutToLevel.html" class="logo noprint"><strong>jsork</strong> Recently leveled</a>
 					<ul class="icons noprint">
 						<li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span
 									class="label">Github</span></a></li>
@@ -38,20 +38,39 @@
 				<section class="noprintpadding">
 					<div class="noprint">
 						<header class="main">
-							<h2>Upcoming Amtgard events</h2>
+							<h2>Recently leveled</h2>
 						</header>
-						<h2 class="working">Generating event list.....</h2>
+						<p class="smallbottommargin">This report will generate a list of <i>marked active</i> players
+							who have recently leveled a class within the last month. You can copy the results to the clipboard
+							or print it and only the relevant information will be printed.
+						</p>
+						<label for="kingdom">
+							<h2>Choose a Kingdom or Principality</h2>
+						</label>
+						<select name="kingdom" id="kingdom"></select>
+						<div id="parkselect" hidden="hidden">
+							<label for="park">
+								<h2>Choose a Park</h2>
+							</label>
+							<select name="park" id="park"></select>
+						</div>
+						<h2 class="working" hidden="hidden">Checking players.....</h2>
 					</div>
+					<h2 class="noplayers"></h2>
 					<div class="allresults" hidden>
-						<table id="eventTable" style="width:100%">
+						<h3 class="printtitle smallbottommargin"></h3>
+						<div class="generateddate"></div>
+						<button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy
+							to CSV</button>
+						<table id="playerTable" style="width:100%">
 							<tr>
-								<th class='left'>Kingdom</th>
-								<th class='left'>Park</th>
-								<th class='middle'>Event</th>
-								<th class='middle'>Date</th>
-								<th class='middle'>Description</th>
+								<th class='left'>Player</th>
+								<th class='middle'>Class</th>
+								<th class='middle'>Level</th>
+								<th class='middle'>When did they level</th>
 							</tr>
 						</table>
+					</div>
 				</section>
 			</div>
 		</div>
@@ -73,7 +92,7 @@
 								<li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
 								<li><a href="upcomingEvents.html">Upcoming Events</a></li>
 								<li><a href="aboutToLevel.html">About to Level</a></li>
-								<li><a href="recentAwards.html">Recently leveled</a></li>
+                                <li><a href="recentAwards.html">Recently leveled</a></li>
 								<li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
 								<li><a href="topTenAverageParks.html">Top 10 Parks by attendance</a></li>
 								<li><a href="whereDoYouPlay.html">Where do you play?</a></li>
@@ -114,7 +133,7 @@
 	<script src="assets/js/main.js"></script>
 	<script src="assets/js/jsork.js"></script>
 	<script src="assets/js/moment.js"></script>
-	<script src="assets/js/upcomingEvents.js"></script>
+	<script src="assets/js/recentlyLeveled.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-161484739-1"></script>
 	<script src="assets/js/google.js"></script>
 </body>
