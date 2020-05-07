@@ -99,7 +99,7 @@ function getAwards() {
     jsork.kingdom.playerAwardsPark(kingdomId, parkId, 0).then(function (awards) {
         // Only awards in the last 6 months
         awards = awards.filter(function(award) {
-            return moment(award.Date) > moment().subtract(8, 'months');
+            return moment(award.Date) > moment().subtract(6, 'months');
         });
         // Sort by Date
         awards.sort(function(a, b) {
