@@ -8,10 +8,13 @@ var incrementalDate;
 var endDate;
 var localPlayersOnly = true;
 var uniqueParkIDs = {};
+var uniqueKingdoms = {};
 var allCSV = '';
+var kingdomName = '';
 
 function kingdomSelect(event, ui) {
   uniqueParkIDs = {};
+  uniqueKingdoms = {};
   allCSV = '';
   localPlayersOnly = $('#localonly').is(":checked");
   startDate = moment($('#startdate').val());
@@ -21,6 +24,7 @@ function kingdomSelect(event, ui) {
     alert("End month before start month silly");
     return;
   }
+  kingdomName = $('#kingdom option:selected').text();
   $('.numberofuniqueplayers').text('');
   $('.allresults').attr('hidden', true);
   $('table').find('tr:gt(0)').remove();
@@ -38,30 +42,13 @@ function kingdomSelect(event, ui) {
     });
     var nextPark = data.shift();
     attendanceForPark(nextPark, data);
-    // var kSelect = $('#park');
-    // var emptyOption = $('<option>');
-    // emptyOption.html('Choose a Park');
-    // emptyOption.val(0);
-    // kSelect.append(emptyOption);
-    // data.forEach(function(park) {
-    //   if (park.Active === 'Active') {
-    //     var option = $('<option>');
-    //     option.html(park.Name);
-    //     option.val(park.ParkId);
-    //     kSelect.append(option);
-    //   }
-    // });
-    // $('#parkselect').attr('hidden', false);
-    // document.getElementById('kingdom').disabled = false;
-    // document.getElementById('park').disabled = false;
-    // document.getElementById('startdate').disabled = false;
-    // document.getElementById('enddate').disabled = false;
   });
 }
 
 function attendanceForPark(nextPark, remainingParks) {
   incrementalDate = moment($('#startdate').val());
   var parkNumber = nextPark.ParkId;
+  var kingdomNumber = nextPark.KingdomId;
   if (nextPark.Active !== 'Active') {
     if (remainingParks.length === 0) {
       doneParks();
@@ -98,6 +85,16 @@ function attendanceForPark(nextPark, remainingParks) {
           var uniqueMonthObj = uniqueParkMonthIDs[uniqueMonth];
           if (!uniqueMonthObj[attendance.MundaneId]) {
             uniqueMonthObj[attendance.MundaneId] = attendance;
+          }
+        }
+        if (!localPlayersOnly || attendance.FromKingdomName === kingdomName) {
+          var uniqueMonth = moment(attendance.Date).format("MMMM, YYYY");
+          if (!uniqueKingdoms[uniqueMonth]) {
+            uniqueKingdoms[uniqueMonth] = {};
+          }
+          var uniqueKingdomMonthObj = uniqueKingdoms[uniqueMonth];
+          if (!uniqueKingdomMonthObj[attendance.MundaneId]) {
+            uniqueKingdomMonthObj[attendance.MundaneId] = attendance;
           }
         }
       });
@@ -155,10 +152,31 @@ function doneParks() {
       parkHTMLLine += '<td class="middle">' + uniquesInMonth + '</td>';
       incrementalDate.add(1, 'months');
     }
-    parkHTMLLine += '</tr>';
     $('#playerTable').append(parkHTMLLine);
     playerContent += parkLine + '\r\n';
   });
+
+  // Do Kingdom attendance
+  incrementalDate = moment($('#startdate').val());
+  var kingdomTotalAttendance = 0;
+  Object.keys(uniqueKingdoms).forEach(function(aMonth) {
+    kingdomTotalAttendance += Object.keys(uniqueKingdoms[aMonth]).length;
+  });
+  var kingdomHTMLLine = '<tr><td class="left">' + kingdomName + '</td><td class="middle">' + Math.round(kingdomTotalAttendance/numberOfMonths) + '</td>';
+  var kingdomLine = kingdomName + '\t' + Math.round(kingdomTotalAttendance/numberOfMonths);
+  while (incrementalDate <= endDate) {
+    var monthValues = uniqueKingdoms[incrementalDate.format("MMMM, YYYY")];
+    var uniquesInMonth = 0;
+    if (monthValues) {
+      uniquesInMonth = Object.keys(monthValues).length;
+    }
+    kingdomLine += '\t' + uniquesInMonth;
+    kingdomHTMLLine += '<td class="middle">' + uniquesInMonth + '</td>';
+    incrementalDate.add(1, 'months');
+  }
+  $('#playerTable').append(kingdomHTMLLine);
+  playerContent += kingdomLine + '\r\n';
+
   $('.working').attr('hidden', true);
   $('.allresults').attr('hidden', false);
   document.getElementById('kingdom').disabled = false;
