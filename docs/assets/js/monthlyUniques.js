@@ -76,9 +76,6 @@ function attendanceForPark(nextPark, remainingParks) {
   $('table').find('tr:gt(0)').remove();
   $('.noplayers').text('');
   playerContent = '';
-  if (event.target.value === '0') {
-    return;
-  }
   numberOfDays = endDate.diff(startDate, "days") + 1;
   // $('.printtitle').text($('#kingdom option:selected').text() + ' - ' + $('#park option:selected').text());
   $('.generateddate').text('Generated on ' + new Date().toDateString());
