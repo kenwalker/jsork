@@ -153,8 +153,11 @@ function donePlayers() {
   }
   playerList.sort(function(a, b) {
     var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 7;
-    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 7;
+    // var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 7;
+    // var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 7;
+    // TEMPORARY
+    var canVoteA = a.DuesPaid && a.sixMonthsPlayed;
+    var canVoteB = b.DuesPaid && b.sixMonthsPlayed;;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -164,7 +167,9 @@ function donePlayers() {
   playerList.forEach(function(aPlayer) {
     var playerHTMLLine = '';
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
-    var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
+    // var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
+    // TEMPORARY
+    var canVote = aPlayer.DuesPaid && aPlayer.sixMonthsPlayed;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -182,7 +187,9 @@ function donePlayers() {
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+    // playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+    // Temporary
+    playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightgreen') + '">' + attendanceNumber + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
