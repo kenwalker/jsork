@@ -58,6 +58,7 @@ function parkSelect(event, ui) {
   $('.working').attr('hidden', false);
   $('.working').text('Getting players....');
   jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.INACTIVE).then(function(data) {
+    data = data.filter(function(aPlayer) { return aPlayer.Suspended === 0 });
     var playersLeft = data.length;
     if (playersLeft === 0) {
       document.getElementById('kingdom').disabled = false;
