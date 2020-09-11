@@ -7,6 +7,8 @@ var dotCount = 1;
 var callCount = 0;
 var today = moment();
 var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+// TEMPORARY 
+var twoYearDate = moment(today).subtract(24, 'months').isoWeekday(1).startOf('isoWeek');
 
 function initParks() {
   playerList = [];
@@ -78,7 +80,7 @@ function parkSelect(event, ui) {
     data.forEach(function(player) {
       updateWorkingMessage();
       jsork.player.getLastAttendance(player.MundaneId).then(function(lastAttendance) {
-        if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) >= startDate) {
+        if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) >= twoYearDate) {
           var playerWeeks = {};
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {

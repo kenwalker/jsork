@@ -46,6 +46,7 @@
   // var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
   // var ork = 'https://staging.amtgard.com/ork/orkservice/Json/index.php';
   var ork = 'https://ork.amtgard.com/orkservice/Json/index.php';
+  // ork = 'https://ork7.dev.amtgard.com/orkservice/Json/index.php'
 
   jsork.filters = {
     ACTIVE: 0,
@@ -315,6 +316,7 @@
     var promise = new Promise(function(resolve) {
       var request =
           {
+            Token: jsork.TOKEN,
             Id: kingdomId,
             Type: 'Kingdom'
           };
@@ -925,6 +927,28 @@
             Active: active ? 1:0,
             DuesDate: duesDate,
             DuesSemesters: semesters
+          }
+        },
+        function(data) {
+          resolve(data);
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.player.updatePlayerWaiver = function(mundaneId, waivered, active) {
+    var promise = new Promise(function(resolve) {
+      $.post(
+        ork + '?request=Player/UpdatePlayer',
+        {
+          call: 'Player/UpdatePlayer',
+          request: {
+            Token: jsork.TOKEN,
+            MundaneId: mundaneId,
+            Active: active ? 1:0,
+            Waivered: waivered ? 1:0,
           }
         },
         function(data) {
