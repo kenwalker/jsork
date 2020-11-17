@@ -163,8 +163,8 @@ function donePlayers() {
     var canVoteA = a.Waivered && a.DuesPaid && Object.keys(a.attendance).length >= 6 && a.sixMonthsPlayed;
     var canVoteB = b.Waivered && b.DuesPaid && Object.keys(b.attendance).length >= 6 && b.sixMonthsPlayed;
     // Temporary voting rules
-    canVoteA = a.Waivered && a.sixMonthsPlayed;
-    canVoteB = b.Waivered && b.sixMonthsPlayed;
+    canVoteA = a.Waivered && Object.keys(a.attendance).length >= 6 && a.sixMonthsPlayed;
+    canVoteB = b.Waivered && Object.keys(b.attendance).length >= 6 && b.sixMonthsPlayed;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -176,7 +176,8 @@ function donePlayers() {
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
     var canVote = aPlayer.Waivered && aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.sixMonthsPlayed;
     // Temporary rules for voting. Just need to have waiver signed
-    canVote = aPlayer.Waivered && aPlayer.sixMonthsPlayed;
+    canVote = aPlayer.Waivered && attendanceNumber >= 6 && aPlayer.sixMonthsPlayed;
+    // canVote = aPlayer.Waivered && aPlayer.sixMonthsPlayed;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -203,7 +204,7 @@ function donePlayers() {
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (true ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? aPlayer.DuesThrough : 'Pay Dues') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (true ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+    playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
 
     // TEMPORARY change back to these after voting returns to normal
