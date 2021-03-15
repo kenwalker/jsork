@@ -589,6 +589,30 @@
     return promise;
   };
 
+  jsork.park.getAllAttendance = function(parkID) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            ParkId: parkID
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/AttendanceSummary',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Dates);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
   jsork.park.getParkDays = function(parkID) {
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
@@ -1412,6 +1436,7 @@
     ORDER_OF_THE_FLAME: 34, ORDER_OF_THE_CROWN: 239, DEFENDER: 35, WEAPONMASTER: 36, PARAGON_ANTIPALADIN: 37, PARAGON_ARCHER: 38, PARAGON_ASSASSIN: 39,
     PARAGON_BARBARIAN: 40, PARAGON_BARD: 41, PARAGON_DRUID: 42, PARAGON_HEALER: 43, PARAGON_MONK: 44, PARAGON_MONSTER: 45,
     PARAGON_PALADIN: 46, PARAGON_PEASANT: 47, PARAGON_RAIDER: 48, PARAGON_SCOUT: 49, PARAGON_WARRIOR: 50, PARAGON_WIZARD: 51,
+    PARAGON_COLOR: 241, PARAGON_REEVE: 242,
     LORD: 52, LADY: 53, BARONET: 54, BARONETESS: 55, BARON: 56, BARONESS: 57, VISCOUNT: 58, VISCOUNTESS: 59, COUNT: 60,
     COUNTESS: 61, MARQUIS: 62, MARQUESS: 63, DUKE: 64, DUCHESS: 65, ARCHDUKE: 66, ARCHDUCHESS: 67, GRAND_DUKE: 68,
     GRAND_DUCHESS: 69, SHERIFF: 70, PROVINCIAL_BARON: 71, PROVINCIAL_BARONESS: 72, PROVINCIAL_DUKE: 73, PROVINCIAL_DUCHESS: 74,
