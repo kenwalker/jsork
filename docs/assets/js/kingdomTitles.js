@@ -7,6 +7,7 @@ var allPlayers = [];
 function kingdomSelect(event, ui) {
   stringOutput = '';
   allPlayers = [];
+  titlesonly = $('#titlesonly').is(":checked");
   $('.working').text('Generating report.....');
   $('.allresults').attr('hidden', true);
   $('table').find('tr:gt(0)').remove();
@@ -49,9 +50,17 @@ function getTitles(kingdomId) {
     $('#kingdomName').text(kingdom.KingdomName);
     jsork.kingdom.getPlayers(kingdomId, jsork.filters.ACTIVE).then(function(activePlayers) {
       // activePlayers = activePlayers.slice(0, 100);
-      var playersLeft = activePlayers.length;
-      activePlayers.forEach(function(player) {
+      var doPlayer = function() {
+        var player;
+        if (activePlayers.length === 0) {
+          outputResults();
+          return;
+        } else {
+          player = activePlayers.pop();
+          $('.working').text('Number of players left to check ' + activePlayers.length);
+        }
         jsork.player.getAwards(player.MundaneId, jsork.awardIDs.ALL).then(function(awards) {
+          var hasTitle = false;
           var knighthoods = [],
               longTitle = '',
               titles = awards.filter(function(award) {
@@ -62,6 +71,7 @@ function getTitles(kingdomId) {
                   award.Name.indexOf('Warlord') === -1;
               }).reverse();
           if (titles.length > 0) {
+            hasTitle = true;
             var topTitle = titles[0];
             var remainingTitles = titles.slice(1);
             longTitle = topTitle.KingdomAwardName ? topTitle.KingdomAwardName : topTitle.Name;
@@ -86,34 +96,35 @@ function getTitles(kingdomId) {
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_SERPENT; })
             || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the serpent/i); })) {
             knighthoods.push('Serpent');
+            hasTitle = true;
           }
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_FLAME; })
             || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the flame/i); })) {
             knighthoods.push('Flame');
+            hasTitle = true;
           }
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_SWORD; })
             || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the sword/i); })) {
             knighthoods.push('Sword');
+            hasTitle = true;
           }
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_CROWN; })
             || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the crown/i); })) {
             knighthoods.push('Crown');
+            hasTitle = true;
           }
           allPlayers.push( {
             ParkName: (player.ParkName || 'No Park'),
             Persona: (player.Persona || 'No persona for ID ' + player.MundaneId),
             MundaneId: player.MundaneId,
             longTitle: longTitle,
-            knighthoods: knighthoods
+            knighthoods: knighthoods,
+            hasTitle: hasTitle
           });
-
-          if (--playersLeft <= 0) {
-            outputResults();
-          } else {
-            $('.working').text('Number of players left to check ' + playersLeft);
-          }
+          doPlayer();
         });
-      });
+      };
+      doPlayer();
     });
   });
 }
@@ -140,38 +151,39 @@ function outputResults() {
     playerHTMLLine += '<td>' + player.longTitle + '</td>';
     if (player.knighthoods.includes('Crown')) {
       playerLine += 'Yes\t';
-      playerHTMLLine += '<td>Yes</td>';
+      playerHTMLLine += '<td>Crown</td>';
     } else {
       playerLine += '\t';
       playerHTMLLine += '<td></td>';
     }
     if (player.knighthoods.includes('Flame')) {
       playerLine += 'Yes\t';
-      playerHTMLLine += '<td>Yes</td>';
+      playerHTMLLine += '<td>Flame</td>';
     } else {
       playerLine += '\t';
       playerHTMLLine += '<td></td>';
     }
     if (player.knighthoods.includes('Serpent')) {
       playerLine += 'Yes\t';
-      playerHTMLLine += '<td>Yes</td>';
+      playerHTMLLine += '<td>Serpent</td>';
     } else {
       playerLine += '\t';
       playerHTMLLine += '<td></td>';
     }
     if (player.knighthoods.includes('Sword')) {
       playerLine += 'Yes';
-      playerHTMLLine += '<td>Yes</td>';
+      playerHTMLLine += '<td>Sword</td>';
     } else {
       playerHTMLLine += '<td></td>';
     }
-
-    $('#titleTable').append(playerHTMLLine);
-    stringOutput += playerLine + '\r\n';
-    $('.allresults').attr('hidden', false);
-    $('#kingdom').selectmenu('option', 'disabled', false);
-    $('.working').attr('hidden', true);
+    if (!titlesonly || player.hasTitle) {
+      $('#titleTable').append(playerHTMLLine);
+      stringOutput += playerLine + '\r\n';  
+    }
   });
+  $('.allresults').attr('hidden', false);
+  $('#kingdom').selectmenu('option', 'disabled', false);
+  $('.working').attr('hidden', true);
 }
 
 function copyTextToClipboard(str) {
