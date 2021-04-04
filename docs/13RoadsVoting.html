@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>jsork - 13 Roads Voting</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1,
+      user-scalable=no" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/nineBladesVoting.css" />
+</head>
+
+<body class="is-preload">
+
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+
+        <!-- Header -->
+        <header id="header" class="noprint">
+          <a href="rwVoting.html" class="logo noprint"><strong>jsork</strong>
+            13 Roads Voting</a>
+          <ul class="icons noprint">
+            <li><a href="https://github.com/kenwalker/jsork" class="icon
+                  brands fa-github"><span class="label">Github</span></a></li>
+            <li><a href="https://www.facebook.com/mORKmobile" class="icon
+                  brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+          </ul>
+        </header>
+
+        <!-- Content -->
+        <section class="noprintpadding">
+          <div class="noprint">
+            <header class="main">
+              <h2>13 Roads Voting</h2>
+            </header>
+            <p class="smallbottommargin">
+              This report will generate a list of
+              players within a 13 Roads park that can vote. A player must have attended 6 different days
+              in the last 6 months at their own park, have signed a waiver, and be dues paid. Only one credit per
+              week is used for the 6 in 6.<br><br>
+              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
+              <br>
+              <h3>TEMPORARY 13 ROADS VOTING REQUIREMENTS:</h3>
+              Currently the waivered status and dues status are not required. The values are still listed in the report
+                  but it does not impact the results.<br>
+              The whole list is provided here and you can use the CSV export to copy the results to a spreadsheet.
+            </p>
+            <div id="parkselect" hidden="hidden">
+              <label for="park">
+                <h2>Choose a Park</h2>
+              </label>
+              <select name="park" id="park"></select>
+            </div>
+            <h2 class="working" hidden="hidden">Generating player list.....</h2>
+          </div>
+          <h2 class="noplayers"></h2>
+          <div class="allresults" hidden>
+            <h3 class="printtitle smallbottommargin"></h3>
+            <div class="generateddate"></div>
+            <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy to
+              CSV</button>
+            <table id="playerTable" style="width:100%">
+              <tr>
+                <th class='left'>Player</th>
+                <th class='middle'>Can Vote</th>
+                <th class='middle'>Signed Waiver</th>
+                <th class='middle'>Dues Paid</th>
+                <th class='middle'>Days of attendance</th>
+              </tr>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="noprint">
+      <div class="inner">
+
+        <!-- Menu -->
+        <nav id="menu">
+          <header class="major">
+            <h2>Menu</h2>
+          </header>
+          <ul>
+            <li><a href="index.html">Homepage</a></li>
+            <li>
+              <span class="opener">Reports</span>
+              <ul>
+                <li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
+                <li><a href="upcomingEvents.html">Upcoming Events</a></li>
+                <li><a href="aboutToLevel.html">About to Level</a></li>
+                <li><a href="recentAwards.html">Recently leveled</a></li>
+                <li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
+                <li><a href="topTenAverageParks.html">Top 10 Parks by
+                    attendance</a></li>
+                <li><a href="whereDoYouPlay.html">Where do you play?</a></li>
+                <li><a href="emeraldHillsVoting.html">Emerald Hills Voting</a></li>
+                <li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
+                <li><a href="nlVoting.html">Northern Lights Voting</a></li>
+                <li><a href="rwVoting.html">Rising Winds Voting</a></li>
+                <li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
+                <li><a href="kingdomTitles.html">Kingdom Titles</a></li>
+                <li><a href="recentAwards.html">Recent Awards</a></li>
+                <li><a href="uniqueAttendance.html">Unique Attendance</a></li>
+                <li><a href="activeRetired.html">Retired but Active</a></li>
+                <li><a href="consolidateCredits.html">Consolidate Credits</a></li>
+                <li><a href="shouldBeRetired.html">Should be retired</a></li>
+                <li><a href="monthlyUniques.html">Monthly Kingdom Uniques</a></li>
+                <li><a href="#">(more to come)</a></li>
+              </ul>
+            </li>
+            <li><a href="api.html">API Usage</a></li>
+          </ul>
+        </nav>
+
+        <!-- Footer -->
+        <footer id="footer">
+          <p class="copyright">jsork was written by Ken Walker.</p>
+        </footer>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/jquery-ui/external/jquery/jquery.js"></script>
+  <script src="assets/js/jquery-ui/jquery-ui.js"></script>
+  <script src="assets/js/browser.min.js"></script>
+  <script src="assets/js/breakpoints.min.js"></script>
+  <script src="assets/js/util.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/jsork.js"></script>
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/13RoadsVoating.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161484739-1"></script>
+  <script src="assets/js/google.js"></script>
+</body>
+
+</html>
