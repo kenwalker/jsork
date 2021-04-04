@@ -7,7 +7,7 @@ var monthAway = moment().add(1, 'months');
 var playerBirthdays = [];
 
 function kingdomSelect(event, ui) {
-    playerList = [];
+    playerBirthdays = [];
     $('.allresults').attr('hidden', true);
     $('table').find('tr:gt(0)').remove();
     $('.noplayers').text(' ');
@@ -46,7 +46,7 @@ function parkSelect(event, ui) {
     $('.allresults').attr('hidden', true);
     $('table').find('tr:gt(0)').remove();
     $('.noplayers').text('');
-    playerList = [];
+    playerBirthdays = [];
     playerContent = '';
     if (event.target.value === '0') {
       return;
