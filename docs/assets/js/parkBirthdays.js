@@ -5,9 +5,11 @@ var numberOfParks = 0;
 var today = moment().subtract(7, 'days');
 var monthAway = moment().add(1, 'months');
 var playerBirthdays = [];
+var allPlayers = false;
 
 function kingdomSelect(event, ui) {
     playerBirthdays = [];
+    allPlayers = $('#allplayers').is(":checked");
     $('.allresults').attr('hidden', true);
     $('table').find('tr:gt(0)').remove();
     $('.noplayers').text(' ');
@@ -46,6 +48,7 @@ function parkSelect(event, ui) {
     $('.allresults').attr('hidden', true);
     $('table').find('tr:gt(0)').remove();
     $('.noplayers').text('');
+    allPlayers = $('#allplayers').is(":checked");
     playerBirthdays = [];
     playerContent = '';
     if (event.target.value === '0') {
@@ -114,7 +117,7 @@ function getBirthdays(parkId) {
             if (attendance && attendance[0]) {
                 var birthDate = moment(attendance[0].Date);
                 var thisYearBirthday = birthDate.clone().set('year', moment().year());
-                if (thisYearBirthday >= today && thisYearBirthday <= monthAway) {
+                if (allPlayers || (thisYearBirthday >= today && thisYearBirthday <= monthAway)) {
                     player.birthDate = birthDate;
                     player.age = moment().year() - birthDate.year();
                     playerBirthdays.push(player);
@@ -130,19 +133,24 @@ function getBirthdays(parkId) {
 function done() {
     if (playerBirthdays.length === 0) {
         document.getElementById('kingdom').disabled = false;
-        document.getElementById('park').disabled = false;        
-        // $('.noplayers').text('Generated on ' + new Date().toDateString());
+        document.getElementById('park').disabled = false;
         $('.working').attr('hidden', true);
         $('.noplayers').text('There are no players with Amtgard birthdays');
         return;
       }
-      playerBirthdays.sort(function(a, b) {
-          var aBirthday = a.birthDate.clone();
-          aBirthday.set('year', moment().year());
-          var bBirthday = b.birthDate.clone();
-          bBirthday.set('year', moment().year());
-        return aBirthday - bBirthday;
-      });
+      if (allPlayers) {
+        playerBirthdays.sort(function(a, b) {
+          return a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
+        });
+      } else {
+        playerBirthdays.sort(function(a, b) {
+            var aBirthday = a.birthDate.clone();
+            aBirthday.set('year', moment().year());
+            var bBirthday = b.birthDate.clone();
+            bBirthday.set('year', moment().year());
+          return aBirthday - bBirthday;
+        });
+      }
       var lastPlayer = null;
       playerBirthdays.forEach(function(aPlayer) {
         var playerHTMLLine = '';
