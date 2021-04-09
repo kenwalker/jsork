@@ -55,6 +55,7 @@ function kingdomSelect(event, ui) {
 function parkSelect(event, ui) {
   playerList = [];
   uniquePlayerIDs = {};
+  localPlayersOnly = $('#localonly').is(":checked");
   startDate = moment($('#startdate').val());
   endDate = moment($('#enddate').val());
   if (startDate > endDate) {
@@ -81,10 +82,15 @@ function parkSelect(event, ui) {
   $('.working').text('Getting ' + numberOfDays + ' days of attendance....');
 
   for (var m = startDate; startDate.isSameOrBefore(endDate); startDate.add(1, 'days')) {
-    jsork.park.getAttendance(parseInt(event.target.value, 10), startDate.toDate()).then(function(attendanceForDay) {
+    var parkId = parseInt(event.target.value, 10);
+    jsork.park.getAttendance(parkId, startDate.toDate()).then(function(attendanceForDay) {
       attendanceForDay.forEach(function(player) {
-        if (!uniquePlayerIDs[player.MundaneId]) {
-          uniquePlayerIDs[player.MundaneId] = player;
+        if (localPlayersOnly && player.FromParkId !== parkId) {
+
+        } else {
+          if (!uniquePlayerIDs[player.MundaneId]) {
+            uniquePlayerIDs[player.MundaneId] = player;
+          }
         }
       });
       numberOfDays--;
