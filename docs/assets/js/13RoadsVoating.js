@@ -84,8 +84,12 @@ function parkSelect(event, ui) {
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
-                if (attendance.ParkId === parkId) {
-                    playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+                if (attendance.KingdomId === 38) {
+                  if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
+                    playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
+                  }
+                  playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
+                  // playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
                 }
               }
             });
