@@ -85,11 +85,11 @@ function parkSelect(event, ui) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
                 if (attendance.KingdomId === 38) {
-                  if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
-                    playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
-                  }
-                  playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
-                  // playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+                  // if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
+                  //   playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
+                  // }
+                  // playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
+                  playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
                 }
               }
             });
