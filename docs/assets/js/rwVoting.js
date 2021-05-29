@@ -8,7 +8,7 @@ var callCount = 0;
 var today = moment();
 var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
 // TEMPORARY 
-var twoYearDate = moment(today).subtract(24, 'months').isoWeekday(1).startOf('isoWeek');
+var twoYearDate = moment(today).subtract(48, 'months').isoWeekday(1).startOf('isoWeek');
 
 function initParks() {
   playerList = [];
