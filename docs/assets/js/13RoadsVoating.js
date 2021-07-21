@@ -169,8 +169,8 @@ function donePlayers() {
     // Temporary rules
     // var canVoteA = a.DuesPaid && a.Waivered && Object.keys(a.attendance).length >= 6;
     // var canVoteB = b.DuesPaid && b.Waivered && Object.keys(b.attendance).length >= 6;
-    var canVoteA = Object.keys(a.attendance).length >= 6;
-    var canVoteB = Object.keys(b.attendance).length >= 6;
+    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6;
+    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -183,7 +183,7 @@ function donePlayers() {
     // var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
     // TEMPORARY
     // var canVote = aPlayer.DuesPaid && aPlayer.Waivered && attendanceNumber >= 6;
-    var canVote = attendanceNumber >= 6;
+    var canVote = aPlayer.DuesPaid && attendanceNumber >= 6;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -203,7 +203,7 @@ function donePlayers() {
     // playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
     // TEMPORARY
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightgreen') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightgreen') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Should Pay Dues') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
