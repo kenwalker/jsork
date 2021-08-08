@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<title>jsork - Family Trees</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="assets/css/familyTrees.css" />
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Main -->
+		<div id="main">
+			<div class="inner">
+
+				<!-- Header -->
+				<header id="header" class="noprint">
+					<a href="upcomingEvents.html" class="logo noprint"><strong>jsork</strong> Family Trees</a>
+					<ul class="icons noprint">
+						<li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span
+									class="label">Github</span></a></li>
+						<li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span
+									class="label">Facebook</span></a></li>
+					</ul>
+				</header>
+
+				<!-- Content -->
+				<section class="noprintpadding">
+					<div class="noprint">
+						<header class="main">
+							<h2>Family Trees</h2>
+						</header>
+						<div id="explanation">
+							<p>A family tree in Amtgard includes those that have been Paged, Squired, Woman-at-Arms, or
+								Man-at-Arms to another
+								player. The ORK only shows your titles but does not show who you may have given these
+								titles to. In addition,
+								many of these titles were given before the current ORK and only show up as <i>"Historical
+								Imports"</i>. These are not
+								included in the results shown in this tool. If you search a name below and either the
+								search shows <i>"There's no family tree info"</i>
+								or after you click on a name and the resulting tree does NOT look complete, you may have
+								to talk to a local Prime Minister
+								or a Kingdom/Principality Prime Minister about updating an ORK profile to have the correct family tree
+								information.
+							</p>
+							<p>The information used for this tool is aquired by running an extensive query once in a
+								while and saving the results. It is not computed live from ORK data. So if you have updated yours or
+								anothers ORK profile to have the correct family tree information, it may take a while to
+								show up. Ping kismet [at] felfrost.ca
+								if you'd like it regenerated on demand.
+							</p>
+						</div>
+					</div>
+					<p class="smallbottommargin" id="searchforaplayer">Search for a player and see if that player has a family tree. Click on
+						the name if they do and navigate
+						by clicking on the various individuals names. The tree will redraw accordingly. Remember you can use abbreviations
+						in the search like "nb: kismet" to only search in the Nine Blades or "kop:mtd hammer" to only look in Mystic Dawn.
+					</p>
+					<section id="search" class="alt">
+						<input type="text" name="query" id="query" placeholder="Enter player name, use Kingdom/Park Abbreviations to narrow search" />
+					</section>
+					<ul class="actions" id="backToSearch" style="display: none;">
+						<li><a href="#" class="button" onClick="backToSearch()">Back to
+								search</a></li>
+					</ul>
+					<div class="searchResults defaultCursor" hidden>
+						<table class="defaultCursor" id="playerList" style="width:100%">
+							<tr>
+								<th class='left'>Persona</th>
+								<th class='left'>Username</th>
+								<th class='left'>Family Tree Information</th>
+							</tr>
+						</table>
+					</div>
+					<div id="myDiagramHelp" style="display: none">
+						You can click on the individual nodes to refocus the tree on that individual's family tree<br><br>
+					</div>
+					<div id="myDiagramDiv"
+						style="display: none;background-color: white; border: solid 1px black; width: 100%; height: 800px">
+					</div>
+
+				</section>
+			</div>
+		</div>
+
+		<!-- Sidebar -->
+		<div id="sidebar" class="noprint">
+			<div class="inner">
+
+				<!-- Menu -->
+				<nav id="menu">
+					<header class="major">
+						<h2>Menu</h2>
+					</header>
+					<ul>
+						<li><a href="index.html">Homepage</a></li>
+						<li>
+							<span class="opener">Reports</span>
+							<ul>
+								<li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
+								<li><a href="upcomingEvents.html">Upcoming Events</a></li>
+								<li><a href="aboutToLevel.html">About to Level</a></li>
+								<li><a href="recentAwards.html">Recently leveled</a></li>
+								<li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
+								<li><a href="topTenAverageParks.html">Top 10 Parks by attendance</a></li>
+								<li><a href="whereDoYouPlay.html">Where do you play?</a></li>
+								<li><a href="emeraldHillsVoting.html">Emerald Hills Voting</a></li>
+								<li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
+								<li><a href="nlVoting.html">Northern Lights Voting</a></li>
+								<li><a href="rwVoting.html">Rising Winds Voting</a></li>
+								<li><a href="voVoting.html">Viridian Outlands Voting</a></li>
+								<li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
+								<li><a href="kingdomTitles.html">Kingdom Titles</a></li>
+								<li><a href="recentAwards.html">Recent Awards</a></li>
+								<li><a href="uniqueAttendance.html">Unique Attendance</a></li>
+								<li><a href="activeRetired.html">Retired but Active</a></li>
+								<li><a href="consolidateCredits.html">Consolidate Credits</a></li>
+								<li><a href="shouldBeRetired.html">Should be retired</a></li>
+								<li><a href="monthlyUniques.html">Monthly Kingdom Uniques</a></li>
+								<li><a href="#">(more to come)</a></li>
+							</ul>
+						</li>
+						<li><a href="api.html">API Usage</a></li>
+					</ul>
+				</nav>
+
+				<!-- Footer -->
+				<footer id="footer">
+					<p class="copyright">jsork was written by Ken Walker.</p>
+				</footer>
+
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery-ui/external/jquery/jquery.js"></script>
+	<script src="assets/js/jquery-ui/jquery-ui.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="assets/js/jsork.js"></script>
+	<script src="assets/js/moment.js"></script>
+	<script src="assets/js/familyTrees.js"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-161484739-1"></script>
+	<script src="assets/js/google.js"></script>
+	<script src="assets/js/go.js"></script>
+</body>
+
+</html>

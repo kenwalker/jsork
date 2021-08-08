@@ -1,0 +1,48 @@
+
+.left {
+    text-align: left;
+  }
+  .defaultCursor {
+    cursor: default;
+  }
+  .pointerCursor {
+    cursor: pointer;
+  }
+  .middle {
+    text-align: center;
+  }
+  
+  .kingdom {
+    width: 400px;
+  }
+  
+  .lightgreen {
+    background-color: #DCECD2;
+  }
+  .green {
+    background-color: lightgreen;
+  }
+  
+  .lightred {
+    background-color: #DFA89F;
+  }
+  
+  .red {
+    background-color: rgb(206, 92, 79);
+  }
+  
+  .lightblue {
+    background-color: #C4D8F0;
+  }
+  
+  .blue {
+    background-color: #93B3F1;
+  }
+  
+  .gold {
+    background-color: goldenrod;
+  }
+  
+  .lightgold {
+    background-color:rgb(245, 220, 138);
+  }
