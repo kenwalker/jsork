@@ -67,6 +67,7 @@ function getTitles(kingdomId) {
                 return award.IsTitle &&
                   award.Name.indexOf('Knight') === -1 &&
                   award.Name.indexOf('Master') === -1 &&
+                  award.Name.indexOf('Battlemaster') === -1 &&
                   award.Name.indexOf('Paragon') === -1 &&
                   award.Name.indexOf('Warlord') === -1;
               }).reverse();
@@ -93,23 +94,28 @@ function getTitles(kingdomId) {
           }
 
           // Compute knighthoods
+          if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_BATTLE; })
+            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName !== null && award.CustomAwardName.match(/knight of battle/i); })) {
+            knighthoods.push('Battle');
+            hasTitle = true;
+          }
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_SERPENT; })
-            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the serpent/i); })) {
+            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName !== null && award.CustomAwardName.match(/knight of the serpent/i); })) {
             knighthoods.push('Serpent');
             hasTitle = true;
           }
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_FLAME; })
-            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the flame/i); })) {
+            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName !== null && award.CustomAwardName.match(/knight of the flame/i); })) {
             knighthoods.push('Flame');
             hasTitle = true;
           }
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_SWORD; })
-            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the sword/i); })) {
+            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName !== null && award.CustomAwardName.match(/knight of the sword/i); })) {
             knighthoods.push('Sword');
             hasTitle = true;
           }
           if (awards.find(function(award) { return award.AwardId === jsork.awardIDs.KNIGHT_OF_THE_CROWN; })
-            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName.match(/knight of the crown/i); })) {
+            || awards.find(function(award) { return award.AwardId === 94 && award.CustomAwardName !== null && award.CustomAwardName.match(/knight of the crown/i); })) {
             knighthoods.push('Crown');
             hasTitle = true;
           }
@@ -149,6 +155,13 @@ function outputResults() {
       (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
     playerLine += player.longTitle + '\t';
     playerHTMLLine += '<td>' + player.longTitle + '</td>';
+    if (player.knighthoods.includes('Battle')) {
+      playerLine += 'Yes\t';
+      playerHTMLLine += '<td>Battle</td>';
+    } else {
+      playerLine += '\t';
+      playerHTMLLine += '<td></td>';
+    }
     if (player.knighthoods.includes('Crown')) {
       playerLine += 'Yes\t';
       playerHTMLLine += '<td>Crown</td>';
@@ -196,7 +209,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyTitlesToClipboard() {
-  var allCSV = 'Park\tPersona\tTitles or None\tCrown\tFlame\tSerpent\tSword\r\n';
+  var allCSV = 'Park\tPersona\tTitles or None\tBattle\tCrown\tFlame\tSerpent\tSword\r\n';
   allCSV += stringOutput;
   copyTextToClipboard(allCSV);
 }
