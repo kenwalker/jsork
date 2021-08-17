@@ -34,6 +34,13 @@ th, td {
   background-color: lightgreen;
 }
 
+.lightpurple {
+  background-color: plum;
+}
+.purple {
+  background-color: mediumpurple;
+}
+
 .lightred {
   background-color: #DFA89F;
 }
