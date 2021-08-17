@@ -4,7 +4,7 @@
 var remembered = [];
 var numberOfPlayers = 0;
 var minimumRank = 0;
-var crownContent, serpentContent, flameContent, swordContent;
+var battleContent, crownContent, serpentContent, flameContent, swordContent;
 
 window.remembered = remembered;
 
@@ -88,6 +88,58 @@ function getAwards(kingdomId) {
       return a.Persona.localeCompare(b.Persona);
     });
 
+      // do the battle
+      var content = '';
+      var htmlContent = '';
+      var battleCandidates = allPlayers.filter(function(player) {
+        return player['Battlemaster'] ||
+          player['Order of Battle'] && player['Order of Battle'].Rank >= minimumRank ||
+          player['Knight of Battle'];
+      });
+      battleCandidates.forEach(function(player) {
+        var playerLine =
+            player.ParkName + '\t' +
+            (player.Persona || 'No persona for ID ' + player.MundaneId) + '\t';
+        var playerHTMLLine = '<tr><td>' +
+          player.ParkName + '</td><td>' +
+          '<a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+          player.MundaneId + '">' +
+          (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
+        if (player['Battlemaster']) {
+          playerLine = playerLine + 'Master\t';
+          playerHTMLLine = playerHTMLLine + '<td class="middle gold">Master</td>';
+        } else if (player['Order of Battle'] && player['Order of Battle'].Rank >= minimumRank) {
+          playerLine = playerLine + player['Order of Battle'].Rank + '\t';
+          playerHTMLLine = playerHTMLLine + '<td class="middle';
+          if (player['Order of Battle'].Rank > 7) {
+            playerHTMLLine = playerHTMLLine + ' lightgold">' + player['Order of Battle'].Rank + '</td>';
+          } else {
+            playerHTMLLine = playerHTMLLine + '">' + player['Order of Battle'].Rank + '</td>';
+          }
+        } else {
+          playerLine = playerLine + '\t';
+          playerHTMLLine = playerHTMLLine + '<td class=middle></td>';
+        }
+        playerLine = playerLine + (player['Knight of Battle'] ? 'TRUE\t' : 'FALSE\t');
+        if (player['Knight of Battle']) {
+          playerHTMLLine = playerHTMLLine + '<td class="middle gold">Yes</td>';
+        } else {
+          playerHTMLLine = playerHTMLLine + '<td class="middle lightgold">No</td>';
+        }
+        playerLine = playerLine + (player['Knight of the Crown'] ? 'TRUE\t' : 'FALSE\t');
+        playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Crown'] ? 'Yes' : 'No') + '</td>';
+        playerLine = playerLine + (player['Knight of the Flame'] ? 'TRUE\t' : 'FALSE\t');
+        playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Flame'] ? 'Yes' : 'No') + '</td>';
+        playerLine = playerLine + (player['Knight of the Serpent'] ? 'TRUE\t' : 'FALSE\t');
+        playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Serpent'] ? 'Yes' : 'No') + '</td>';
+        playerLine = playerLine + (player['Knight of the Sword'] ? 'TRUE' : 'FALSE');
+        playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Sword'] ? 'Yes' : 'No') + '</td>';
+        content = content + playerLine + '\r\n';
+        htmlContent = htmlContent + playerHTMLLine + '</tr>';
+      });
+      battleContent = content;
+      $('#battleTable').append(htmlContent);
+  
     // do the crowns
     var content = '';
     var htmlContent = '';
@@ -120,6 +172,8 @@ function getAwards(kingdomId) {
         playerLine = playerLine + '\t';
         playerHTMLLine = playerHTMLLine + '<td class=middle></td>';
       }
+      playerLine = playerLine + (player['Knight of Battle'] ? 'TRUE\t' : 'FALSE\t');
+      playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of Battle'] ? 'Yes' : 'No') + '</td>';
       playerLine = playerLine + (player['Knight of the Crown'] ? 'TRUE\t' : 'FALSE\t');
       if (player['Knight of the Crown']) {
         playerHTMLLine = playerHTMLLine + '<td class="middle gold">Yes</td>';
@@ -204,6 +258,8 @@ function getAwards(kingdomId) {
         playerLine = playerLine + '\t';
         playerHTMLLine = playerHTMLLine + '<td class=middle></td>';
       }
+      playerLine = playerLine + (player['Knight of Battle'] ? 'TRUE\t' : 'FALSE\t');
+      playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of Battle'] ? 'Yes' : 'No') + '</td>';
       playerLine = playerLine + (player['Knight of the Crown'] ? 'TRUE\t' : 'FALSE\t');
       playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Crown'] ? 'Yes' : 'No') + '</td>';
       playerLine = playerLine + (player['Knight of the Flame'] ? 'TRUE\t' : 'FALSE\t');
@@ -288,6 +344,8 @@ function getAwards(kingdomId) {
         playerLine = playerLine + '\t';
         playerHTMLLine = playerHTMLLine + '<td class=middle></td>';
       }
+      playerLine = playerLine + (player['Knight of Battle'] ? 'TRUE\t' : 'FALSE\t');
+      playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of Battle'] ? 'Yes' : 'No') + '</td>';
       playerLine = playerLine + (player['Knight of the Crown'] ? 'TRUE\t' : 'FALSE\t');
       playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Crown'] ? 'Yes' : 'No') + '</td>';
       playerLine = playerLine + (player['Knight of the Flame'] ? 'TRUE\t' : 'FALSE\t');
@@ -339,6 +397,8 @@ function getAwards(kingdomId) {
         playerHTMLLine = playerHTMLLine + '<td class=middle></td>';
       }
 
+      playerLine = playerLine + (player['Knight of Battle'] ? 'TRUE\t' : 'FALSE\t');
+      playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of Battle'] ? 'Yes' : 'No') + '</td>';
       playerLine = playerLine + (player['Knight of the Crown'] ? 'TRUE\t' : 'FALSE\t');
       playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Crown'] ? 'Yes' : 'No') + '</td>';
       playerLine = playerLine + (player['Knight of the Flame'] ? 'TRUE\t' : 'FALSE\t');
@@ -419,26 +479,33 @@ function copyTextToClipboard(str) {
   document.body.removeChild(el);
 }
 
+function copyBattleToClipboard() {
+  var allCSV = 'Park\tPersona\tBattle Order\tBattle\tCrown\tFlame\tSerpent\tSword\r\n';
+  allCSV += battleContent;
+  copyTextToClipboard(allCSV);
+}
+
+
 function copyCrownToClipboard() {
-  var allCSV = 'Park\tPersona\tCrown Order\tCrown\tFlame\tSerpent\tSword\r\n';
+  var allCSV = 'Park\tPersona\tCrown Order\tBattle\tCrown\tFlame\tSerpent\tSword\r\n';
   allCSV += crownContent;
   copyTextToClipboard(allCSV);
 }
 
 function copyFlameToClipboard() {
-  var allCSV = 'Park\tPersona\tLion\tRose\tSmith\tCrown\tFlame\tSerpent\tSword\r\n';
+  var allCSV = 'Park\tPersona\tLion\tRose\tSmith\tBattle\tCrown\tFlame\tSerpent\tSword\r\n';
   allCSV += flameContent;
   copyTextToClipboard(allCSV);
 }
 
 function copySerpentToClipboard() {
-  var allCSV = 'Park\tPersona\tDragon\tGarber\tOwl\tCrown\tFlame\tSerpent\tSword\r\n';
+  var allCSV = 'Park\tPersona\tDragon\tGarber\tOwl\tBattle\tCrown\tFlame\tSerpent\tSword\r\n';
   allCSV += serpentContent;
   copyTextToClipboard(allCSV);
 }
 
 function copySwordToClipboard() {
-  var allCSV = 'Park\tPersona\tWarrior\tCrown\tFlame\tSerpent\tSword\r\n';
+  var allCSV = 'Park\tPersona\tWarrior\tBattle\tCrown\tFlame\tSerpent\tSword\r\n';
   allCSV += swordContent;
   copyTextToClipboard(allCSV);
 }

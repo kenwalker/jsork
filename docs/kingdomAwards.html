@@ -70,13 +70,29 @@
                       <h2 class="printtitle smallbottommargin"></h2>
                       <div class="generateddate"></div>
                        
-                    <h2 class="smallbottommargin">Crown candidates</h2>
+                      <h2 class="smallbottommargin">Battle candidates</h2>
+                      <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyBattleToClipboard()">Copy Battle candidates to CSV</button>
+                      <table id="battleTable" style="width:100%">
+                        <tr>
+                          <th class='left'>Park</th>
+                          <th class='left'>Persona</th>
+                          <th class='middle'>Battle Order</th>
+                          <th class='middle'>Battle</th>
+                          <th class='middle'>Crown</th>
+                          <th class='middle'>Flame</th>
+                          <th class='middle'>Serpent</th>
+                          <th class='middle'>Sword</th>
+                        </tr>
+                      </table>
+
+                      <h2 class="smallbottommargin">Crown candidates</h2>
                     <button class="noprint smallbottommargin primary icon fa-copy" onclick="copyCrownToClipboard()">Copy Crown candidates to CSV</button>
                     <table id="crownTable" style="width:100%">
                       <tr>
                         <th class='left'>Park</th>
                         <th class='left'>Persona</th>
                         <th class='middle'>Crown Order</th>
+                        <th class='middle'>Battle</th>
                         <th class='middle'>Crown</th>
                         <th class='middle'>Flame</th>
                         <th class='middle'>Serpent</th>
@@ -94,6 +110,7 @@
                         <th class='middle'>Lion</th>
                         <th class='middle'>Rose</th>
                         <th class='middle'>Smith</th>
+                        <th class='middle'>Battle</th>
                         <th class='middle'>Crown</th>
                         <th class='middle'>Flame</th>
                         <th class='middle'>Serpent</th>
@@ -110,6 +127,7 @@
                         <th class='middle'>Dragon</th>
                         <th class='middle'>Garber</th>
                         <th class='middle'>Owl</th>
+                        <th class='middle'>Battle</th>
                         <th class='middle'>Crown</th>
                         <th class='middle'>Flame</th>
                         <th class='middle'>Serpent</th>
@@ -124,6 +142,7 @@
                         <th class='left'>Park</th>
                         <th class='left'>Persona</th> 
                         <th class='middle'>Warrior</th>
+                        <th class='middle'>Battle</th>
                         <th class='middle'>Crown</th>
                         <th class='middle'>Flame</th>
                         <th class='middle'>Serpent</th>
