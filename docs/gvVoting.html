@@ -3,7 +3,7 @@
 <html>
 
 <head>
-  <title>jsork - Viridian Outlands Voting</title>
+  <title>jsork - Goldenvale Voting</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1,
       user-scalable=no" />
@@ -22,8 +22,8 @@
 
         <!-- Header -->
         <header id="header" class="noprint">
-          <a href="voVoting.html" class="logo noprint"><strong>jsork</strong>
-            Viridian Outlands Voting</a>
+          <a href="gvVoting.html" class="logo noprint"><strong>jsork</strong>
+            Goldenvale Voting</a>
           <ul class="icons noprint">
             <li><a href="https://github.com/kenwalker/jsork" class="icon
                   brands fa-github"><span class="label">Github</span></a></li>
@@ -36,17 +36,18 @@
         <section class="noprintpadding">
           <div class="noprint">
             <header class="main">
-              <h2>Viridian Outlands Voting</h2>
+              <h2>Goldenvale Voting</h2>
             </header>
-            <p class="smallbottommargin">This report will generate a list of
-              players within a Viridian Outlands park that can vote.<br><br>
-              A player must have attended 6 different days
-              in the last 6 months anywhere in the Viridian Outlands, be dues paid, and have signed a waiver. The Viridian Outlands Week starts
-              on Monday and ends on Sunday.<br>
-              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
-              <br>
-              The whole list is provided here and you can use the CSV export to copy the results to a spreadsheet.
+            <p class="smallbottommargin">
+              This report will generate a list of
+              players within a Goldenvale park that can vote. A player must have attended 8 different weeks
+              in the last 6 months in their home park and where 1 of those attendances can be from a Kingdom event.<br>
+              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br><br>
+              The whole list is provided here but the CSV export provides the week numbers that a person has attended
+              for verification.              
             </p>
+						<p><b>WARNING: </b>This report will take a while and use data, don't run it on your cell phone
+							data plan! <b>WARNING!!</b></b></p>
             <div id="parkselect" hidden="hidden">
               <label for="park">
                 <h2>Choose a Park</h2>
@@ -67,7 +68,9 @@
                 <th class='middle'>Can Vote</th>
                 <th class='middle'>Signed Waiver</th>
                 <th class='middle'>Dues Paid</th>
-                <th class='middle'>Days of attendance</th>
+                <th class='middle'>Weeks of attendance</th>
+                <th class='middle'>One was Kingdom Event</th>
+                <th class='middle'>First Attendance</th>
               </tr>
             </table>
           </div>
@@ -136,7 +139,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jsork.js"></script>
   <script src="assets/js/moment.js"></script>
-  <script src="assets/js/voVoting.js"></script>
+  <script src="assets/js/gvVoting.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161484739-1"></script>
   <script src="assets/js/google.js"></script>
 </body>
