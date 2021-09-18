@@ -6,7 +6,7 @@ var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
 var today = moment();
-// today = moment(new Date("03/15/2020"));
+today = moment(new Date("03/15/2020"));
 
 var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
 
@@ -173,7 +173,6 @@ function donePlayers() {
     var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
     var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 8 ;
     var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 8 ;
-    // Temporary voting rules
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -197,7 +196,7 @@ function donePlayers() {
       aPlayer.MundaneId + '">' +
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
-    playerLine += attendanceNumber + '\t' + aPlayer.firstAttendance + '\t' + aPlayer.oneKingdomEvent + '\t';
+    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t' + aPlayer.oneKingdomEvent + '\t' + aPlayer.firstAttendance + '\t';
     var firstTime = true;
     Object.keys(aPlayer.attendance).forEach(function(aWeek) {
       if (firstTime) {
@@ -264,7 +263,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tWeeks of Attendance\tFirst Attendance\tOne Kingdom Event\tThe Week numbers of attendance\r\n';
+  var allCSV = 'Persona\tCan Vote\tWaivered\tDues Paid\tWeeks of Attendance\tOne Kingdom Event\tFirst Attendance\tThe Week numbers of attendance\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
