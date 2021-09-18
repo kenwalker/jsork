@@ -6,7 +6,7 @@ var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
 var today = moment();
-today = moment(new Date("03/15/2020"));
+// today = moment(new Date("03/15/2020"));
 
 var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
 
