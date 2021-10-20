@@ -81,6 +81,14 @@ function parkSelect(event, ui) {
                         }
                         if (--playersLeft <= 0) {
                             allMatchedNames = new Array(playerList.length).fill(false);
+                            if (playerList.length === 0) {
+                                document.getElementById('kingdom').disabled = false;
+                                document.getElementById('park').disabled = false;
+                                // $('.noplayers').text('Generated on ' + new Date().toDateString());
+                                $('.working').attr('hidden', true);
+                                $('.noplayers').text('There are no players with photos in this park ;-(');
+                                return;
+                            }
                             donePlayers();
                         }
                     }.bind(player));
@@ -88,6 +96,14 @@ function parkSelect(event, ui) {
                     $('.working').text('Number of players left to check for images ' + playersLeft);
                     if (--playersLeft <= 0) {
                         allMatchedNames = new Array(playerList.length).fill(false);
+                        if (playerList.length === 0) {
+                            document.getElementById('kingdom').disabled = false;
+                            document.getElementById('park').disabled = false;
+                            // $('.noplayers').text('Generated on ' + new Date().toDateString());
+                            $('.working').attr('hidden', true);
+                            $('.noplayers').text('There are no players with photos in this park ;-(');
+                            return;
+                        }
                         donePlayers();
                     }
                 }
