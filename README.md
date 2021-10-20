@@ -28,14 +28,14 @@ jsork.kingdom.getKingdoms().then(function(allKingdoms) {
 })
 ```
 
-Would print out _There are 26 Kingdoms in Amtgard_
+Would print out _There are 25 Kingdoms in Amtgard_
 
 ```javascript
 jsork.player.getInfo(43232).then(function(player) {
     console.log("Ken's persona is " + player.Persona);
 })
 ```
-Would print out _Ken's persona is Lord Kismet Shenchu_
+Would print out _Ken's persona is Kismet Shenchu_
 
 Some APIs have additional parameters like getting a players awards.  You can ask for them all using _jsork.awardIDs.ALL_ or like the following example just as for the one you want.
 
@@ -45,4 +45,14 @@ jsork.player.getAwards(43232, jsork.awardIDs.ORDER_OF_THE_SMITH).then(function(d
 );
 ```
 
-Would print out _Ken has 3 Orders of the Smith_
+Would print out _Ken has 4 Orders of the Smith_
+
+Or look for a specific award, say like a Knighting?
+
+```javascript
+jsork.player.getAwards(43232, jsork.awardIDs.KNIGHT_OF_THE_FLAME).then(function(data) {
+    console.log("Ken received his Flame belt on " + data[0].Date + "");}
+);
+```
+
+Would print out _Ken received his Flame belt on 2021-04-03_
