@@ -47,11 +47,11 @@ jsork.player.getAwards(43232, jsork.awardIDs.ORDER_OF_THE_SMITH).then(function(d
 
 Would print out _Ken has 4 Orders of the Smith_
 
-Or look for a specific award, say like a Knighting?
+Another example is to look for, say, a Knighting?
 
 ```javascript
 jsork.player.getAwards(43232, jsork.awardIDs.KNIGHT_OF_THE_FLAME).then(function(data) {
-    console.log("Ken received his Flame belt on " + data[0].Date + "");}
+    console.log("Ken received his Flame belt on " + data[0].Date);}
 );
 ```
 
