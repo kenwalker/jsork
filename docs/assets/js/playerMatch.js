@@ -144,7 +144,7 @@ function donePlayers() {
     shuffledFullList = shuffle([...nonMatchedPlayers]);
     reducedToFiveList = shuffledFullList.slice(0, numberToMatch);
     shuffledNames = [...reducedToFiveList];
-    droppedNames = [...reducedToFiveList];
+    droppedNames = Array(reducedToFiveList.length).fill({MundaneId: 0});
     shuffle(shuffledNames);
     reducedToFiveList.forEach(function (aPlayer, index) {
         var playerHTMLLine = '';
@@ -194,11 +194,19 @@ function dragLeave(e) {
 }
 
 function dragEnd(e) {
+    if (!e.target) {
+        return;
+    }
+    var theTarget = e.target;
+    if (theTarget instanceof Text) {
+        theTarget = e.target.parentElement;
+    }
     e.preventDefault();
+    e.stopImmediatePropagation();
     if (e.dataTransfer.dropEffect === 'none') {
         return;
     }
-    e.target.setAttribute('draggable', false);
+    theTarget.setAttribute('draggable', false);
     totalDropped++;
     if (totalDropped === reducedToFiveList.length) {
         finishedFive();
@@ -230,15 +238,24 @@ function finishedFive() {
 }
 
 function drop(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
     e.target.classList.remove('drag-over');
+    const id = e.dataTransfer.getData('text/plain');
+    if (id === undefined || id === 'undefined') {
+        return false;
+    }
     e.target.removeEventListener('dragenter', dragEnter, false);
     e.target.removeEventListener('dragover', dragOver, false);
     e.target.removeEventListener('dragleave', dragLeave, false);
     e.target.removeEventListener('drop', drop, false);
 
     e.target.setAttribute('drop', false);
-    // get the draggable element
-    const id = e.dataTransfer.getData('text/plain');
+    // // get the draggable element
+    // const id = e.dataTransfer.getData('text/plain');
+    // if (id === undefined) {
+    //     return;
+    // }
     const draggable = document.getElementById(id);
     const indexOfDestination = $('table tr').index(e.target.parentElement) - 1;
     droppedNames[indexOfDestination] = shuffledNames[id];
