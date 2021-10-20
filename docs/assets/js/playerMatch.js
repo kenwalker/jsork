@@ -74,9 +74,12 @@ function parkSelect(event, ui) {
             jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
                 if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) > moment().subtract(6, 'months')) {
                     jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
-                        $('.working').text('Number of players left to check for images ' + playersLeft);
-                        if (!playerInfo.Suspended && playerInfo.HasImage && playerInfo.Persona) {
+                        $('.working').text('Number of players left to check for images/heraldry ' + playersLeft);
+                        if (!playerInfo.Suspended && (playerInfo.HasImage || playerInfo.HasHeraldry) && playerInfo.Persona) {
                             playerList.push(playerInfo);
+                            if (!playerInfo.HasImage && playerInfo.HasHeraldry) {
+                                console.log("HERALDRY");
+                            }
                         }
                         if (--playersLeft <= 0) {
                             allMatchedNames = new Array(playerList.length).fill(false);
@@ -84,21 +87,21 @@ function parkSelect(event, ui) {
                                 document.getElementById('kingdom').disabled = false;
                                 document.getElementById('park').disabled = false;
                                 $('.working').attr('hidden', true);
-                                $('.noplayers').text('There are no players with photos in this park ;-(');
+                                $('.noplayers').text('There are no players with images or heraldry in this park ;-(');
                                 return;
                             }
                             donePlayers();
                         }
                     }.bind(player));
                 } else {
-                    $('.working').text('Number of players left to check for images ' + playersLeft);
+                    $('.working').text('Number of players left to check for images/heraldry ' + playersLeft);
                     if (--playersLeft <= 0) {
                         allMatchedNames = new Array(playerList.length).fill(false);
                         if (playerList.length === 0) {
                             document.getElementById('kingdom').disabled = false;
                             document.getElementById('park').disabled = false;
                             $('.working').attr('hidden', true);
-                            $('.noplayers').text('There are no players with photos in this park ;-(');
+                            $('.noplayers').text('There are no players with images or heraldry in this park ;-(');
                             return;
                         }
                         donePlayers();
@@ -121,7 +124,7 @@ function pickAnotherPark() {
 
 function donePlayers() {
     var totalKnown = allMatchedNames.filter(function(x) { return x; }).length;
-    $('.noplayers').text('You have matched ' + totalKnown + ' out of ' + playerList.length + ' players in this park with an image');
+    $('.noplayers').text('You have matched ' + totalKnown + ' out of ' + playerList.length + ' players in this park with an image/heraldry');
     $('table').find('tr:gt(0)').remove();
     $('.playagain').hide();
     $('.kingdomselection').hide();
@@ -139,8 +142,13 @@ function donePlayers() {
         var playerHTMLLine = '';
         playerHTMLLine += '<tr><td class="name noselect namecolumn" id="' + index + '"draggable="true">' + shuffledNames[index].Persona + '<br>' + shuffledNames[index].UserName + '</td>';
         playerHTMLLine += '<td class="match noselect namecolumn"></td>';
-        playerHTMLLine += '<td class="noselect imagecolumn" style="width:130px; height:130px;text-align:center; vertical-align:middle">';
-        playerHTMLLine += '<img src="https:' + aPlayer.Image + '" style="max-height:100%; max-width:100%" /></td></tr>';
+        if (aPlayer.HasImage) {
+            playerHTMLLine += '<td class="noselect imagecolumn" style="width:130px; height:130px;text-align:center; vertical-align:middle">';
+            playerHTMLLine += '<img src="https:' + aPlayer.Image + '" style="max-height:100%; max-width:100%" /></td></tr>';
+        } else {
+            playerHTMLLine += '<td class="noselect imagecolumn" style="width:130px; height:130px;text-align:center; vertical-align:middle">';
+            playerHTMLLine += '<img src="https:' + aPlayer.Heraldry + '" style="max-height:100%; max-width:100%" /></td></tr>';
+        }
         $('#playerTable').append(playerHTMLLine);
         lastPlayer = aPlayer;
     });
@@ -210,7 +218,7 @@ function finishedFive() {
         }
     });
     var totalKnown = allMatchedNames.filter(function(x) { return x; }).length;
-    $('.noplayers').text('You have matched ' + totalKnown + ' out of ' + playerList.length + ' players in this park with an image');
+    $('.noplayers').text('You have matched ' + totalKnown + ' out of ' + playerList.length + ' players in this park with an image/heraldry');
     // if (totalMatches === reducedToFiveList.length) {
     //     $('.noplayers').text('You matched them all!');
     // } else {
