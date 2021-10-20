@@ -58,7 +58,6 @@ function parkSelect(event, ui) {
     document.getElementById('kingdom').disabled = true;
     document.getElementById('park').disabled = true;
     $('.printtitle').text($('#kingdom option:selected').text() + ' - ' + $('#park option:selected').text());
-    // $('.generateddate').text('Generated on ' + new Date().toDateString());
 
     $('.working').attr('hidden', false);
     $('.working').text('Getting players....');
@@ -84,7 +83,6 @@ function parkSelect(event, ui) {
                             if (playerList.length === 0) {
                                 document.getElementById('kingdom').disabled = false;
                                 document.getElementById('park').disabled = false;
-                                // $('.noplayers').text('Generated on ' + new Date().toDateString());
                                 $('.working').attr('hidden', true);
                                 $('.noplayers').text('There are no players with photos in this park ;-(');
                                 return;
@@ -99,7 +97,6 @@ function parkSelect(event, ui) {
                         if (playerList.length === 0) {
                             document.getElementById('kingdom').disabled = false;
                             document.getElementById('park').disabled = false;
-                            // $('.noplayers').text('Generated on ' + new Date().toDateString());
                             $('.working').attr('hidden', true);
                             $('.noplayers').text('There are no players with photos in this park ;-(');
                             return;
@@ -123,14 +120,6 @@ function pickAnotherPark() {
 }
 
 function donePlayers() {
-    // if (playerList.length < numberToMatch) {
-    //     document.getElementById('kingdom').disabled = false;
-    //     document.getElementById('park').disabled = false;
-    //     // $('.noplayers').text('Generated on ' + new Date().toDateString());
-    //     $('.working').attr('hidden', true);
-    //     $('.noplayers').text('Need at least ' + numberToMatch + ' players in the park that have an ORK image set. This has ' + playerList.length);
-    //     return;
-    // }
     var totalKnown = allMatchedNames.filter(function(x) { return x; }).length;
     $('.noplayers').text('You have matched ' + totalKnown + ' out of ' + playerList.length + ' players in this park with an image');
     $('table').find('tr:gt(0)').remove();
@@ -174,6 +163,7 @@ function donePlayers() {
 }
 
 function dragStart(e) {
+    e.dataTransfer.effectAllowed = 'all';
     e.dataTransfer.setData('text/plain', e.target.id);
 }
 
@@ -185,7 +175,6 @@ function dragEnter(e) {
 
 function dragOver(e) {
     e.preventDefault();
-    e.target.classList.add('drag-over');
     e.dataTransfer.dropEffect = "move";
 }
 
@@ -207,10 +196,6 @@ function dragEnd(e) {
         return;
     }
     theTarget.setAttribute('draggable', false);
-    totalDropped++;
-    if (totalDropped === reducedToFiveList.length) {
-        finishedFive();
-    }
 }
 
 function finishedFive() {
@@ -243,29 +228,24 @@ function drop(e) {
     e.target.classList.remove('drag-over');
     const id = e.dataTransfer.getData('text/plain');
     if (id === undefined || id === 'undefined') {
-        return false;
+        return;
     }
+    e.dataTransfer.dropEffect = "move";
     e.target.removeEventListener('dragenter', dragEnter, false);
     e.target.removeEventListener('dragover', dragOver, false);
     e.target.removeEventListener('dragleave', dragLeave, false);
     e.target.removeEventListener('drop', drop, false);
 
     e.target.setAttribute('drop', false);
-    // // get the draggable element
-    // const id = e.dataTransfer.getData('text/plain');
-    // if (id === undefined) {
-    //     return;
-    // }
     const draggable = document.getElementById(id);
     const indexOfDestination = $('table tr').index(e.target.parentElement) - 1;
     droppedNames[indexOfDestination] = shuffledNames[id];
     e.target.innerHTML = draggable.innerHTML;
     draggable.textContent = "";
-    // add it to the drop target
-    // e.target.appendChild(draggable);
-
-    // display the draggable element
-    // draggable.classList.remove('hide');
+    totalDropped++;
+    if (totalDropped === reducedToFiveList.length) {
+        finishedFive();
+    }
 }
 
 function shuffle(array) {
