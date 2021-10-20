@@ -178,6 +178,7 @@ function dragLeave(e) {
 }
 
 function dragEnd(e) {
+    e.preventDefault();
     if (e.dataTransfer.dropEffect === 'none') {
         return;
     }
