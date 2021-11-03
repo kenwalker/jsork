@@ -79,40 +79,52 @@ function doPlayerTwo(mundaneId, element) {
     attendanceOne = attendanceOne.reverse();
     jsork.player.getAttendance(mundaneIdTwo).then(function(attendanceTwo) {
         attendanceTwo = attendanceTwo.reverse();
+        var getNextAttendance = function(attendances) {
+            while (true) {
+                var nextAttendance = attendances.shift();
+                if (nextAttendance === undefined || nextAttendance.Date !== '0000-00-00') {
+                    return nextAttendance;
+                }
+            }
+        };
         var keepLooking = true;
-        var firstOne = attendanceOne.shift();
-        var firstTwo = attendanceTwo.shift();
+        var firstOne = getNextAttendance(attendanceOne);
+        var firstTwo = getNextAttendance(attendanceTwo);
         var foundDateText = null;
         while (keepLooking) {
             var incrementADate = function() {
                 if (moment(firstOne.Date) < moment(firstTwo.Date)) {
-                    firstOne = attendanceOne.shift();
+                    firstOne = getNextAttendance(attendanceOne);
                     if (firstOne === undefined) {
                         keepLooking = false;
                     }
                 } else {
-                    firstTwo = attendanceTwo.shift();
+                    firstTwo = getNextAttendance(attendanceTwo);
                     if (firstTwo === undefined) {
                         keepLooking = false;
                     }
                 }
             };
-            if (firstOne.Date === firstTwo.Date) {
-                if ((firstOne.KingdomName && firstOne.KingdomName === firstTwo.KingdomName) &&
-                    (firstOne.ParkName && firstOne.ParkName === firstTwo.ParkName)) {
-                      foundDateText = " first met at a park day at " + firstOne.ParkName + " in " + firstOne.KingdomName + " on " + moment(firstOne.Date).format('MMMM Do YYYY') + ". Roughly " + moment.duration(moment(firstOne.Date) - moment()).humanize() + ' ago';
-                      keepLooking = false;
-                    } else {
-                        if ((firstOne.EventKingdomName && firstOne.EventKingdomName === firstTwo.EventKingdomName) &&
-                            (firstOne.EventName && firstOne.EventName === firstTwo.EventName)) {
-                                foundDateText = " first met at the event " + firstOne.EventName + " in " + firstOne.KingdomName + " on " + moment(firstOne.Date).format('MMMM Do YYYY') + ". Roughly " + moment.duration(moment(firstOne.Date) - moment()).humanize() + ' ago';
-                                keepLooking = false;
-                            }
-                    }
-                incrementADate();
-                // keepLooking = false;
+            if (firstOne === undefined || firstTwo === undefined) {
+                keepLooking = false;
             } else {
-                incrementADate();
+                if (firstOne.Date === firstTwo.Date) {
+                    if ((firstOne.KingdomName && firstOne.KingdomName === firstTwo.KingdomName) &&
+                        (firstOne.ParkName && firstOne.ParkName === firstTwo.ParkName)) {
+                          foundDateText = " first met at a park day at " + firstOne.ParkName + " in " + firstOne.KingdomName + " on " + moment(firstOne.Date).format('MMMM Do YYYY') + ". Roughly " + moment.duration(moment(firstOne.Date) - moment()).humanize() + ' ago';
+                          keepLooking = false;
+                        } else {
+                            if ((firstOne.EventKingdomName && firstOne.EventKingdomName === firstTwo.EventKingdomName) &&
+                                (firstOne.EventName && firstOne.EventName === firstTwo.EventName)) {
+                                    foundDateText = " first met at the event " + firstOne.EventName + " in " + firstOne.KingdomName + " on " + moment(firstOne.Date).format('MMMM Do YYYY') + ". Roughly " + moment.duration(moment(firstOne.Date) - moment()).humanize() + ' ago';
+                                    keepLooking = false;
+                                }
+                        }
+                    incrementADate();
+                    // keepLooking = false;
+                } else {
+                    incrementADate();
+                }    
             }
         }
         if (foundDateText) {
