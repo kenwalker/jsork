@@ -92,13 +92,15 @@ function parkSelect(event, ui) {
             });
             if (Object.keys(playerWeeks).length >= 0) {
               jsork.player.getInfo(player.MundaneId).then(function(playerInfo) {
+                var duesForLife = false;
+                playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });
                 if (!playerInfo.Suspended) {
                   playerList.push({
                     Persona: playerInfo.Persona,
                     UserName: playerInfo.UserName,
                     MundaneId: playerInfo.MundaneId,
                     DuesThrough: playerInfo.DuesThrough,
-                    DuesPaid: moment(playerInfo.DuesThrough) > startDate,
+                    DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > startDate,
                     Waivered: playerInfo.Waivered !== 0,
                     attendance: playerWeeks
                   });
@@ -199,7 +201,7 @@ function donePlayers() {
     });
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Should Pay Dues') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Should Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
     // playerHTMLLine += '</tr>';

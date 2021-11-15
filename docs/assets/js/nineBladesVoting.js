@@ -93,15 +93,18 @@ function parkSelect(event, ui) {
             });
             if (Object.keys(playerWeeks).length >= 0) {
               jsork.player.getInfo(player.MundaneId).then(function(playerInfo) {
+                var duesForLife = false;
+                playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });
                 if (!playerInfo.Suspended) {
                   playerList.push({
                     Persona: playerInfo.Persona,
                     UserName: playerInfo.UserName,
                     MundaneId: playerInfo.MundaneId,
                     DuesThrough: playerInfo.DuesThrough,
-                    DuesPaid: moment(playerInfo.DuesThrough) > moment(),
+                    DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > moment(),
                     Waivered: playerInfo.Waivered !== 0,
-                    attendance: playerWeeks
+                    attendance: playerWeeks,
+                    duesForLife: duesForLife
                   });
                 }
                 $('.working').text('Number of players left to check ' + playersLeft);
@@ -209,7 +212,7 @@ function donePlayers() {
 
     // TEMPORARY change back to these after voting returns to normal
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? aPlayer.DuesThrough : 'Pay Dues') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
 

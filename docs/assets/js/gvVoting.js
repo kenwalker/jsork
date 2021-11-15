@@ -113,16 +113,19 @@ function parkSelect(event, ui) {
                         });
                         if (Object.keys(playerWeeks).length >= 0) {
                             jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+                                var duesForLife = false;
+                                playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });                
                                 if (!playerInfo.Suspended) {
                                     playerList.push({
                                         Persona: playerInfo.Persona,
                                         UserName: playerInfo.UserName,
                                         MundaneId: playerInfo.MundaneId,
                                         DuesThrough: playerInfo.DuesThrough,
-                                        DuesPaid: moment(playerInfo.DuesThrough) > moment(),
+                                           DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > moment(),
                                         Waivered: playerInfo.Waivered !== 0,
                                         attendance: playerWeeks,
-                                        oneKingdomEvent: oneKingdomEvent
+                                        oneKingdomEvent: oneKingdomEvent,
+                                        duesForLife: duesForLife
                                     });
                                 }
                                 $('.working').text('Number of players left to check ' + playersLeft);
@@ -218,7 +221,7 @@ function donePlayers() {
         });
         playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
         playerHTMLLine += '<td class="middle white" >' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
-        playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? aPlayer.DuesThrough : 'Pay Dues') + '</td>';
+        playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Pay Dues') + '</td>';
         playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 8 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
         playerHTMLLine += '<td class="middle white" >' + aPlayer.oneKingdomEvent + '</td>';
         playerHTMLLine += '<td class="middle white" >' + aPlayer.firstAttendance + '</td>';

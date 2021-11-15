@@ -95,15 +95,19 @@ function parkSelect(event, ui) {
             });
             if (Object.keys(playerWeeks).length >= 0) {
               jsork.player.getInfo(player.MundaneId).then(function(playerInfo) {
-                playerList.push({
-                  Persona: playerInfo.Persona,
-                  UserName: playerInfo.UserName,
-                  MundaneId: playerInfo.MundaneId,
-                  DuesThrough: playerInfo.DuesThrough,
-                  DuesPaid: moment(playerInfo.DuesThrough) > moment(),
-                  Waivered: playerInfo.Waivered !== 0,
-                  attendance: playerWeeks
-                });
+                var duesForLife = false;
+                playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });
+                if (!playerInfo.Suspended) {
+                  playerList.push({
+                    Persona: playerInfo.Persona,
+                    UserName: playerInfo.UserName,
+                    MundaneId: playerInfo.MundaneId,
+                    DuesThrough: playerInfo.DuesThrough,
+                    DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > moment(),
+                    Waivered: playerInfo.Waivered !== 0,
+                    attendance: playerWeeks
+                  });
+                }
                 $('.working').text('Number of players left to check ' + playersLeft);
                 if (--playersLeft <= 0) {
                   checkFirstAttendance();

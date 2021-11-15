@@ -96,15 +96,18 @@ function parkSelect(event, ui) {
               jsork.player.getInfo(player.MundaneId).then(function(playerInfo) {
                 var duesForLife = false;
                 playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });
-                playerList.push({
-                  Persona: playerInfo.Persona,
-                  UserName: playerInfo.UserName,
-                  MundaneId: playerInfo.MundaneId,
-                  DuesThrough: playerInfo.DuesThrough,
-                  DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > moment(),
-                  Waivered: playerInfo.Waivered !== 0,
-                  attendance: playerWeeks
-                });
+                if (!playerInfo.Suspended) {
+                  playerList.push({
+                    Persona: playerInfo.Persona,
+                    UserName: playerInfo.UserName,
+                    MundaneId: playerInfo.MundaneId,
+                    DuesThrough: playerInfo.DuesThrough,
+                    DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > moment(),
+                    Waivered: playerInfo.Waivered !== 0,
+                    attendance: playerWeeks,
+                    duesForLife: duesForLife
+                  });
+                }
                 $('.working').text('Number of players left to check ' + playersLeft);
                 if (--playersLeft <= 0) {
                   donePlayers();
@@ -170,7 +173,7 @@ function donePlayers() {
     playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t';
     playerHTMLLine += '<td class="middle">' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Pay Dues') + '</td>';
     // Temporary no dues required
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td><tr>';
     $('#playerTable').append(playerHTMLLine);
