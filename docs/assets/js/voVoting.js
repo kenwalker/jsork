@@ -94,12 +94,14 @@ function parkSelect(event, ui) {
             });
             if (Object.keys(playerWeeks).length >= 0) {
               jsork.player.getInfo(player.MundaneId).then(function(playerInfo) {
+                var duesForLife = false;
+                playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });
                 playerList.push({
                   Persona: playerInfo.Persona,
                   UserName: playerInfo.UserName,
                   MundaneId: playerInfo.MundaneId,
                   DuesThrough: playerInfo.DuesThrough,
-                  DuesPaid: moment(playerInfo.DuesThrough) > moment(),
+                  DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > moment(),
                   Waivered: playerInfo.Waivered !== 0,
                   attendance: playerWeeks
                 });
