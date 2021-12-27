@@ -8,12 +8,14 @@ var playerList = [];
 var numberOfDays = 0;
 var startDate;
 var endDate;
+var selectedParkId = 0;
 
 function kingdomSelect(event, ui) {
   playerList = [];
   uniquePlayerIDs = {};
   $('.numberofuniqueplayers').text('');
   $('.allresults').attr('hidden', true);
+  $('.rerunbutton').attr('hidden', true);
   $('table').find('tr:gt(0)').remove();
   $('.noplayers').text(' ');
   if (event.target.value === '0') {
@@ -53,6 +55,22 @@ function kingdomSelect(event, ui) {
 }
 
 function parkSelect(event, ui) {
+  if (event.target.value === '0') {
+    return;
+  }
+  var parkId = parseInt(event.target.value, 10);
+  selectedParkId = parkId;
+  runQuery(parkId);
+}
+
+function rerunQuery() {
+  if (selectedParkId !== 0) {
+    $('.rerunbutton').attr('hidden', true);
+    runQuery(selectedParkId);
+  }
+}
+
+function runQuery(parkId) {
   playerList = [];
   uniquePlayerIDs = {};
   localPlayersOnly = $('#localonly').is(":checked");
@@ -67,9 +85,6 @@ function parkSelect(event, ui) {
   $('.noplayers').text('');
   playerList = [];
   playerContent = '';
-  if (event.target.value === '0') {
-    return;
-  }
   numberOfDays = endDate.diff(startDate, "days") + 1;
   document.getElementById('kingdom').disabled = true;
   document.getElementById('park').disabled = true;
@@ -82,7 +97,6 @@ function parkSelect(event, ui) {
   $('.working').text('Getting ' + numberOfDays + ' days of attendance....');
 
   for (var m = startDate; startDate.isSameOrBefore(endDate); startDate.add(1, 'days')) {
-    var parkId = parseInt(event.target.value, 10);
     jsork.park.getAttendance(parkId, startDate.toDate()).then(function(attendanceForDay) {
       attendanceForDay.forEach(function(player) {
         if (localPlayersOnly && player.FromParkId !== parkId) {
@@ -127,6 +141,7 @@ function donePlayers() {
     document.getElementById('enddate').disabled = false;
     $('.working').attr('hidden', true);
     $('.noplayers').text('There are no players who attended those dates');
+    $('.rerunbutton').attr('hidden', false);
     return;
   }
   var lastPlayer = null;
@@ -152,6 +167,7 @@ function donePlayers() {
   document.getElementById('park').disabled = false;
   document.getElementById('startdate').disabled = false;
   document.getElementById('enddate').disabled = false;
+  $('.rerunbutton').attr('hidden', false);
 
 }
 
@@ -161,6 +177,8 @@ function initKingdoms() {
   $('#startdate').val(today.subtract(1, "days").format('YYYY-MM-DD'));
   $('#parkselect').attr('hidden', true);
   $('.working').attr('hidden', true);
+  $('.rerunbutton').attr('hidden', true);
+
   jsork.kingdom.getKingdoms().then(function(data) {
     var kSelect = $('#kingdom');
     var emptyOption = $('<option>');
