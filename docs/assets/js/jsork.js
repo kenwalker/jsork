@@ -39,6 +39,7 @@
   // Current version.
   jsork.VERSION = '1.0';
   jsork.TOKEN = null;
+  jsork.TIMEOUT = null;
 
 
   // var ork = 'http://localhost/ork/orkservice/Json/index.php';
@@ -735,6 +736,9 @@
   };
 
   jsork.player.getClasses = function(mundaneID) {
+    if (jsork.TIMEOUT) {
+      $.ajaxSetup({timeout: jsork.TIMEOUT});
+    }
     var promise = new Promise(function(resolve, reject) {
       var request =
           {
