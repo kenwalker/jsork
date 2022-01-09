@@ -10,11 +10,15 @@ var numberOfFailedCalls = 0;
 var callTimeout;
 const msBetweenCalls = 0;
 jsork.TIMEOUT = 2000;
+const MAXTESTS = 10000;
 
 function runORKCall() {
     if (callTimeout) {
         clearTimeout(callTimeout);
         callTimeout = null;
+    }
+    if (numberOfCalls === MAXTESTS) {
+        return;
     }
     startOfCall = Date.now();
     numberOfCalls++;
