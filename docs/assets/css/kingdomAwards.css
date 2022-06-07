@@ -41,6 +41,14 @@ th, td {
   background-color: mediumpurple;
 }
 
+.lightgrey {
+  background-color: lightgray;
+}
+.grey {
+  background-color: gray;
+}
+
+
 .lightred {
   background-color: #DFA89F;
 }
