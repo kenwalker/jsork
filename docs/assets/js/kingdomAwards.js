@@ -107,12 +107,12 @@ function getAwards(kingdomId) {
           (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
         if (player['Battlemaster']) {
           playerLine = playerLine + 'Master\t';
-          playerHTMLLine = playerHTMLLine + '<td class="middle gold">Master</td>';
+          playerHTMLLine = playerHTMLLine + '<td class="middle purple">Master</td>';
         } else if (player['Order of Battle'] && player['Order of Battle'].Rank >= minimumRank) {
           playerLine = playerLine + player['Order of Battle'].Rank + '\t';
           playerHTMLLine = playerHTMLLine + '<td class="middle';
           if (player['Order of Battle'].Rank > 7) {
-            playerHTMLLine = playerHTMLLine + ' lightgold">' + player['Order of Battle'].Rank + '</td>';
+            playerHTMLLine = playerHTMLLine + ' lightpurple">' + player['Order of Battle'].Rank + '</td>';
           } else {
             playerHTMLLine = playerHTMLLine + '">' + player['Order of Battle'].Rank + '</td>';
           }
@@ -122,9 +122,9 @@ function getAwards(kingdomId) {
         }
         playerLine = playerLine + (player['Knight of Battle'] ? 'TRUE\t' : 'FALSE\t');
         if (player['Knight of Battle']) {
-          playerHTMLLine = playerHTMLLine + '<td class="middle gold">Yes</td>';
+          playerHTMLLine = playerHTMLLine + '<td class="middle purple">Yes</td>';
         } else {
-          playerHTMLLine = playerHTMLLine + '<td class="middle lightgold">No</td>';
+          playerHTMLLine = playerHTMLLine + '<td class="middle lightpurple">No</td>';
         }
         playerLine = playerLine + (player['Knight of the Crown'] ? 'TRUE\t' : 'FALSE\t');
         playerHTMLLine = playerHTMLLine + '<td class=middle>' + (player['Knight of the Crown'] ? 'Yes' : 'No') + '</td>';
