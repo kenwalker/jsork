@@ -73,7 +73,6 @@ function getNewPlayers(kingdomId) {
         mundane_number = kingdomPlayers.length;
         howManyPlayersChecked = 0;
         dotCount = 0;
-        mundane_number = 0;
         startTime = Date.now();
         getNextPlayer();
     });
