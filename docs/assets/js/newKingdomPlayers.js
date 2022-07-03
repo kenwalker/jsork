@@ -112,7 +112,7 @@ function outputResults() {
       '<a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
       player.MundaneId + '">' +
       (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
-    playerLine += player.startDate + '\r\n';
+    playerLine += player.startDate;
     playerHTMLLine += '<td>' + player.startDate + '</td></tr>';
     $('#newPlayersTable').append(playerHTMLLine);
     stringOutput += playerLine + '\r\n';  
