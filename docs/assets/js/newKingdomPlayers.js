@@ -71,6 +71,9 @@ function getNewPlayers(kingdomId) {
         kingdomPlayers = players;
         // kingdomPlayers = kingdomPlayers.slice(0,150);
         mundane_number = kingdomPlayers.length;
+        howManyPlayersChecked = 0;
+        dotCount = 0;
+        mundane_number = 0;
         startTime = Date.now();
         getNextPlayer();
     });
