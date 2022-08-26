@@ -133,7 +133,7 @@ function donePlayers() {
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
     playerLine += aPlayer.Class + '\t' + aPlayer.Level + '\t' + aPlayer.aquired;
-    playerHTMLLine += '<td class="middle">' + aPlayer.Class + '</td><td class="middle">' + aPlayer.Level + '</td><td class="middle">' + aPlayer.aquired + '</td><tr>';
+    playerHTMLLine += '<td class="middle">' + aPlayer.Class + '</td><td class="middle">' + aPlayer.Level + '</td><td class="middle">' + aPlayer.aquired + '</td></tr>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;

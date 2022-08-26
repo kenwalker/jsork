@@ -43,9 +43,11 @@
 
 
   // var ork = 'http://localhost/ork/orkservice/Json/index.php';
+
   // var ork = 'http://192.168.2.21/ork/orkservice/Json/index.php';
   // var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
   // var ork = 'https://staging.amtgard.com/ork/orkservice/Json/index.php';
+  
   var ork = 'https://ork.amtgard.com/orkservice/Json/index.php';
   // ork = 'https://ork7.dev.amtgard.com/orkservice/Json/index.php'
 
@@ -364,12 +366,15 @@
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
         {
-          call: 'Reports/knights_list',
-          request: {KingdomId: kingdomID}
+          call: 'Report/PlayerAwards',
+          request: {
+            KingdomId: kingdomID,
+            IncludeKnights: 1,
+          }
         },
         function(data) {
           if (data.Status.Status === 0) {
-            resolve(data.Parks);
+            resolve(data.Awards);
           } else {
             // on error just assume no parks
             resolve([]);
@@ -484,6 +489,68 @@
     return promise;
   };
 
+  jsork.park.getReeveQualified = function(parkID) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/GetReeveQualified',
+          request: {ParkId: parkID}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.ReeveQualified);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.park.getParagons = function(parkId) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            ParkId: parkId
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/ClassMasters',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Awards);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.park.getKnights = function(parkId) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/PlayerAwards',
+          request: {
+            ParkId: parkId,
+            IncludeKnights: 1,
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.Awards);
+          } else {
+            // on error just assume no parks
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
   jsork.park.getActivePlayers = function(parkID) {
     var request = {
       ParkId: parkID
@@ -564,7 +631,7 @@
   jsork.park.getAttendance = function(parkID, date) {
     var promise = new Promise(function(resolve, reject) {
       var month = date.getMonth() + 1; //months from 1-12
-      var day = date.getDate();
+      var day = date.getUTCDate();
       var year = date.getFullYear();
       var requestDate = year + '-' + month + '-' + day;
       var request =

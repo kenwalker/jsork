@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<title>jsork - Park Herald</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="assets/css/parkHerald.css" />
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Main -->
+		<div id="main">
+			<div class="inner">
+
+				<!-- Header -->
+				<header id="header" class="noprint">
+					<a href="parkHerald.html" class="logo noprint"><strong>jsork</strong> Park Herald</a>
+					<ul class="icons noprint">
+						<li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span
+									class="label">Github</span></a></li>
+						<li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span
+									class="label">Facebook</span></a></li>
+					</ul>
+				</header>
+
+				<!-- Content -->
+				<section class="noprintpadding">
+					<div class="noprint overview">
+						<header class="main">
+							<h2>Park Herald Report</h2>
+						</header>
+						<p class="smallbottommargin">This report is intended to provide a summary of Park information. It
+                            could be used during a lull between games or before your Althings. Currently, it looks at Officers, Reeve Qualified, Knights, 
+                            Paragons, Players About to Level, Players Recently Leveled, Park Birthdays, Marked Active but not attending, and optionally Active but marked Inactive report. If there's something you think
+                            is missing that is in another report or could be generated from ORK Data please send that suggestion 
+                            to <a href="mailto:kismet@felfrost.ca?Subject=Park%20Herald%20Suggestion" target="_system">Kismet</a><br><br>
+                            <strong>WARNING:</strong> Do not run this on a cell data plan since it may consume significant bandwith.
+						</p>
+                        <br>
+                        <input type="checkbox" id="runinactivecheck" name="runinactivecheck" >
+						<label for="runinactivecheck">Also run inactive check? (Time consuming, individual report <a href="activeRetired.html">here</a>)</label>
+						<label for="kingdom">
+							<h2>Choose a Kingdom or Principality</h2>
+						</label>
+						<select name="kingdom" id="kingdom"></select>
+						<div id="parkselect" hidden="hidden">
+							<label for="park">
+								<h2>Choose a Park</h2>
+							</label>
+							<select name="park" id="park"></select>
+						</div>
+						<h2 class="working" hidden="hidden">Working on report.....</h2>
+					</div>
+					<div class="allresults" hidden>
+                        <button class="noprint smallbottommargin primary icon fa-copy" onclick="rerunReport()">Rerun</button>              
+						<div class="generateddate"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<!-- Sidebar -->
+		<div id="sidebar" class="noprint">
+			<div class="inner">
+
+				<!-- Menu -->
+				<nav id="menu">
+					<header class="major">
+						<h2>Menu</h2>
+					</header>
+					<ul>
+						<li><a href="index.html">Homepage</a></li>
+						<li>
+							<span class="opener">Reports</span>
+							<ul>
+								<li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
+								<li><a href="upcomingEvents.html">Upcoming Events</a></li>
+								<li><a href="aboutToLevel.html">About to Level</a></li>
+								<li><a href="recentlyLeveled.html">Recently leveled</a></li>
+								<li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
+								<li><a href="topTenAverageParks.html">Top 10 Parks by attendance</a></li>
+								<li><a href="whereDoYouPlay.html">Where do you play?</a></li>
+								<li><a href="emeraldHillsVoting.html">Emerald Hills Voting</a></li>
+								<li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
+								<li><a href="nlVoting.html">Northern Lights Voting</a></li>
+								<li><a href="rwVoting.html">Rising Winds Voting</a></li>
+								<li><a href="voVoting.html">Viridian Outlands Voting</a></li>
+								<li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
+								<li><a href="kingdomTitles.html">Kingdom Titles</a></li>
+								<li><a href="recentAwards.html">Recent Awards</a></li>
+								<li><a href="uniqueAttendance.html">Unique Attendance</a></li>
+								<li><a href="activeRetired.html">Retired but Active</a></li>
+								<li><a href="consolidateCredits.html">Consolidate Credits</a></li>
+								<li><a href="shouldBeRetired.html">Should be retired</a></li>
+								<li><a href="monthlyUniques.html">Monthly Kingdom Uniques</a></li>
+								<li><a href="#">(more to come)</a></li>
+							</ul>
+						</li>
+						<li><a href="api.html">API Usage</a></li>
+					</ul>
+				</nav>
+
+				<!-- Footer -->
+				<footer id="footer">
+					<p class="copyright">jsork was written by Ken Walker.</p>
+				</footer>
+
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery-ui/external/jquery/jquery.js"></script>
+	<script src="assets/js/jquery-ui/jquery-ui.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="assets/js/jsork.js"></script>
+	<script src="assets/js/moment.js"></script>
+	<script src="assets/js/parkHerald.js"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-161484739-1"></script>
+	<script src="assets/js/google.js"></script>
+</body>
+
+</html>

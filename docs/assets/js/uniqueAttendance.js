@@ -156,7 +156,7 @@ function donePlayers() {
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
     playerLine += aPlayer.FromParkName + '\t' + aPlayer.FromKingdomName;
-    playerHTMLLine += '<td>' + aPlayer.FromParkName + '</td><td>' + aPlayer.FromKingdomName + '</td><tr>';
+    playerHTMLLine += '<td>' + aPlayer.FromParkName + '</td><td>' + aPlayer.FromKingdomName + '</td></tr>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;

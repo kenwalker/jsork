@@ -107,7 +107,7 @@ function donePlayers() {
       playerHTMLLine += '<tr><td></td>';
     } else {
       playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Admin/player/' +
-      aPlayer.MundaneId + '">' +
+      aPlayer.MundaneId + '" target="_blank">' +
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
     playerHTMLLine += "<td>" + aPlayer.lastAttendance + "</td></tr>";
