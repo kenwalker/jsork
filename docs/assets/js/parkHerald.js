@@ -350,10 +350,14 @@ function getOfficers() {
                 let champion = kingdomOfficers.find(function (officer) {
                     return officer.OfficerRole === 'Champion';
                 });
+                var gmr = kingdomOfficers.find(function(officer) {
+                    return officer.OfficerRole === 'GMR';
+                  });
                 officerOutput += '<b>Monarch:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + monarch.MundaneId + '" target="_blank">' + monarch.Persona + '</a> (' + monarch.Surname + ', ' + monarch.GivenName + ')<br>';
                 officerOutput += '<b>Regent:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + regent.MundaneId + '" target="_blank">' + regent.Persona + '</a> (' + regent.Surname + ', ' + regent.GivenName + ')<br>';
                 officerOutput += '<b>Prime Minister:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + pm.MundaneId + '" target="_blank">' + pm.Persona + '</a> (' + pm.Surname + ', ' + pm.GivenName + ')<br>';
                 officerOutput += '<b>Champion:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + champion.MundaneId + '" target="_blank">' + champion.Persona + '</a> (' + champion.Surname + ', ' + champion.GivenName + ')<br>';
+                officerOutput += '<b>GMR:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + gmr.MundaneId + '" target="_blank">' + gmr.Persona + '</a> (' + gmr.Surname + ', ' + gmr.GivenName + ')<br>';
                 officerOutput += '<p>';
             }
             jsork.park.getOfficers(parkId).then(function (parkOfficers) {

@@ -59,10 +59,14 @@ function getOfficers(kingdomId) {
         var champion = kingdomOfficers.find(function(officer) {
           return officer.OfficerRole === 'Champion';
         });
+        var gmr = kingdomOfficers.find(function(officer) {
+          return officer.OfficerRole === 'GMR';
+        });
         $('.allresults').append('<b>Monarch:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + monarch.MundaneId + '">' + monarch.Persona + '</a> (' + monarch.Surname + ', ' + monarch.GivenName + ')<br>');
         $('.allresults').append('<b>Regent:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + regent.MundaneId + '">' + regent.Persona + '</a> (' + regent.Surname + ', ' + regent.GivenName + ')<br>');
         $('.allresults').append('<b>Prime Minister:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + pm.MundaneId + '">' + pm.Persona + '</a> (' + pm.Surname + ', ' + pm.GivenName + ')<br>');
         $('.allresults').append('<b>Champion:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + champion.MundaneId + '">' + champion.Persona + '</a> (' + champion.Surname + ', ' + champion.GivenName + ')<br>');
+        $('.allresults').append('<b>GMR:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + gmr.MundaneId + '">' + gmr.Persona + '</a> (' + gmr.Surname + ', ' + gmr.GivenName + ')<br>');
         $('.allresults').append('<p>');
       }
       $('.allresults').append('<p><h2>All Parks</h2></p>');
