@@ -408,6 +408,8 @@ function getPlayerData() {
         allPlayersActive.sort(function (a, b) {
             if (!a.Persona) { a.Persona = "" }
             if (!b.Persona) { b.Persona = "" }
+            a.Persona = a.Persona + "";
+            b.Persona = b.Persona + "";
             return b.Persona.toLowerCase().localeCompare(a.Persona.toLowerCase());
         });
         if (runinactivecheck) {
@@ -416,6 +418,8 @@ function getPlayerData() {
                 inactivePlayers.sort(function (a, b) {
                     if (!a.Persona) { a.Persona = "" }
                     if (!b.Persona) { b.Persona = "" }
+                    a.Persona = a.Persona + "";
+                    b.Persona = b.Persona + "";
                     return b.Persona.toLowerCase().localeCompare(a.Persona.toLowerCase());
                 });
                 doNextPlayer();
