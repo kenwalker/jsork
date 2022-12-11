@@ -22,6 +22,7 @@ parkBirthdaysOutput = '';
 parkParagonsOutput = '';
 reeveQualifiedOutput = '';
 knightsOutput = '';
+attendancesOutput = '';
 runinactivecheck = false;
 
 today = moment().subtract(7, 'days');
@@ -93,6 +94,7 @@ function parkSelect(event, ui) {
     parkParagonsOutput = '';
     reeveQualifiedOutput = '';
     knightsOutput = '';
+    attendancesOutput = '';
     if (event.target.value === '0') {
         return;
     }
@@ -107,7 +109,23 @@ function parkSelect(event, ui) {
 
     $('.working').attr('hidden', false);
     parkId = parseInt(event.target.value, 10);
-    getOfficers();
+    getLastAttendance();
+}
+
+function getLastAttendance() {
+    jsork.park.getAllAttendance(parkId).then(function(attendances) { 
+        if (attendances.length > 0) {
+            var now = moment(Date.now());
+            var weeksAgo = now.diff(moment(attendances[0].Date), "weeks");
+            attendancesOutput += "<p><h2>Most recent attendance</h2>";
+            if (weeksAgo > 1) {
+                attendancesOutput += "Most recent attendance entered for " + moment(attendances[0].Date).format("MMMM Do, YYYY") + " (" + weeksAgo + " weeks ago)</p>"
+            } else {
+                attendancesOutput += "Most recent attendance entered for " + moment(attendances[0].Date).format("MMMM Do, YYYY") + "</p>"
+            }
+        }
+        getOfficers();
+    });
 }
 
 function doKnights() {
@@ -523,6 +541,7 @@ function done() {
     allContent += '<div class="allContent">';
     allContent += heraldTitle;
     allContent += officerOutput;
+    allContent += attendancesOutput;
     allContent += reeveQualifiedOutput;
     allContent += knightsOutput;
     allContent += parkParagonsOutput;
