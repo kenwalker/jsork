@@ -18,6 +18,7 @@ aboutToLevelOutput = '';
 recentlyLeveledOutput = '';
 shouldBeRetiredOutput = '';
 shouldBeActiveOutput = '';
+shouldBeWaiveredOutput = '';
 parkBirthdaysOutput = '';
 parkParagonsOutput = '';
 reeveQualifiedOutput = '';
@@ -95,6 +96,7 @@ function parkSelect(event, ui) {
     reeveQualifiedOutput = '';
     knightsOutput = '';
     attendancesOutput = '';
+    shouldBeWaiveredOutput = '';
     if (event.target.value === '0') {
         return;
     }
@@ -370,12 +372,22 @@ function getOfficers() {
                 });
                 var gmr = kingdomOfficers.find(function(officer) {
                     return officer.OfficerRole === 'GMR';
-                  });
-                officerOutput += '<b>Monarch:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + monarch.MundaneId + '" target="_blank">' + monarch.Persona + '</a> (' + monarch.Surname + ', ' + monarch.GivenName + ')<br>';
-                officerOutput += '<b>Regent:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + regent.MundaneId + '" target="_blank">' + regent.Persona + '</a> (' + regent.Surname + ', ' + regent.GivenName + ')<br>';
-                officerOutput += '<b>Prime Minister:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + pm.MundaneId + '" target="_blank">' + pm.Persona + '</a> (' + pm.Surname + ', ' + pm.GivenName + ')<br>';
-                officerOutput += '<b>Champion:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + champion.MundaneId + '" target="_blank">' + champion.Persona + '</a> (' + champion.Surname + ', ' + champion.GivenName + ')<br>';
-                officerOutput += '<b>GMR:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + gmr.MundaneId + '" target="_blank">' + gmr.Persona + '</a> (' + gmr.Surname + ', ' + gmr.GivenName + ')<br>';
+                });
+                if (monarch && monarch.Persona) {
+                    officerOutput += '<b>Monarch:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + monarch.MundaneId + '" target="_blank">' + monarch.Persona + '</a> (' + monarch.Surname + ', ' + monarch.GivenName + ')<br>';
+                }
+                if (regent && regent.Persona) {
+                    officerOutput += '<b>Regent:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + regent.MundaneId + '" target="_blank">' + regent.Persona + '</a> (' + regent.Surname + ', ' + regent.GivenName + ')<br>';
+                }
+                if (pm && pm.Persona) {
+                    officerOutput += '<b>Prime Minister:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + pm.MundaneId + '" target="_blank">' + pm.Persona + '</a> (' + pm.Surname + ', ' + pm.GivenName + ')<br>';
+                }
+                if (champion && champion.Persona) {
+                    officerOutput += '<b>Champion:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + champion.MundaneId + '" target="_blank">' + champion.Persona + '</a> (' + champion.Surname + ', ' + champion.GivenName + ')<br>';
+                }
+                if (gmr && gmr.Persona) {
+                    officerOutput += '<b>GMR:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + gmr.MundaneId + '" target="_blank">' + gmr.Persona + '</a> (' + gmr.Surname + ', ' + gmr.GivenName + ')<br>';
+                }
                 officerOutput += '<p>';
             }
             jsork.park.getOfficers(parkId).then(function (parkOfficers) {
@@ -393,6 +405,9 @@ function getOfficers() {
                 let parkChampion = parkOfficers.find(function (officer) {
                     return officer.OfficerRole === 'Champion';
                 });
+                let parkGMR = parkOfficers.find(function (officer) {
+                    return officer.OfficerRole === 'GMR';
+                });
                 if (parkMonarch && parkMonarch.Persona) {
                     anyOfficers = true;
                     officerOutput += '<b>Monarch:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + parkMonarch.MundaneId + '" target="_blank">' + parkMonarch.Persona + '</a> (' + parkMonarch.Surname + ', ' + parkMonarch.GivenName + ')<br>';
@@ -408,6 +423,10 @@ function getOfficers() {
                 if (parkChampion && parkChampion.Persona) {
                     anyOfficers = true;
                     officerOutput += '<b>Champion:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + parkChampion.MundaneId + '" target="_blank">' + parkChampion.Persona + '</a> (' + parkChampion.Surname + ', ' + parkChampion.GivenName + ')<br>';
+                }
+                if (parkGMR && parkGMR.Persona) {
+                    anyOfficers = true;
+                    officerOutput += '<b>GMR:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + parkGMR.MundaneId + '" target="_blank">' + parkGMR.Persona + '</a> (' + parkGMR.Surname + ', ' + parkGMR.GivenName + ')<br>';
                 }
                 if (!anyOfficers) {
                     officerOutput += 'No officers were found';
@@ -472,18 +491,49 @@ function doNextPlayer() {
     }
     $('.working').text('Computing info for ' + allPlayersActive.length + " active players");
     var player = allPlayersActive.pop();
+    var now = moment(Date.now());
 
     jsork.player.getFirstAttendance(player.MundaneId).then(function (attendance) {
-        if (attendance && attendance[0]) {
-            birthDate = moment(attendance[0].Date);
-            thisYearBirthday = birthDate.clone().set('year', moment().year());
-            if (thisYearBirthday >= today && thisYearBirthday <= monthAway) {
-                player.birthDate = birthDate;
-                player.age = moment().year() - birthDate.year();
-                parkBirthdays.push(player);
-            }
-        }
         jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+            // Show birthday if attended within the year
+            if (attendance && attendance[0]) {
+                if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) > moment().subtract(50, 'weeks')) {
+                    birthDate = moment(attendance[0].Date);
+                    thisYearBirthday = birthDate.clone().set('year', moment().year());
+                    if (thisYearBirthday >= today && thisYearBirthday <= monthAway) {
+                        player.birthDate = birthDate;
+                        player.age = moment().year() - birthDate.year();
+                        parkBirthdays.push(player);
+                    }
+                }
+            }
+            // Should be waivered?
+            if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) > moment().subtract(2, 'months')) {
+                if (!player.Waivered) {
+                    if (shouldBeWaiveredOutput.length === 0) {
+                        shouldBeWaiveredOutput += "<h2>Players who are recently active but NOT Waivered</h2>";
+                        shouldBeWaiveredOutput += '<table style="width:100%"><tr><th class="left">Player</th><th class="left">Last Played</th></tr>';
+                    }
+                    player.lastAttendance = lastAttendance[0].Date;
+                    var weeksAgo = now.diff(moment(player.lastAttendance), "weeks");
+                    var weeksText = "";
+                    switch (true) {
+                        case (weeksAgo < 0): 
+                            weeksText = "weirdly " + Math.abs(weeksAgo) + " week(s) in the future?";
+                            break;
+                        case (weeksAgo === 0):
+                            weeksText = "within a week";
+                            break;
+                        case (weeksAgo === 1):
+                            weeksText = "one week ago";
+                            break;
+                        default:
+                            weeksText = weeksAgo + " weeks ago";
+                    }
+                    shouldBeWaiveredOutput += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Admin/player/' + player.MundaneId + '" target="_blank">' + (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
+                    shouldBeWaiveredOutput += "<td>" + weeksText + "</td></tr>";
+                }
+            }
             // Compute if player shoud be retired?
             if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) < moment().subtract(24, 'months')) {
                 if (shouldBeRetiredOutput.length === 0) {
@@ -534,6 +584,13 @@ function rerunReport() {
 }
 
 function done() {
+    if (shouldBeWaiveredOutput.length > 0) {
+        shouldBeWaiveredOutput += "</table>";
+    }
+    if (shouldBeRetiredOutput.length > 0) {
+        shouldBeRetiredOutput += "</table>";
+    }
+
     $(".allContent").remove();
     $(".overview").hide();
     $(".allresults").show();
@@ -545,15 +602,12 @@ function done() {
     allContent += reeveQualifiedOutput;
     allContent += knightsOutput;
     allContent += parkParagonsOutput;
+    allContent += shouldBeWaiveredOutput;
     allContent += aboutToLevelOutput;
     allContent += recentlyLeveledOutput;
     allContent += parkBirthdaysOutput;
     allContent += shouldBeActiveOutput;
 
-    if (shouldBeRetiredOutput.length > 0) {
-        shouldBeRetiredOutput += "</table>";
-        //ya nasty ;-)
-    }
     allContent += shouldBeRetiredOutput;
     allContent += '</div>';
     $('.allresults').append(allContent);
