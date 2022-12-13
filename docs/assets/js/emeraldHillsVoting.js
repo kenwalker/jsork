@@ -6,8 +6,10 @@ var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
 // var today = moment(new Date("03/17/2020"));
+// var today = moment().startOf('week').isoWeekday(2);
 var today = moment();
-var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+var startDate = moment(today).subtract(6, 'months').startOf('week').isoWeekday(2);
+// var begin = moment(date).startOf('week').isoWeekday(1);
 
 function initParks() {
   playerList = [];
@@ -59,9 +61,9 @@ function parkSelect(event, ui) {
   $('.printtitle').text($('#park option:selected').text());
   $('.generateddate').text(
     'Attendance from ' +
-    startDate.format('ddd MMM Do, YYYY [Week] w') +
+    startDate.format('ddd MMM Do, YYYY [Week] W') +
     ' To ' +
-    today.format('ddd MMM Do, YYYY [Week] w'));
+    today.format('ddd MMM Do, YYYY [Week] W'));
 
   $('.working').attr('hidden', false);
   $('.working').text('Gathering the players...');
@@ -84,10 +86,12 @@ function parkSelect(event, ui) {
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
-                if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
-                    playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
+                if (attendance.KingdomId === 6 || attendance.EventKingdomId === 6) {
+                  if (!playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()]) {
+                      playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()] = [];
+                  }
+                  playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()].push(attendance);
                 }
-                playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
               }
             });
             if (Object.keys(playerWeeks).length >= 0) {
@@ -96,7 +100,7 @@ function parkSelect(event, ui) {
                 playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });
                 if (!playerInfo.Suspended) {
                   playerList.push({
-                    Persona: playerInfo.Persona,
+                    Persona: playerInfo.Persona || "",
                     UserName: playerInfo.UserName,
                     MundaneId: playerInfo.MundaneId,
                     DuesThrough: playerInfo.DuesThrough,
@@ -161,10 +165,8 @@ function donePlayers() {
   }
   playerList.sort(function(a, b) {
     var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-    var aAttendance = Object.values(a.attendance).reduce(function(count, att) { return count + Math.min(2, att.length) }, 0);
-    var bAttendance = Object.values(b.attendance).reduce(function(count, att) { return count + Math.min(2, att.length) }, 0);
-    var canVoteA = aAttendance >= 6 && a.sixMonthsPlayed;
-    var canVoteB = bAttendance >= 6 && b.sixMonthsPlayed;
+    var canVoteA = a.Waivered && a.DuesPaid && Object.keys(a.attendance).length >= 6 && a.sixMonthsPlayed;
+    var canVoteB = b.Waivered && b.DuesPaid && Object.keys(b.attendance).length >= 6 && b.sixMonthsPlayed;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -172,10 +174,10 @@ function donePlayers() {
   });
   var lastPlayer = null;
   playerList.forEach(function(aPlayer) {
-    var allowedTwoPerWeek = Object.values(aPlayer.attendance).reduce(function(count, att) { return count + Math.min(2, att.length) }, 0);
+    // var allowedTwoPerWeek = Object.values(aPlayer.attendance).reduce(function(count, att) { return count + Math.min(2, att.length) }, 0);
     var playerHTMLLine = '';
-    var attendanceNumber = Math.max(Object.keys(aPlayer.attendance).length, allowedTwoPerWeek);
-    var canVote = attendanceNumber >= 6 && aPlayer.sixMonthsPlayed;
+    var attendanceNumber = Object.keys(aPlayer.attendance).length;
+    var canVote = aPlayer.Waivered && aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.sixMonthsPlayed;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -186,8 +188,8 @@ function donePlayers() {
         playerHTMLLine += '<tr>';
       }
       playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
-      aPlayer.MundaneId + '">' +
-      (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
+        aPlayer.MundaneId + '" target="_blank">' +
+        (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
     playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t' + aPlayer.sixMonthsPlayed + '\t' + aPlayer.firstAttendance + '\t';
     var firstTime = true;
@@ -200,8 +202,8 @@ function donePlayers() {
       playerLine += aWeek;
     });
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Should Pay Dues') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Must sign Waiver') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Must Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
     // playerHTMLLine += '</tr>';
