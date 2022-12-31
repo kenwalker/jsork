@@ -12,6 +12,7 @@ var startTime = Date.now();
 var howManyPlayersChecked = 0;
 var dotCount = 0;
 var mundane_number = 0;
+var runTwelveMonths = false;
 
 function updateWorkingMessage() {
     howManyPlayersChecked++;
@@ -38,8 +39,16 @@ function kingdomSelect(event, ui) {
   }
   $('.working').attr('hidden', false);
   $('#kingdom').selectmenu('option', 'disabled', true);
+  runTwelveMonths = $('#twelvemonths').is(":checked");
+  sixMonthsAgo = moment();
+  if (runTwelveMonths) {
+    sixMonthsAgo = sixMonthsAgo.subtract(12, "months");
+  } else {
+    sixMonthsAgo = sixMonthsAgo.subtract(6, "months");
+  }
+
   getNewPlayers(parseInt(event.target.value, 10));
-  $('.generateddate').text('Generated on ' + new Date().toDateString());
+  $('.generateddate').text('Generated on ' + new Date().toDateString() + " for " + (runTwelveMonths ? "12 months" : "6 months"));
 }
 
 function initKingdoms() {
@@ -69,7 +78,7 @@ function startUp() {
 function getNewPlayers(kingdomId) {
     jsork.kingdom.getPlayers(kingdomId, jsork.filters.ACTIVE).then(function(players) {
         kingdomPlayers = players;
-        // kingdomPlayers = kingdomPlayers.slice(0,150);
+        // kingdomPlayers = kingdomPlayers.slice(0,50);
         mundane_number = kingdomPlayers.length;
         howManyPlayersChecked = 0;
         dotCount = 0;
@@ -89,10 +98,15 @@ function getNextPlayer() {
     var nextPlayer = kingdomPlayers.pop();
     jsork.player.getFirstAttendance(nextPlayer.MundaneId).then(function(attendance) {
         if (attendance.length > 0 && (moment(attendance[0].Date) >= sixMonthsAgo)) {
-            nextPlayer.startDate = attendance[0].Date;
+          nextPlayer.startDate = attendance[0].Date;
+          jsork.player.getAttendanceFrom(nextPlayer.MundaneId, sixMonthsAgo.format('YYYY-MM-DD')).then(function(allAttendance) {
+            nextPlayer.totalAttendance = allAttendance.length;
             allPlayers.push(nextPlayer);
+            getNextPlayer();
+          });
+        } else {
+          getNextPlayer();
         }
-        getNextPlayer();
     });
 }
 
@@ -105,6 +119,7 @@ function outputResults() {
     }
     return personaSort;
   });
+  $('.totalnewplayers').text("There were " + allPlayers.length + " new players in this timeframe");
   allPlayers.forEach(function(player) {
     var playerLine =
       (player.ParkName || 'No Park') + '\t' +
@@ -114,8 +129,10 @@ function outputResults() {
       '<a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
       player.MundaneId + '">' +
       (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
-    playerLine += player.startDate;
-    playerHTMLLine += '<td>' + player.startDate + '</td></tr>';
+    playerLine += player.startDate + '\t';
+    playerHTMLLine += '<td>' + player.startDate + '</td>';
+    playerLine += player.totalAttendance;
+    playerHTMLLine += '<td>' + player.totalAttendance + '</td></tr>';
     $('#newPlayersTable').append(playerHTMLLine);
     stringOutput += playerLine + '\r\n';  
   });
@@ -134,7 +151,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyNewPlayersToClipboard() {
-  var allCSV = 'Park\tPersona\tFirst Credit\r\n';
+  var allCSV = 'Park\tPersona\tFirst Credit\tTotal Credits\r\n';
   allCSV += stringOutput;
   copyTextToClipboard(allCSV);
 }

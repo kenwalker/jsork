@@ -34,12 +34,14 @@
 						<header class="main">
 							<h2>New Kingdom Players</h2>
 						</header>
-						<p class="smallbottommargin">This report will show all Kingdom players who've joined and taken their first credit in the last six months.
+						<p class="smallbottommargin">This report will show all Kingdom players who've joined and taken their first credit in the last six (or twelve) months.
 						</p>
 						<p><b>WARNING: </b>This report will take a while and use data, don't run it on your cell phone
 							data plan! <b>WARNING!!</b></b></p>
 						<br>
-	
+						<input type="checkbox" id="twelvemonths" name="twelvemonths" >
+						<label for="twelvemonths">Toggle on if you want twelve months instead of six months</label>
+
 						<label for="kingdom">
 							<h2>Choose a Kingdom or Principality</h2>
 						</label>
@@ -49,6 +51,9 @@
 					<div class="allresults" hidden>
 						<h2 class="smallbottommargin">New Kingdom Players</h2>
 						<h3 id="kingdomName"></h3>
+						<h3 class="printtitle smallbottommargin"></h3>
+						<div class="generateddate"></div>
+						<div class="totalnewplayers"></div>
 						<button class="noprint smallbottommargin primary icon fa-copy"
 							onclick="copyNewPlayersToClipboard()">Copy new players to CSV</button>
 						<table id="newPlayersTable" style="width:100%">
@@ -56,6 +61,7 @@
 								<th class='left'>Park</th>
 								<th class='left'>Persona</th>
                                 <th class='left'>First Credit</th>
+								<th class='left'>Total Credits</th>
 							</tr>
 						</table>
 					</div>
