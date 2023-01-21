@@ -22,7 +22,7 @@
 
         <!-- Header -->
         <header id="header" class="noprint">
-          <a href="rwVoting.html" class="logo noprint"><strong>jsork</strong>
+          <a href="polarisVoting.html" class="logo noprint"><strong>jsork</strong>
             Polaris Voting</a>
           <ul class="icons noprint">
             <li><a href="https://github.com/kenwalker/jsork" class="icon
@@ -40,13 +40,20 @@
             </header>
             <p class="smallbottommargin">
               This report will generate a list of
-              players within a Polaris park that can vote. A player must be dues paid (1.3.1.1), be at least 14 years old (1.3.1.2) but the ORK
-              does not track age so you have to do this manually, attended 6 different days
-              in the last 6 months at their chapter (1.3.1.3), and not be suspended (1.3.1.4) (suspended players are not even listed).<br>
-              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
-              The waiver status of the player is also shown but not included as a prerequisite for Members in Good Standing (MiGS).
-              <br><br>
-              The whole list is provided here and you can use the CSV export to copy the results to a spreadsheet.
+              players within a Polaris park that can vote because they meet Citizenship requirements (sometimes called Member in Good Standing or MiGS).
+              <ul>
+                <li>Must be at least 14 years old (2.3.2.1) but the ORK does not track age so you have to do this manually</li>
+                <li>Must be dues paid (2.3.2.3)</li>
+                <li>Must sign a waiver with their Chapter and/or the Kingdom (2.3.2.4)</li>
+                <li>Have attended 6 different weeks in the last 6 months within the Kingdom (2.3.2.5)</li>
+                <li>Be an attending member of their home chapter for at least six months (2.3.2.6)</li>
+                <li>Not be suspended (2.5.3)</li>
+              </ul>
+              Only players that have taken at least 1 credit in the last 6 months are shown<br>
+              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why. This report uses the <b>Active</b> player list from
+              the ORK. If a player should be showing up here, check the <a href="https://kenwalker.github.io/jsork/activeRetired.html">Active but Marked Retired</a> report for your park.</a><br>
+              The whole list is provided here but the CSV export provides the week numbers that a person has attended
+              for verification.
             </p>
             <div id="parkselect" hidden="hidden">
               <label for="park">
@@ -68,7 +75,8 @@
                 <th class='middle'>Can Vote</th>
                 <th class='middle'>Signed Waiver</th>
                 <th class='middle'>Dues Paid</th>
-                <th class='middle'>Days of Chapter Attendance</th>
+                <th class='middle'>Weeks</th>
+                <th class='middle'>Six Months in Chapter</th>
               </tr>
             </table>
           </div>
