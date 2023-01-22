@@ -111,7 +111,7 @@ function parkSelect(event, ui) {
                                 addTwoPerMonthMax(attendance);
                             }
                         });
-                        if (Object.keys(playerWeeks).length >= 0) {
+                        if (Object.keys(playerWeeks).length > 0) {
                             jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
                                 var duesForLife = false;
                                 playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });                
@@ -183,9 +183,11 @@ function donePlayers() {
         return;
     }
     playerList.sort(function (a, b) {
-        var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-        var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 8;
-        var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 8;
+        var aPersona = a.Persona !== null ? a.Persona : '';
+        var bPersona = b.Persona !== null ? b.Persona : '';
+        var personaSort = aPersona.toLowerCase().localeCompare(bPersona.toLowerCase());
+        var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6 && a.Waivered;
+        var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6 && b.Waivered;
         if (canVoteA === canVoteB) {
             return personaSort;
         }
@@ -195,7 +197,7 @@ function donePlayers() {
     playerList.forEach(function (aPlayer) {
         var playerHTMLLine = '';
         var attendanceNumber = Object.keys(aPlayer.attendance).length;
-        var canVote = aPlayer.DuesPaid && attendanceNumber >= 8;
+        var canVote = aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.Waivered;
         var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
         if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
             playerHTMLLine += '<tr><td></td>';
@@ -220,9 +222,9 @@ function donePlayers() {
             playerLine += aWeek;
         });
         playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
-        playerHTMLLine += '<td class="middle white" >' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
+        playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
         playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Pay Dues') + '</td>';
-        playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 8 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+        playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
         playerHTMLLine += '<td class="middle white" >' + aPlayer.oneKingdomEvent + '</td>';
         playerHTMLLine += '<td class="middle white" >' + aPlayer.firstAttendance + '</td>';
 
