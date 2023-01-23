@@ -66,8 +66,9 @@ function parkSelect(event, ui) {
 
     $('.working').attr('hidden', false);
     $('.working').text('Gathering the players...');
-    jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.ACTIVE).then(function (data) {
-        // jsork.park.getActivePlayers(parseInt(event.target.value, 10)).then(function(data) {
+    var parkId = parseInt(event.target.value, 10);
+    jsork.park.getPlayers(parkId, jsork.filters.ACTIVE).then(function (data) {
+        // jsork.park.getActivePlayers(parkId).then(function(data) {
         var playersLeft = data.length;
         if (playersLeft === 0) {
             document.getElementById('kingdom').disabled = false;
@@ -81,28 +82,22 @@ function parkSelect(event, ui) {
             updateWorkingMessage();
             jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
                 if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) >= startDate) {
-                    var playerWeeks = {};
-                    var playerMonths = {};
+                    var totalAttendance = 0;
                     var oneKingdomEvent = false;
                     var addTwoPerMonthMax = function (attendance) {
                         var attMonth = moment(attendance.Date).month() + 1;
                         var attWeek = moment(attendance.Date).isoWeekday(1).week();
-                        if (playerMonths[attMonth] !== undefined && playerMonths[attMonth] === 2) {
+                        // if (playerMonths[attMonth] !== undefined && playerMonths[attMonth] === 2) {
+                        //     return;
+                        // }
+                        if (attendance.EventKingdomId === 4 && oneKingdomEvent) {
                             return;
                         }
-                        if (attendance.EventKingdomId === 4 && !oneKingdomEvent) {
-                            return;
-                        }
-                        if (!playerWeeks[attWeek]) {
-                            playerWeeks[attWeek] = [];
-                        }
-                        if (!playerMonths[attMonth]) {
-                            playerMonths[attMonth] = 0;
-                        }
-                        playerWeeks[attWeek].push(attendance);
-                        playerMonths[attMonth]++;
-                        if (attendance.EventKingdomId === 4) {
-                            oneKingdomEvent = true;
+                        if (attendance.EventParkId === parkId || attendance.ParkId === parkId || attendance.EventKingdomId === 4) {
+                            totalAttendance++;
+                            if (attendance.EventKingdomId === 4) {
+                                oneKingdomEvent = true;
+                            }    
                         }
                     };
                     jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
@@ -111,7 +106,7 @@ function parkSelect(event, ui) {
                                 addTwoPerMonthMax(attendance);
                             }
                         });
-                        if (Object.keys(playerWeeks).length > 0) {
+                        if (totalAttendance > 0) {
                             jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
                                 var duesForLife = false;
                                 playerInfo.DuesPaidList.forEach(function(dues) { if (dues.DuesForLife) { duesForLife = true } });                
@@ -123,7 +118,7 @@ function parkSelect(event, ui) {
                                         DuesThrough: playerInfo.DuesThrough,
                                            DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > moment(),
                                         Waivered: playerInfo.Waivered !== 0,
-                                        attendance: playerWeeks,
+                                        attendance: totalAttendance,
                                         oneKingdomEvent: oneKingdomEvent,
                                         duesForLife: duesForLife
                                     });
@@ -186,8 +181,8 @@ function donePlayers() {
         var aPersona = a.Persona !== null ? a.Persona : '';
         var bPersona = b.Persona !== null ? b.Persona : '';
         var personaSort = aPersona.toLowerCase().localeCompare(bPersona.toLowerCase());
-        var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6 && a.Waivered;
-        var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6 && b.Waivered;
+        var canVoteA = a.DuesPaid && a.attendance >= 6 && a.Waivered;
+        var canVoteB = b.DuesPaid && b.attendance >= 6 && b.Waivered;
         if (canVoteA === canVoteB) {
             return personaSort;
         }
@@ -196,7 +191,7 @@ function donePlayers() {
     var lastPlayer = null;
     playerList.forEach(function (aPlayer) {
         var playerHTMLLine = '';
-        var attendanceNumber = Object.keys(aPlayer.attendance).length;
+        var attendanceNumber = aPlayer.attendance;
         var canVote = aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.Waivered;
         var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
         if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
