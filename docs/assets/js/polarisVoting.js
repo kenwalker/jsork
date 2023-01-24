@@ -5,14 +5,16 @@ var playerList = null;
 var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
-var today = moment();
-var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+var startDate;
+var endDate = moment();
 
 function initParks() {
   playerList = [];
   $('.allresults').attr('hidden', true);
   $('table').find('tr:gt(0)').remove();
   $('.noplayers').text(' ');
+  $('#enddate').val(endDate.format('YYYY-MM-DD'));
+  dateChange();
 
   jsork.kingdom.getParks(27).then(function (data) {
     data.sort(function (a, b) {
@@ -55,12 +57,13 @@ function parkSelect(event, ui) {
     return;
   }
   document.getElementById('park').disabled = true;
+  document.getElementById('enddate').disabled = true;
   $('.printtitle').text($('#park option:selected').text());
   $('.generateddate').text(
     'Attendance from ' +
     startDate.format('ddd MMM Do, YYYY [Week] w') +
     ' To ' +
-    today.format('ddd MMM Do, YYYY [Week] w'));
+    endDate.format('ddd MMM Do, YYYY [Week] w'));
 
   $('.working').attr('hidden', false);
   $('.working').text('Gathering the players...');
@@ -82,12 +85,12 @@ function parkSelect(event, ui) {
           var playerWeeks = {};
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (sixMonthAttendance) {
             sixMonthAttendance.forEach(function (attendance) {
-              if (moment(attendance.Date) <= today) {
+              if (moment(attendance.Date) <= endDate) {
                 if (attendance.KingdomId === 27 || attendance.EventKingdomId === 27) {
-                  if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
-                    playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
+                  if (!playerWeeks[moment(attendance.Date).week()]) {
+                    playerWeeks[moment(attendance.Date).week()] = [];
                   }
-                  playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
+                  playerWeeks[moment(attendance.Date).week()].push(attendance);
                 }
               }
             });
@@ -142,6 +145,7 @@ function parkSelect(event, ui) {
 function donePlayers() {
   if (playerList.length === 0) {
     document.getElementById('park').disabled = false;
+    document.getElementById('enddate').disabled = false;
     // $('.noplayers').text('Generated on ' + new Date().toDateString());
     $('.working').attr('hidden', true);
     $('.noplayers').text('There are no players returned in the results');
@@ -198,14 +202,31 @@ function donePlayers() {
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;
   });
+  $('.reportspan').hide();
   $('.working').attr('hidden', true);
   $('.allresults').attr('hidden', false);
   document.getElementById('park').disabled = false;
+  document.getElementById('enddate').disabled = false;
 }
 
 function startUp() {
   $('#park').on('change', parkSelect);
+  $('#dateselect').on('change', dateChange);
   initParks();
+}
+
+function dateChange() {
+  var ed = $('#enddate').val();
+  endDate = moment(ed);
+  startDate = moment(endDate).subtract(6, 'months').startOf('week');
+  $('.reportspan').show();
+  $('.reportspan').text(
+    'Attendance will be calculated from ' +
+    startDate.format('ddd MMM Do, YYYY [Week] w') +
+    ' To ' +
+    endDate.format('ddd MMM Do, YYYY [Week] w')
+  );
+
 }
 
 function copyTextToClipboard(str) {

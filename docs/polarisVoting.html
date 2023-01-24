@@ -49,12 +49,18 @@
                 <li>Be an attending member of their home chapter for at least six months (2.3.2.6)</li>
                 <li>Not be suspended (2.5.3)</li>
               </ul>
-              Only players that have taken at least 1 credit in the last 6 months are shown<br>
+              Only players that have taken at least 1 credit in the last 6 months are shown.
               If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why. This report uses the <b>Active</b> player list from
               the ORK. If a player should be showing up here, check the <a href="https://kenwalker.github.io/jsork/activeRetired.html">Active but Marked Retired</a> report for your park.</a><br>
               The whole list is provided here but the CSV export provides the week numbers that a person has attended
               for verification.
+							Choose the date from which to look back six months. Dues and Waiver status reflect only the current values. Weeks for 
+              Polaris start on Sunday and end on Saturday. The start is adjusted to include the whole week.
             </p>
+						<div id="dateselect">
+							<input type="date" id="enddate" name="enddate"> <b>Choose the End date of the six month window (defaults to today)</b>
+						</div>
+            <div class="reportspan"></div>
             <div id="parkselect" hidden="hidden">
               <label for="park">
                 <h2>Choose a Park</h2>
