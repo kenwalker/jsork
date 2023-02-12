@@ -7,8 +7,6 @@ var dotCount = 1;
 var callCount = 0;
 var today = moment();
 var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
-// TEMPORARY 
-var twoYearDate = moment(today).subtract(48, 'months').isoWeekday(1).startOf('isoWeek');
 
 function initParks() {
   playerList = [];
@@ -85,7 +83,9 @@ function parkSelect(event, ui) {
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
-                playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+                if (attendance.KingdomId === 10 || attendance.EventKingdomId === 10) {
+                  playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+                }
               }
             });
             if (Object.keys(playerWeeks).length >= 0) {
@@ -160,11 +160,8 @@ function donePlayers() {
   }
   playerList.sort(function(a, b) {
     var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 7;
-    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 7;
-    // TEMPORARY
-    // var canVoteA = a.DuesPaid && a.sixMonthsPlayed;
-    // var canVoteB = b.DuesPaid && b.sixMonthsPlayed;;
+    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 7 && a.sixMonthsPlayed;
+    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 7 && b.sixMonthsPlayed;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -175,8 +172,6 @@ function donePlayers() {
     var playerHTMLLine = '';
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
     var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
-    // TEMPORARY
-    // var canVote = aPlayer.DuesPaid && aPlayer.sixMonthsPlayed;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
