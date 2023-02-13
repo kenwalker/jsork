@@ -106,20 +106,20 @@ function parkSelect(event, ui) {
                 }
                 $('.working').text('Number of players left to check ' + playersLeft);
                 if (--playersLeft <= 0) {
-                  checkFirstAttendance();
+                  donePlayers();
                 }
               });
             } else {
               $('.working').text('Number of players left to check ' + playersLeft);
               if (--playersLeft <= 0) {
-                checkFirstAttendance();
+                donePlayers();
               }
             }
           })
         } else {
           $('.working').text('Number of players left to check ' + playersLeft);
           if (--playersLeft <= 0) {
-            checkFirstAttendance();
+            donePlayers();
           }
         }
       });
@@ -128,9 +128,6 @@ function parkSelect(event, ui) {
 }
 
 function checkFirstAttendance() {
-  if (true) {
-    donePlayers();
-  }
   var playersLeft = playerList.length;
   if (playerList.length === 0) {
     donePlayers();
