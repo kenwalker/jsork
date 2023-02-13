@@ -6,7 +6,7 @@ var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
 var today = moment();
-var startDate = moment(today).subtract(180, 'days').isoWeekday(1).startOf('isoWeek');
+var startDate = moment(today).subtract(180, 'days');
 
 function initParks() {
   playerList = [];
