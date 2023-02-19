@@ -84,7 +84,9 @@ function parkSelect(event, ui) {
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
-                if (attendance.KingdomId === 38 || attendance.EventKingdomId === 38) {
+                if (attendance.KingdomId === 38 || 
+                  attendance.EventKingdomId === 38 || 
+                  player.ParkId === attendance.ParkId) {
                   // if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
                   //   playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
                   // }
