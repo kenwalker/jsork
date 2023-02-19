@@ -84,7 +84,7 @@ function parkSelect(event, ui) {
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
-                if (attendance.KingdomId === 38) {
+                if (attendance.KingdomId === 38 || attendance.EventKingdomId === 38) {
                   // if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
                   //   playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
                   // }
@@ -173,8 +173,8 @@ function donePlayers() {
     // Temporary rules
     // var canVoteA = a.DuesPaid && a.Waivered && Object.keys(a.attendance).length >= 6;
     // var canVoteB = b.DuesPaid && b.Waivered && Object.keys(b.attendance).length >= 6;
-    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6;
-    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6;
+    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6 && a.Waivered;
+    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6 && a.Waivered;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -187,7 +187,7 @@ function donePlayers() {
     // var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
     // TEMPORARY
     // var canVote = aPlayer.DuesPaid && aPlayer.Waivered && attendanceNumber >= 6;
-    var canVote = aPlayer.DuesPaid && attendanceNumber >= 6;
+    var canVote = aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.Waivered;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -203,10 +203,10 @@ function donePlayers() {
     }
     playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber;
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
-    // playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
     // playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
     // TEMPORARY
-    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightgreen') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
+    // playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? 'Dues Paid' : 'Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     $('#playerTable').append(playerHTMLLine);
