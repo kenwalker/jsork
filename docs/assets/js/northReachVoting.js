@@ -5,14 +5,17 @@ var playerList = null;
 var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
-var today = moment();
-var startDate = moment(today).subtract(180, 'days');
+var startDate;
+var endDate = moment();
+
 
 function initParks() {
   playerList = [];
   $('.allresults').attr('hidden', true);
   $('table').find('tr:gt(0)').remove();
   $('.noplayers').text(' ');
+  $('#enddate').val(endDate.format('YYYY-MM-DD'));
+  dateChange();
 
   jsork.kingdom.getParks(36).then(function(data) {
     data.sort(function(a, b) {
@@ -60,7 +63,7 @@ function parkSelect(event, ui) {
     'Attendance from ' +
     startDate.format('ddd MMM Do, YYYY [Week] w') +
     ' To ' +
-    today.format('ddd MMM Do, YYYY [Week] w'));
+    endDate.format('ddd MMM Do, YYYY [Week] w'));
 
   $('.working').attr('hidden', false);
   $('.working').text('Gathering the players...');
@@ -84,7 +87,7 @@ function parkSelect(event, ui) {
             allAttendance.reverse();
             allAttendance.forEach(function(attendance) {
               var dow = moment(attendance.Date).isoWeekday();
-              if (moment(attendance.Date) <= today && (dow === 6 || dow === 7)) {
+              if (moment(attendance.Date) <= endDate && (dow === 6 || dow === 7)) {
                 if (attendance.KingdomId === 36 || attendance.EventKingdomId === 36) {
                   playerWeeks[Object.keys(playerWeeks).length.toString()] = moment(attendance.Date).format("ddd, MMM Do YYYY");
                 }
@@ -212,7 +215,22 @@ function donePlayers() {
 
 function startUp() {
   $('#park').on('change', parkSelect);
+  $('#dateselect').on('change', dateChange);
   initParks();
+}
+
+function dateChange() {
+  var ed = $('#enddate').val();
+  endDate = moment(ed);
+  startDate = moment(endDate).subtract(180, 'days');
+  $('.reportspan').show();
+  $('.reportspan').text(
+    'Attendance will be calculated from ' +
+    startDate.format('ddd MMM Do, YYYY [Week] w') +
+    ' To ' +
+    endDate.format('ddd MMM Do, YYYY [Week] w')
+  );
+
 }
 
 function copyTextToClipboard(str) {

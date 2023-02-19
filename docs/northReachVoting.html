@@ -42,12 +42,17 @@
               This report will generate a list of
               players within a Northreach park that can vote. A player must be waivered (2.1.1.d), be dues paid (A.2.2.a), 
               have attended 12 different days (Saturdays/Sundays only) in the last 180 days at any event or park day within Northreach (A.2.2.b), and be at least
-              14 years of age (2.2.1.d) <b>NOTE:</b> The ORK does not track age so this needs to be done manually.<br>
+              14 years of age (2.2.1.d) <b>NOTE:</b> The ORK does not track age so this needs to be done manually. If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
               If a player is not seen here that you think should be, check the <a href="https://kenwalker.github.io/jsork/activeRetired.html">Active but Retired report</a>.<br>
-              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why.<br>
+              
               <br>
-              The whole list is provided here and you can use the CSV export to copy the results to a spreadsheet. This CVS file shows the attendance dates.
+              The whole list is provided here and you can use the CSV export to copy the results to a spreadsheet. This CVS file shows the attendance dates.<br>
+              Choose the date from which to look back 180 days. Dues and Waiver status reflect only the current values.
             </p>
+						<div id="dateselect">
+							<input type="date" id="enddate" name="enddate"> <b>Choose the End date of the 180 day window (defaults to today)</b>
+						</div>
+            <div class="reportspan"></div>
             <div id="parkselect" hidden="hidden">
               <label for="park">
                 <h2>Choose a Park</h2>
