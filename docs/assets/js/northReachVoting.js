@@ -81,10 +81,12 @@ function parkSelect(event, ui) {
         if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) >= startDate) {
           var playerWeeks = {};
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
+            allAttendance.reverse();
             allAttendance.forEach(function(attendance) {
-              if (moment(attendance.Date) <= today) {
+              var dow = moment(attendance.Date).isoWeekday();
+              if (moment(attendance.Date) <= today && (dow === 6 || dow === 7)) {
                 if (attendance.KingdomId === 36 || attendance.EventKingdomId === 36) {
-                  playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+                  playerWeeks[Object.keys(playerWeeks).length.toString()] = moment(attendance.Date).format("ddd, MMM Do YYYY");
                 }
               }
             });
@@ -185,7 +187,7 @@ function donePlayers() {
       aPlayer.MundaneId + '">' +
       (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
-    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber;
+    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t';
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Pay Dues') + '</td>';
@@ -194,6 +196,12 @@ function donePlayers() {
     // playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightgreen') + '">' + attendanceNumber + '</td>';
     // playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
     $('#playerTable').append(playerHTMLLine);
+    Object.keys(aPlayer.attendance).forEach(function(aKey, index) {
+      playerLine += aPlayer.attendance[aKey];
+      if (index < attendanceNumber - 1) {
+        playerLine += ', ';
+      }
+    });
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;
   });
@@ -217,7 +225,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tDays of Attendance\r\n';
+  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tDays of Attendance\tAll Attendances\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
