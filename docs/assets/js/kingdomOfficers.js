@@ -91,6 +91,10 @@ function getOfficers(kingdomId) {
               var parkChampion = parkOfficers.find(function(officer) {
                 return officer.OfficerRole === 'Champion';
               });
+              var parkGmr = parkOfficers.find(function(officer) {
+                return officer.OfficerRole === 'GMR';
+              });
+      
               if (parkMonarch && parkMonarch.Persona) {
                 parkHTML += '<b>Monarch:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + parkMonarch.MundaneId + '">' + parkMonarch.Persona + '</a> (' + parkMonarch.Surname + ', ' + parkMonarch.GivenName + ')<br>';
               }
@@ -102,6 +106,9 @@ function getOfficers(kingdomId) {
               }
               if (parkChampion && parkChampion.Persona) {
                 parkHTML += '<b>Champion:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + parkChampion.MundaneId + '">' + parkChampion.Persona + '</a> (' + parkChampion.Surname + ', ' + parkChampion.GivenName + ')<br>';
+              }
+              if (parkGmr && parkGmr.Persona) {
+                parkHTML += '<b>GMR:</b> <a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' + parkGmr.MundaneId + '">' + parkGmr.Persona + '</a> (' + parkGmr.Surname + ', ' + parkGmr.GivenName + ')<br>';
               }
               parkHTML += '<p>';
               allParks[park.Name] = parkHTML;
