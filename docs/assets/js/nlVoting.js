@@ -7,6 +7,7 @@ var dotCount = 1;
 var callCount = 0;
 var today = moment();
 var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+var kingdomParkIds = [];
 
 function initParks() {
   playerList = [];
@@ -29,6 +30,7 @@ function initParks() {
         option.html(park.Name);
         option.val(park.ParkId);
         kSelect.append(option);
+        kingdomParkIds.push(park.ParkId);
       }
     });
     $('#parkselect').attr('hidden', false);
@@ -83,7 +85,7 @@ function parkSelect(event, ui) {
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
-                if (attendance.KingdomId === 20 || attendance.EventKingdomId === 20) {
+                if (attendance.KingdomId === 20 || attendance.EventKingdomId === 20 || kingdomParkIds.includes(attendance.ParkId) || kingdomParkIds.includes(attendance.EventParkId)) {
                     playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
                 }
               }
