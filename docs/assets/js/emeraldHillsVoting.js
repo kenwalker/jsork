@@ -2,9 +2,11 @@
 /* global jsork, $ */
 
 var playerList = null;
+var allKnights = [];
 var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
+var selectedPark = 0;
 // var today = moment(new Date("03/17/2020"));
 // var today = moment().startOf('week').isoWeekday(2);
 var today = moment();
@@ -53,10 +55,12 @@ function parkSelect(event, ui) {
   $('table').find('tr:gt(0)').remove();
   $('.noplayers').text('');
   playerList = [];
+  allKnights = [];
   playerContent = '';
   if (event.target.value === '0') {
     return;
   }
+  selectedPark = parseInt(event.target.value, 10);
   document.getElementById('park').disabled = true;
   $('.printtitle').text($('#park option:selected').text());
   $('.generateddate').text(
@@ -66,8 +70,20 @@ function parkSelect(event, ui) {
     today.format('ddd MMM Do, YYYY [Week] W'));
 
   $('.working').attr('hidden', false);
+  doKnights();
+}
+
+function doKnights() {
+  $('.working').text('Checking for park Knights');
+  jsork.park.getKnights(selectedPark).then(function(result) {
+    allKnights = result;
+    doPlayers();
+  });
+};
+
+function doPlayers() {
   $('.working').text('Gathering the players...');
-  jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.ACTIVE).then(function(data) {
+  jsork.park.getPlayers(selectedPark, jsork.filters.ACTIVE).then(function(data) {
   // jsork.park.getActivePlayers(parseInt(event.target.value, 10)).then(function(data) {
     var playersLeft = data.length;
     if (playersLeft === 0) {
@@ -80,10 +96,13 @@ function parkSelect(event, ui) {
     $('.working').text('Number of players left to check ' + playersLeft);
     data.forEach(function(player) {
       updateWorkingMessage();
+      var isKnight = allKnights.find(function(aKnight) { return aKnight.MundaneId === player.MundaneId });
+      player.IsKnight = isKnight;
       jsork.player.getLastAttendance(player.MundaneId).then(function(lastAttendance) {
         if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) >= startDate) {
           var playerWeeks = {};
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
+
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
                 if (attendance.KingdomId === 6 || attendance.EventKingdomId === 6) {
@@ -104,9 +123,11 @@ function parkSelect(event, ui) {
                     UserName: playerInfo.UserName,
                     MundaneId: playerInfo.MundaneId,
                     DuesThrough: playerInfo.DuesThrough,
-                    DuesPaid: duesForLife || moment(playerInfo.DuesThrough) > startDate,
+                    DuesPaid: duesForLife || moment(playerInfo.DuesThrough) >= today,
+                    DuesForLife: duesForLife,
                     Waivered: playerInfo.Waivered !== 0,
-                    attendance: playerWeeks
+                    attendance: playerWeeks,
+                    IsKnight: player.IsKnight
                   });
                 }
                 $('.working').text('Number of players left to check ' + playersLeft);
@@ -178,6 +199,7 @@ function donePlayers() {
     var playerHTMLLine = '';
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
     var canVote = aPlayer.Waivered && aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.sixMonthsPlayed;
+    aPlayer.ActiveKnight = attendanceNumber >= 8 && canVote;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -203,10 +225,15 @@ function donePlayers() {
     });
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Must sign Waiver') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Must Pay Dues') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.DuesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Must Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
-    // playerHTMLLine += '</tr>';
+    if (aPlayer.IsKnight) {
+      playerHTMLLine += '<td class="middle ' + (aPlayer.ActiveKnight ? 'lightgreen':'lightred') + '">' + (aPlayer.ActiveKnight ? "Yes" : "No") + '</td>';
+    } else {
+      playerHTMLLine += '<td class="middle white"></td>';
+    }
+    playerHTMLLine += '</tr>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;
