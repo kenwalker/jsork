@@ -140,7 +140,7 @@ function checkFirstAttendance() {
     $('.working').text('Checking first attendance date....');
     playerList.forEach(function(aPlayer) {
       jsork.player.getFirstAttendance(aPlayer.MundaneId).then(function(attendance) {
-        if (moment(attendance[0].Date) <= startDate) {
+        if (moment(attendance[0].Date) <= startDate || attendance[0].Date === '0000-00-00') {
           aPlayer.sixMonthsPlayed = true;
         } else {
           aPlayer.sixMonthsPlayed = false;
