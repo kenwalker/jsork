@@ -39,13 +39,19 @@
   // Current version.
   jsork.VERSION = '1.0';
   jsork.TOKEN = null;
+  jsork.TIMEOUT = null;
 
 
   // var ork = 'http://localhost/ork/orkservice/Json/index.php';
+
   // var ork = 'http://192.168.2.21/ork/orkservice/Json/index.php';
   // var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
   // var ork = 'https://staging.amtgard.com/ork/orkservice/Json/index.php';
+  // var ork = 'https://ork.stage.amtgard.com/orkservice/Json/index.php';
+  
   var ork = 'https://ork.amtgard.com/orkservice/Json/index.php';
+
+  // ork = 'https://ork7.dev.amtgard.com/orkservice/Json/index.php'
 
   jsork.filters = {
     ACTIVE: 0,
@@ -315,6 +321,7 @@
     var promise = new Promise(function(resolve) {
       var request =
           {
+            Token: jsork.TOKEN,
             Id: kingdomId,
             Type: 'Kingdom'
           };
@@ -361,12 +368,15 @@
     var promise = new Promise(function(resolve) {
       $.getJSON(ork + '?request=',
         {
-          call: 'Reports/knights_list',
-          request: {KingdomId: kingdomID}
+          call: 'Report/PlayerAwards',
+          request: {
+            KingdomId: kingdomID,
+            IncludeKnights: 1,
+          }
         },
         function(data) {
           if (data.Status.Status === 0) {
-            resolve(data.Parks);
+            resolve(data.Awards);
           } else {
             // on error just assume no parks
             resolve([]);
@@ -481,6 +491,68 @@
     return promise;
   };
 
+  jsork.park.getReeveQualified = function(parkID) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/GetReeveQualified',
+          request: {ParkId: parkID}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.ReeveQualified);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.park.getParagons = function(parkId) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            ParkId: parkId
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/ClassMasters',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Awards);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.park.getKnights = function(parkId) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/PlayerAwards',
+          request: {
+            ParkId: parkId,
+            IncludeKnights: 1,
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.Awards);
+          } else {
+            // on error just assume no parks
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
   jsork.park.getActivePlayers = function(parkID) {
     var request = {
       ParkId: parkID
@@ -561,7 +633,7 @@
   jsork.park.getAttendance = function(parkID, date) {
     var promise = new Promise(function(resolve, reject) {
       var month = date.getMonth() + 1; //months from 1-12
-      var day = date.getDate();
+      var day = date.getUTCDate();
       var year = date.getFullYear();
       var requestDate = year + '-' + month + '-' + day;
       var request =
@@ -577,6 +649,30 @@
         function(data) {
           if (data.Status.Status === 0 || data.Status === true) {
             resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.park.getAllAttendance = function(parkID) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            ParkId: parkID
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/AttendanceSummary',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Dates);
           } else {
             resolve([]);
           }
@@ -658,6 +754,27 @@
     return promise;
   };
 
+  jsork.pronouns = {};
+
+  jsork.pronouns.getList = function() {
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Pronoun/GetPronounList'
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Pronouns);
+          } else {
+            reject('Error retrieving pronouns');
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;    
+  }
+
   // Define all the Player applicable APIs
   jsork.player = {};
 
@@ -709,6 +826,9 @@
   };
 
   jsork.player.getClasses = function(mundaneID) {
+    if (jsork.TIMEOUT) {
+      $.ajaxSetup({timeout: jsork.TIMEOUT});
+    }
     var promise = new Promise(function(resolve, reject) {
       var request =
           {
@@ -925,6 +1045,28 @@
             Active: active ? 1:0,
             DuesDate: duesDate,
             DuesSemesters: semesters
+          }
+        },
+        function(data) {
+          resolve(data);
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.player.updatePlayerWaiver = function(mundaneId, waivered, active) {
+    var promise = new Promise(function(resolve) {
+      $.post(
+        ork + '?request=Player/UpdatePlayer',
+        {
+          call: 'Player/UpdatePlayer',
+          request: {
+            Token: jsork.TOKEN,
+            MundaneId: mundaneId,
+            Active: active ? 1:0,
+            Waivered: waivered ? 1:0,
           }
         },
         function(data) {
@@ -1388,6 +1530,7 @@
     ORDER_OF_THE_FLAME: 34, ORDER_OF_THE_CROWN: 239, DEFENDER: 35, WEAPONMASTER: 36, PARAGON_ANTIPALADIN: 37, PARAGON_ARCHER: 38, PARAGON_ASSASSIN: 39,
     PARAGON_BARBARIAN: 40, PARAGON_BARD: 41, PARAGON_DRUID: 42, PARAGON_HEALER: 43, PARAGON_MONK: 44, PARAGON_MONSTER: 45,
     PARAGON_PALADIN: 46, PARAGON_PEASANT: 47, PARAGON_RAIDER: 48, PARAGON_SCOUT: 49, PARAGON_WARRIOR: 50, PARAGON_WIZARD: 51,
+    PARAGON_COLOR: 241, PARAGON_REEVE: 242,
     LORD: 52, LADY: 53, BARONET: 54, BARONETESS: 55, BARON: 56, BARONESS: 57, VISCOUNT: 58, VISCOUNTESS: 59, COUNT: 60,
     COUNTESS: 61, MARQUIS: 62, MARQUESS: 63, DUKE: 64, DUCHESS: 65, ARCHDUKE: 66, ARCHDUCHESS: 67, GRAND_DUKE: 68,
     GRAND_DUCHESS: 69, SHERIFF: 70, PROVINCIAL_BARON: 71, PROVINCIAL_BARONESS: 72, PROVINCIAL_DUKE: 73, PROVINCIAL_DUCHESS: 74,
