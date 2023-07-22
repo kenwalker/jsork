@@ -57,8 +57,19 @@ function run() {
                 }
             }
         });
+        var playerResults = [];
         Object.keys(awardsByPlayer).forEach(function(aPlayerName) {
-            var aPlayer = awardsByPlayer[aPlayerName];
+            playerResults.push(awardsByPlayer[aPlayerName]);
+        });
+        playerResults.sort(function(a, b) {
+            var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
+            var parkSort = a.ParkName.toLowerCase().localeCompare(b.ParkName.toLowerCase());
+            if (parkSort !== 0) {
+              return parkSort;
+            }
+            return personaSort;
+        });
+        playerResults.forEach(function(aPlayer) {
             var playerHTMLLine = '';
             var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
             playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
@@ -88,41 +99,6 @@ function run() {
         $('.working').attr('hidden', true);
         $('.allresults').attr('hidden', false);
      });
-}
-
-function donePlayers() {
-    if (playerList.length === 0) {
-        document.getElementById('kingdom').disabled = false;
-        // $('.noplayers').text('Generated on ' + new Date().toDateString());
-        $('.working').attr('hidden', true);
-        $('.noplayers').text('There are no players with any Orders of the Warrior');
-        return;
-    }
-    playerList.sort(function (a, b) {
-        return a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-    });
-    playerList.forEach(function (aPlayer) {
-        var playerHTMLLine = '';
-        var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
-        if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
-            playerHTMLLine += '<tr><td></td>';
-        } else {
-            playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
-                aPlayer.MundaneId + '" target="_blank">' +
-                (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
-        }
-        playerLine += aPlayer.KingdomName + '\t' + aPlayer.ParkName + '\t' + aPlayer.Warriors + '\t' + aPlayer.Warlord + '\t' + aPlayer.Knight;
-        playerHTMLLine += '<td class="left">' + aPlayer.KingdomName + '<td class="left">' + aPlayer.ParkName + '</td><td class="middle">' + aPlayer.Warriors + '</td><td class="middle">' + aPlayer.Warlord + '</td><td class="middle">' + aPlayer.Knight + '</td></tr>';
-        $('#playerTable').append(playerHTMLLine);
-        playerContent += playerLine + '\r\n';
-        lastPlayer = aPlayer;
-    });
-    $('.working').attr('hidden', true);
-    $('.allresults').attr('hidden', false);
-    document.getElementById('kingdom').disabled = false;
-}
-
-function startUp() {
 }
 
 function copyTextToClipboard(str) {
