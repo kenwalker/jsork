@@ -8,7 +8,7 @@ var endOfCall = 0;
 var totalTimeOfCalls = 0;
 var numberOfFailedCalls = 0;
 var callTimeout;
-const msBetweenCalls = 0;
+const msBetweenCalls = 60000;
 jsork.TIMEOUT = 2000;
 const MAXTESTS = 10000;
 
