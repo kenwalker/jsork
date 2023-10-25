@@ -160,8 +160,8 @@ function donePlayers() {
   }
   playerList.sort(function(a, b) {
     var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 7 && a.sixMonthsPlayed;
-    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 7 && b.sixMonthsPlayed;
+    var canVoteA = a.Waivered && a.DuesPaid && Object.keys(a.attendance).length >= 7 && a.sixMonthsPlayed;
+    var canVoteB = b.Waivered && b.DuesPaid && Object.keys(b.attendance).length >= 7 && b.sixMonthsPlayed;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -171,7 +171,7 @@ function donePlayers() {
   playerList.forEach(function(aPlayer) {
     var playerHTMLLine = '';
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
-    var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
+    var canVote = aPlayer.Waivered && aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -187,7 +187,7 @@ function donePlayers() {
     }
     playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t'+ aPlayer.sixMonthsPlayed + '\t' + aPlayer.firstAttendance;
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightyellow') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Should Sign Waiver') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
     // Temporary
