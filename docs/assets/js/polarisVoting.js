@@ -6,6 +6,7 @@ var playerContent = '';
 var dotCount = 1;
 var callCount = 0;
 var startDate;
+var attendingDate;
 var endDate = moment();
 
 function initParks() {
@@ -100,7 +101,7 @@ function parkSelect(event, ui) {
                 // Reduce this to the attendance that is before the start of the six month window
                 // and where the park is the same as the players park
                 allAttendance = allAttendance.filter(function(attendance) {
-                  return moment(attendance.Date) <= startDate && attendance.ParkId === player.ParkId;
+                  return moment(attendance.Date) <= attendingDate && attendance.ParkId === player.ParkId;
                 });
                 jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
                   var duesForLife = false;
@@ -115,7 +116,7 @@ function parkSelect(event, ui) {
                       Waivered: playerInfo.Waivered !== 0,
                       attendance: playerWeeks,
                       duesForLife: duesForLife,
-                      SixMonthsHomeChapter: allAttendance.length > 0
+                      ThreeMonthsHomeChapter: allAttendance.length > 0
                     });
                   }
                   $('.working').text('Number of players left to check ' + playersLeft);
@@ -155,8 +156,8 @@ function donePlayers() {
     var aPersona = a.Persona !== null ? a.Persona : '';
     var bPersona = b.Persona !== null ? b.Persona : '';
     var personaSort = aPersona.toLowerCase().localeCompare(bPersona.toLowerCase());
-    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6 && a.SixMonthsHomeChapter && a.Waivered;
-    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6 && b.SixMonthsHomeChapter && b.Waivered;
+    var canVoteA = a.DuesPaid && Object.keys(a.attendance).length >= 6 && a.ThreeMonthsHomeChapter && a.Waivered;
+    var canVoteB = b.DuesPaid && Object.keys(b.attendance).length >= 6 && b.ThreeMonthsHomeChapter && b.Waivered;
     if (canVoteA === canVoteB) {
       return personaSort;
     }
@@ -168,7 +169,7 @@ function donePlayers() {
     var attendanceNumber = Object.keys(aPlayer.attendance).length;
     // var canVote = aPlayer.DuesPaid && attendanceNumber >= 7 && aPlayer.sixMonthsPlayed;
     // TEMPORARY
-    var canVote = aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.SixMonthsHomeChapter && aPlayer.Waivered;
+    var canVote = aPlayer.DuesPaid && attendanceNumber >= 6 && aPlayer.ThreeMonthsHomeChapter && aPlayer.Waivered;
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
     if (lastPlayer && lastPlayer.Persona === aPlayer.Persona) {
       playerHTMLLine += '<tr><td></td>';
@@ -182,7 +183,7 @@ function donePlayers() {
         aPlayer.MundaneId + '">' +
         (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
-    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t' + aPlayer.SixMonthsHomeChapter + '\t';
+    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t' + aPlayer.ThreeMonthsHomeChapter + '\t';
     var firstTime = true;
     Object.keys(aPlayer.attendance).forEach(function(aWeek) {
       if (firstTime) {
@@ -197,7 +198,7 @@ function donePlayers() {
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.duesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Pay Dues') + '</td>';
     playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
-    playerHTMLLine += '<td class="middle ' + (aPlayer.SixMonthsHomeChapter ? 'lightgreen' : 'lightred') + '">' + (aPlayer.SixMonthsHomeChapter ? 'Yes' : 'No') + '</td>';
+    playerHTMLLine += '<td class="middle ' + (aPlayer.ThreeMonthsHomeChapter ? 'lightgreen' : 'lightred') + '">' + (aPlayer.ThreeMonthsHomeChapter ? 'Yes' : 'No') + '</td>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;
@@ -219,6 +220,7 @@ function dateChange() {
   var ed = $('#enddate').val();
   endDate = moment(ed);
   startDate = moment(endDate).subtract(6, 'months').startOf('week');
+  attendingDate = moment(endDate).subtract(3, 'months').startOf('week')
   $('.reportspan').show();
   $('.reportspan').text(
     'Attendance will be calculated from ' +
@@ -239,7 +241,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tWeeks of Attendance\tSix Months in Home Chapter\tThe Week numbers of attendance\r\n';
+  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tWeeks of Attendance\tThree Months in Home Chapter\tThe Week numbers of attendance\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
