@@ -535,15 +535,15 @@ function doNextPlayer() {
                 }
             }
             // Compute if player shoud be retired?
-            if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) < moment().subtract(24, 'months')) {
+            if ((lastAttendance.length === 0) || (lastAttendance.length > 0 && moment(lastAttendance[0].Date) < moment().subtract(24, 'months'))) {
                 if (shouldBeRetiredOutput.length === 0) {
                     shouldBeRetiredOutput += "<h2>Players who are marked ACTIVE but haven't played in 2 years</h2>";
                     shouldBeRetiredOutput += "<p>Follow the link to the ORK player and toggle their status to RETIRED vs. VISIBLE</p>"
                     shouldBeRetiredOutput += '<table style="width:100%"><tr><th class="left">Player</th><th class="left">Last Played</th></tr>';
                 }
-                player.lastAttendance = lastAttendance[0].Date;
+                player.lastAttendance = lastAttendance.length === 0 ? "Never attended" : moment(lastAttendance[0].Date).format("MMMM Do, YYYY");
                 shouldBeRetiredOutput += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Admin/player/' + player.MundaneId + '" target="_blank">' + (player.Persona || 'No persona for ID ' + player.MundaneId) + '</a></td>';
-                shouldBeRetiredOutput += "<td>" + moment(player.lastAttendance).format("MMMM Do, YYYY") + "</td></tr>";
+                shouldBeRetiredOutput += "<td>" + player.lastAttendance + "</td></tr>";
 
             }
     

@@ -58,33 +58,26 @@ function parkSelect(event, ui) {
   $('.working').attr('hidden', false);
   $('.working').text('Getting players....');
   jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.ACTIVE).then(function(data) {
+    // data = data.slice(10, 20);
     var playersLeft = data.length;
     if (playersLeft === 0) {
       document.getElementById('kingdom').disabled = false;
       document.getElementById('park').disabled = false;
       $('.working').attr('hidden', true);
-      $('.noplayers').text('There are no inactive players');
+      $('.noplayers').text('There are no active players');
       return;
     }
     data.forEach(function(player) {
-      jsork.player.getLastAttendance(player.MundaneId).then(function(lastAttendance) {
-        if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) < moment().subtract(14, 'months')) {
-            player.lastAttendance = lastAttendance[0].Date;
-            playerList.push(player);
+        jsork.player.getClasses(player.MundaneId).then(function(classes) {
             $('.working').text('Number of players left to check ' + playersLeft);
-            if (--playersLeft <= 0) {
-                donePlayers();  
-            }
-        } else {
-          if (lastAttendance.length === 0) {
-            player.lastAttendance = "No attendance";
-            playerList.push(player);
-          }
-          $('.working').text('Number of players left to check ' + playersLeft);
+            playerList.push({
+                Persona: player.Persona,
+                MundaneId: player.MundaneId,
+                Classes: classes
+            });
           if (--playersLeft <= 0) {
-            donePlayers();
+            donePlayers();  
           }
-        }
       });
     });
   });
@@ -96,20 +89,24 @@ function donePlayers() {
     document.getElementById('park').disabled = false;        
     // $('.noplayers').text('Generated on ' + new Date().toDateString());
     $('.working').attr('hidden', true);
-    $('.noplayers').text('There are no players marked ACTIVE that haven\'t played in 14 months');
+    $('.noplayers').text('There are no active players');
     return;
   }
   playerList.sort(function(a, b) {
-    return a.Persona.toString().toLowerCase().localeCompare(b.Persona.toString().toLowerCase());
+    return a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
   });
   var lastPlayer = null;
   playerList.forEach(function(aPlayer) {
     var playerHTMLLine = '';
     var playerLine = (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '\t';
-    playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Admin/player/' +
-    aPlayer.MundaneId + '" target="_blank">' +
+    playerHTMLLine += '<tr><td><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+    aPlayer.MundaneId + '">' +
     (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
-    playerHTMLLine += "<td>" + aPlayer.lastAttendance + "</td></tr>";
+    aPlayer.Classes.forEach(function(aClass, index) {
+        playerLine += aClass.credits + ((index + 1 < aPlayer.Classes.length) ? '\t' : '');
+        playerHTMLLine += '<td class="middle">' + aClass.credits + '</td>';    
+    });
+    playerHTMLLine += '</tr>';
     $('#playerTable').append(playerHTMLLine);
     playerContent += playerLine + '\r\n';
     lastPlayer = aPlayer;
@@ -157,7 +154,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tLast Played\r\n';
+  var allCSV = 'Persona\tAnti-Paladin\tArcher\tAssassin\tBarbarian\tBard\tColor\tDruid\tHealer\tMonk\tMonster\tPaladin\tPeasant\tReeve\tScout\tWarrior\tWizard\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
