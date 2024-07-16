@@ -1,6 +1,7 @@
 var debounceSearch = debounce(searchForPlayer, 400);
 var supportedKingdoms = [
     10,
+    25,
     31
 ];
 var today = moment();
@@ -59,11 +60,14 @@ function clickedPlayer(mundaneId) {
     jsork.player.getInfo(mundaneId).then(function(aPlayer) {
         switch (aPlayer.KingdomId) {
             case 10:
-                kingdom10(aPlayer);
-                break;
+              kingdom10(aPlayer);
+              break;
+            case 25:
+              kingdom25(aPlayer);
+              break;
             case 31: 
-                kingdom31(aPlayer);
-                break;
+              kingdom31(aPlayer);
+              break;
         }
       });
 }
@@ -209,7 +213,7 @@ function kingdom10(player) {
                   playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
                   playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
                   playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
-                  playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+                  playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
                   playerHTMLLine += '<td class="middle ' + (playerInfo.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + playerInfo.firstAttendance + '</td>';
                   $('#playerTable').append(playerHTMLLine);
                   showPlayerInfo();
@@ -220,6 +224,61 @@ function kingdom10(player) {
                   hideSearch();
               });
           });
+      });
+  });
+}
+
+function kingdom25(player) {
+  $('#playerTable').empty();
+  var votingText = "In the Viridian Outlands a player must have attended 6 different days in the last 6 months anywhere in the Viridian Outlands, be dues paid, and have signed a waiver. The Viridian Outlands Week starts on Monday and ends on Sunday.";
+  var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+  jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+      var playerWeeks = {};
+      jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
+          allAttendance.forEach(function(attendance) {
+            if (moment(attendance.Date) <= today) {
+              if (attendance.KingdomId === 25 || attendance.EventKingdomId === 25) {
+                playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+              }
+            }
+          });
+          jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+              var duesForLife = false;
+              playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
+              playerInfo.attendance = playerWeeks;
+              playerInfo.duesForLife = duesForLife;
+              playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment();
+              var playerHTMLLine = '';
+              playerHTMLLine += '<tr>';
+              playerHTMLLine += '<th class="left">Player</th>';
+              playerHTMLLine += '<th class="middle">Can Vote</th>';
+              playerHTMLLine += '<th class="middle">Signed Waiver</th>';
+              playerHTMLLine += '<th class="middle">Dues Paid</th>';
+              playerHTMLLine += '<th class="middle">Days of attendance</th>';
+              playerHTMLLine += '</tr>';
+              var attendanceNumber = Object.keys(playerInfo.attendance).length;
+              var canVote = playerInfo.Waivered && playerInfo.DuesPaid && attendanceNumber >= 6;
+              if (canVote) {
+                  playerHTMLLine += '<tr class="lightgreen">';
+                } else {
+                  playerHTMLLine += '<tr>';
+                }
+              playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+              playerInfo.MundaneId + '" target="_blank">' +
+              (playerInfo.Persona || 'No persona for ID ' + playerInfo.MundaneId) + '</a></td>';
+              playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
+              playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+              playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
+              playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+              playerHTMLLine += '</tr>';
+              $('#playerTable').append(playerHTMLLine);
+              showPlayerInfo();
+              var queryParams = new URLSearchParams(window.location.search);
+              queryParams.set("mundaneId", playerInfo.MundaneId);
+              history.replaceState(null, null, "?"+queryParams.toString());
+              setVotingText(votingText);
+              hideSearch();
+            });
       });
   });
 }
