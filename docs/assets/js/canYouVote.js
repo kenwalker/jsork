@@ -5,6 +5,7 @@ var supportedKingdoms = [
     10,
     20,
     25,
+    27,
     31,
     38
 ];
@@ -77,6 +78,9 @@ function clickedPlayer(mundaneId) {
               break;
             case 25:
               kingdom25(aPlayer);
+              break;
+            case 27:
+              kingdom27(aPlayer);
               break;
             case 31: 
               kingdom31(aPlayer);
@@ -514,6 +518,82 @@ function kingdom25(player) {
             });
       });
   });
+}
+
+function kingdom27(player) {
+  $('#playerTable').empty();
+  var votingText = "In the Kingdom of Polaris a player must be dues paid (2.3.2.3), must sign a waiver with their Chapter and/or the Kingdom (2.3.2.4), have attended 6 different weeks in the last 6 months within the Kingdom (2.3.2.5), and be an attending member of their home chapter for at least three months (2.3.2.6).";
+  var startDate = moment(today).subtract(6, 'months').startOf('week').isoWeekday(2);
+  var attendingDate = moment(today).subtract(3, 'months').startOf('week');
+
+  jsork.park.getKnights(player.ParkId).then(function (parkKnights) {
+    var isKnight = parkKnights.find(function(aKnight) { return aKnight.MundaneId === player.MundaneId });
+    jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+      var playerWeeks = {};
+      jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
+        allAttendance.forEach(function (attendance) {
+          if (moment(attendance.Date) <= today) {
+            if (attendance.KingdomId === 27 || attendance.EventKingdomId === 27) {
+              if (!playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()]) {
+                  playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()] = [];
+              }
+              playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()].push(attendance);
+            }
+          }
+        });
+        // Need full attendance to check park affiliation
+        jsork.player.getAttendance(player.MundaneId).then(function (allAttendance) {
+          // Reduce this to the attendance that is before the start of the six month window
+          // and where the park is the same as the players park
+          allAttendance = allAttendance.filter(function(attendance) {
+            return moment(attendance.Date) <= attendingDate && attendance.ParkId === player.ParkId;
+          });
+          jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+            var duesForLife = false;
+            playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
+            playerInfo.attendance = playerWeeks;
+            playerInfo.duesForLife = duesForLife;
+            playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment();
+            playerInfo.IsKnight = isKnight;
+            playerInfo.ThreeMonthsHomeChapter = allAttendance.length > 0;
+            var playerHTMLLine = '';
+            playerHTMLLine += '<tr>';
+            playerHTMLLine += '<th class="left">Player</th>';
+            playerHTMLLine += '<th class="middle">Can Vote</th>';
+            playerHTMLLine += '<th class="middle">Signed Waiver</th>';
+            playerHTMLLine += '<th class="middle">Dues Paid</th>';
+            playerHTMLLine += '<th class="middle">Weeks of attendance</th>';
+            playerHTMLLine += '<th class="middle">Three Months In Chapter</th>';
+            playerHTMLLine += '</tr>';
+            var attendanceNumber = Object.keys(playerInfo.attendance).length;
+            var canVote = playerInfo.Waivered && playerInfo.DuesPaid && attendanceNumber >= 6 && playerInfo.ThreeMonthsHomeChapter;
+
+            if (canVote) {
+              playerHTMLLine += '<tr class="lightgreen">';
+            } else {
+              playerHTMLLine += '<tr>';
+            }
+            playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+              playerInfo.MundaneId + '" target="_blank">' +
+              (playerInfo.Persona || 'No persona for ID ' + playerInfo.MundaneId) + '</a></td>';
+            playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
+            playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+            playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
+            playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+            playerHTMLLine += '<td class="middle ' + (playerInfo.ThreeMonthsHomeChapter ? 'lightgreen' : 'lightred') + '">' + playerInfo.ThreeMonthsHomeChapter + '</td>';
+            playerHTMLLine += "</tr>";
+            $('#playerTable').append(playerHTMLLine);
+            showPlayerInfo();
+            var queryParams = new URLSearchParams(window.location.search);
+            queryParams.set("mundaneId", playerInfo.MundaneId);
+            history.replaceState(null, null, "?" + queryParams.toString());
+            setVotingText(votingText);
+            hideSearch();
+          });
+      });
+    });
+  });
+});
 }
 
 function kingdom31(player) {
