@@ -72,6 +72,7 @@ function doPlayers() {
                             if (!playerInfo.Suspended) {
                                 playerList.push({
                                     Persona: playerInfo.Persona || "",
+                                    ParkName: player.ParkName || "",
                                     UserName: playerInfo.UserName,
                                     MundaneId: playerInfo.MundaneId,
                                     DuesThrough: playerInfo.DuesThrough,
@@ -162,7 +163,7 @@ function donePlayers() {
         aPlayer.MundaneId + '" target="_blank">' +
         (aPlayer.Persona || 'No persona for ID ' + aPlayer.MundaneId) + '</a></td>';
     }
-    playerLine += canVote + '\t' + aPlayer.Waivered + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t' + aPlayer.sixMonthsPlayed + '\t' + aPlayer.firstAttendance + '\t' + aPlayer.ActiveKnight + '\t';
+    playerLine += aPlayer.ParkName + '\t' + canVote + '\t' + aPlayer.Waivered  + '\t' + aPlayer.DuesPaid + '\t' + attendanceNumber + '\t' + aPlayer.sixMonthsPlayed + '\t' + aPlayer.firstAttendance + '\t' + aPlayer.ActiveKnight + '\t';
     var firstTime = true;
     Object.keys(aPlayer.attendance).forEach(function(aWeek) {
       if (firstTime) {
@@ -172,6 +173,7 @@ function donePlayers() {
       }
       playerLine += aWeek;
     });
+    playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + aPlayer.ParkName + '</td>';
     playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.Waivered ? 'lightgreen' : 'lightred') + '">' + (aPlayer.Waivered ? 'Waivered' : 'Must sign Waiver') + '</td>';
     playerHTMLLine += '<td class="middle ' + (aPlayer.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (aPlayer.DuesPaid ? (aPlayer.DuesForLife ? "Dues for Life" : aPlayer.DuesThrough) : 'Must Pay Dues') + '</td>';
@@ -218,7 +220,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tWeeks of Attendance\tSix Months Played\tFirst Attendance\tActive Knight\tThe Week numbers of attendance\r\n';
+  var allCSV = 'Persona\tPark\tCan Vote\tSigned Waiver\tDues Paid\tWeeks of Attendance\tSix Months Played\tFirst Attendance\tActive Knight\tThe Week numbers of attendance\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
