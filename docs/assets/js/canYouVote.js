@@ -1,5 +1,6 @@
 var debounceSearch = debounce(searchForPlayer, 400);
 var supportedKingdoms = [
+    6,
     10,
     25,
     31
@@ -59,6 +60,9 @@ function clickedPlayer(mundaneId) {
     gatheringInfo();
     jsork.player.getInfo(mundaneId).then(function(aPlayer) {
         switch (aPlayer.KingdomId) {
+            case 6:
+              kingdom6(aPlayer);
+              break;
             case 10:
               kingdom10(aPlayer);
               break;
@@ -162,6 +166,86 @@ function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
+}
+
+function kingdom6(player) {
+  $('#playerTable').empty();
+  var votingText = "In Emerald Hills a player must be waivered, be dues paid, and have signed in at a minimum of six Emerald Hills functions, in six different weeks, within the previous six months. The attendance week starts on Tuesday and ends on Monday for Emerald Hills.";
+  var startDate = moment(today).subtract(6, 'months').startOf('week').isoWeekday(2);
+  jsork.park.getKnights(player.ParkId).then(function (parkKnights) {
+    var isKnight = parkKnights.find(function(aKnight) { return aKnight.MundaneId === player.MundaneId });
+    jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+      var playerWeeks = {};
+      jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
+        allAttendance.forEach(function (attendance) {
+          if (moment(attendance.Date) <= today) {
+            if (attendance.KingdomId === 6 || attendance.EventKingdomId === 6) {
+              if (!playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()]) {
+                  playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()] = [];
+              }
+              playerWeeks[moment(attendance.Date).startOf('week').isoWeekday(2).isoWeek()].push(attendance);
+            }
+          }
+        });
+        jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+          var duesForLife = false;
+          playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
+          playerInfo.attendance = playerWeeks;
+          playerInfo.duesForLife = duesForLife;
+          playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment();
+          playerInfo.IsKnight = isKnight;
+          jsork.player.getFirstAttendance(playerInfo.MundaneId).then(function (attendance) {
+            if (moment(attendance[0].Date) <= startDate) {
+              playerInfo.sixMonthsPlayed = true;
+            } else {
+              playerInfo.sixMonthsPlayed = false;
+            }
+            playerInfo.firstAttendance = attendance[0].Date;
+            var playerHTMLLine = '';
+            playerHTMLLine += '<tr>';
+            playerHTMLLine += '<th class="left">Player</th>';
+            playerHTMLLine += '<th class="middle">Can Vote</th>';
+            playerHTMLLine += '<th class="middle">Signed Waiver</th>';
+            playerHTMLLine += '<th class="middle">Dues Paid</th>';
+            playerHTMLLine += '<th class="middle">Weeks of attendance</th>';
+            playerHTMLLine += '<th class="middle">First Attendance</th>';
+            playerHTMLLine += '<th class="middle">Active Knight</th>';
+            playerHTMLLine += '</tr>';
+            var attendanceNumber = Object.keys(playerInfo.attendance).length;
+            var canVote = playerInfo.Waivered && playerInfo.DuesPaid && attendanceNumber >= 6 && playerInfo.sixMonthsPlayed;
+            playerInfo.ActiveKnight = attendanceNumber >= 8 && canVote;
+
+            if (canVote) {
+              playerHTMLLine += '<tr class="lightgreen">';
+            } else {
+              playerHTMLLine += '<tr>';
+            }
+            playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+              playerInfo.MundaneId + '" target="_blank">' +
+              (playerInfo.Persona || 'No persona for ID ' + playerInfo.MundaneId) + '</a></td>';
+            playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
+            playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+            playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
+            playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+            playerHTMLLine += '<td class="middle ' + (playerInfo.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + playerInfo.firstAttendance + '</td>';
+            if (playerInfo.IsKnight) {
+              playerHTMLLine += '<td class="middle ' + (playerInfo.ActiveKnight ? 'lightgreen':'lightred') + '">' + (playerInfo.ActiveKnight ? "Yes" : "No") + '</td>';
+            } else {
+              playerHTMLLine += '<td class="middle white"></td>';
+            }
+            playerHTMLLine += "</tr>";
+            $('#playerTable').append(playerHTMLLine);
+            showPlayerInfo();
+            var queryParams = new URLSearchParams(window.location.search);
+            queryParams.set("mundaneId", playerInfo.MundaneId);
+            history.replaceState(null, null, "?" + queryParams.toString());
+            setVotingText(votingText);
+            hideSearch();
+          });
+        });
+      });
+    });
+  });
 }
 
 function kingdom10(player) {
