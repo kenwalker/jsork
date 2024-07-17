@@ -1,5 +1,6 @@
 var debounceSearch = debounce(searchForPlayer, 400);
 var supportedKingdoms = [
+    4,
     6,
     10,
     20,
@@ -62,6 +63,9 @@ function clickedPlayer(mundaneId) {
     gatheringInfo();
     jsork.player.getInfo(mundaneId).then(function(aPlayer) {
         switch (aPlayer.KingdomId) {
+            case 4:
+              kingdom4(aPlayer);
+              break;
             case 6:
               kingdom6(aPlayer);
               break;
@@ -174,6 +178,88 @@ function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
+}
+
+function kingdom4(player) {
+  $('#playerTable').empty();
+  var votingText = "In Goldenvale a player must have signed a waiver, must have attended 6 times in the last 6 months in their home park where 1 of those attendances can be from a Kingdom event. The player must also be dues paid.";
+  var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+  jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+      var playerWeeks = {};
+      jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
+          var totalAttendance = 0;
+          var oneKingdomEvent = false;
+          var addTwoPerMonthMax = function (attendance) {
+              if (attendance.EventKingdomId === 4 && oneKingdomEvent) {
+                  return;
+              }
+              if (attendance.EventParkId === player.ParkId || attendance.ParkId === player.ParkId || attendance.EventKingdomId === 4) {
+                  totalAttendance++;
+                  if (attendance.EventKingdomId === 4) {
+                      oneKingdomEvent = true;
+                  }    
+              }
+          };
+
+          allAttendance.forEach(function (attendance) {
+            if (moment(attendance.Date) <= today) {
+              addTwoPerMonthMax(attendance);
+            }
+          });
+
+          jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+              var duesForLife = false;
+              playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
+              playerInfo.attendance = totalAttendance;
+              playerInfo.oneKingdomEvent = oneKingdomEvent;
+              playerInfo.duesForLife = duesForLife;
+              playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment()
+              jsork.player.getFirstAttendance(playerInfo.MundaneId).then(function (attendance) {
+                  if (moment(attendance[0].Date) <= startDate) {
+                      playerInfo.sixMonthsPlayed = true;
+                  } else {
+                      playerInfo.sixMonthsPlayed = false;
+                  }
+                  playerInfo.firstAttendance = attendance[0].Date;
+                  var playerHTMLLine = '';
+                  playerHTMLLine += '<tr>';
+                  playerHTMLLine += '<th class="left">Player</th>';
+                  playerHTMLLine += '<th class="middle">Can Vote</th>';
+                  playerHTMLLine += '<th class="middle">Signed Waiver</th>';
+                  playerHTMLLine += '<th class="middle">Dues Paid</th>';
+                  playerHTMLLine += '<th class="middle">Weeks of attendance</th>';
+                  playerHTMLLine += '<th class="middle">One was Kingdom Event</th>';
+                  playerHTMLLine += '<th class="middle">First Attendance</th>';
+                  playerHTMLLine += '</tr>';
+                  var attendanceNumber = playerInfo.attendance
+                  var canVote = playerInfo.DuesPaid && attendanceNumber >= 6 && playerInfo.Waivered;
+                  ;
+                  var canVote = playerInfo.Waivered && playerInfo.DuesPaid && attendanceNumber >= 6 && playerInfo.sixMonthsPlayed;
+                  if (canVote) {
+                      playerHTMLLine += '<tr class="lightgreen">';
+                    } else {
+                      playerHTMLLine += '<tr>';
+                    }
+                  playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+                  playerInfo.MundaneId + '" target="_blank">' +
+                  (playerInfo.Persona || 'No persona for ID ' + playerInfo.MundaneId) + '</a></td>';
+                  playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
+                  playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+                  playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
+                  playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+                  playerHTMLLine += '<td class="middle white" >' + playerInfo.oneKingdomEvent + '</td>';
+                  playerHTMLLine += '<td class="middle white">' + playerInfo.firstAttendance + '</td>';
+                  $('#playerTable').append(playerHTMLLine);
+                  showPlayerInfo();
+                  var queryParams = new URLSearchParams(window.location.search);
+                  queryParams.set("mundaneId", playerInfo.MundaneId);
+                  history.replaceState(null, null, "?"+queryParams.toString());
+                  setVotingText(votingText);
+                  hideSearch();
+              });
+          });
+      });
+  });
 }
 
 function kingdom6(player) {
