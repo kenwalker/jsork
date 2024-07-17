@@ -4,6 +4,7 @@ var supportedKingdoms = [
     6,
     10,
     14,
+    19,
     20,
     25,
     27,
@@ -78,7 +79,10 @@ function clickedPlayer(mundaneId) {
             case 14:
               kingdom14(aPlayer);
               break;
-              case 20:
+            case 19:
+              kingdom19(aPlayer);
+              break;
+            case 20:
               kingdom20(aPlayer);
               break;
             case 25:
@@ -477,6 +481,110 @@ function kingdom14(player) {
               hideSearch();
             });
       });
+  });
+}
+
+function kingdom19(player) {
+  $('#playerTable').empty();
+  var votingText = "In Tal Dagore a Citizen Player must be waivered (1.1.2), be dues paid (1.3.1), have 8 attendance credits in the previous 6 months where only 2 of these credits may be from outside Tal Dagore and where multi-credit events may only grant a max of two credits per event (1.3.4).";
+  var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+  jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+    var playerWeeks = {};
+    var creditsOutsideTD = 0;
+    var totalCredits = 0;
+    jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
+      allAttendance.reverse();
+      allAttendance.forEach(function (attendance) {
+        var dow = moment(attendance.Date).isoWeekday();
+        if (moment(attendance.Date) <= today) {
+          var added = false;
+          var addedOutsideTD = false;
+          if (attendance.EventId) {
+            var possibleCredits = Math.min(attendance.Credits, 2);
+            if (attendance.EventKingdomId !== 19) {
+              var diff = 0;
+              switch (creditsOutsideTD) {
+                case 0:
+                  diff = possibleCredits; break;
+                case 1:
+                  diff = 1; break;
+              }
+              if (diff > 0) {
+                added = true;
+                addedOutsideTD = true;
+                totalCredits += diff;
+                creditsOutsideTD += diff;
+              }
+            } else {
+              added = true;
+              totalCredits += possibleCredits;
+            }
+          } else {
+            var possibleCredits = Math.min(attendance.Credits, 2);
+            if (attendance.KingdomId !== 19) {
+              var diff = 0;
+              switch (creditsOutsideTD) {
+                case 0:
+                  diff = possibleCredits; break;
+                case 1:
+                  diff = 1; break;
+              }
+              if (diff > 0) {
+                added = true;
+                addedOutsideTD = true;
+                totalCredits += diff;
+                creditsOutsideTD += diff;
+              }
+            } else {
+              totalCredits += possibleCredits;
+              added = true;
+            }
+          }
+          if (added) {
+            playerWeeks[Object.keys(playerWeeks).length.toString()] = moment(attendance.Date).format("ddd, MMM Do YYYY") + (addedOutsideTD ? " (Outside TD)" : "");
+          }
+        }
+      });
+
+      jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+        var duesForLife = false;
+        playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
+        playerInfo.attendance = playerWeeks;
+        playerInfo.duesForLife = duesForLife;
+        playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment()
+        playerInfo.TotalCredits = totalCredits;
+        var playerHTMLLine = '';
+        playerHTMLLine += '<tr>';
+        playerHTMLLine += '<th class="left">Player</th>';
+        playerHTMLLine += '<th class="middle">Citizen</th>';
+        playerHTMLLine += '<th class="middle">Signed Waiver</th>';
+        playerHTMLLine += '<th class="middle">Dues Paid</th>';
+        playerHTMLLine += '<th class="middle">Days of attendance</th>';
+        playerHTMLLine += '</tr>';
+        var attendanceNumber = playerInfo.TotalCredits;
+        var citizen = playerInfo.DuesPaid && attendanceNumber >= 8 && playerInfo.Waivered;
+        if (citizen) {
+          playerHTMLLine += '<tr class="lightgreen">';
+        } else {
+          playerHTMLLine += '<tr>';
+        }
+        playerHTMLLine += '<td ' + (citizen ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+          playerInfo.MundaneId + '" target="_blank">' +
+          (playerInfo.Persona || 'No persona for ID ' + playerInfo.MundaneId) + '</a></td>';
+        playerHTMLLine += '<td ' + (citizen ? 'class="lightgreen"' : '') + '>' + (citizen ? 'Yes' : 'No') + '</td>';
+        playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+        playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
+        playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 8 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+        playerHTMLLine += '</tr>';
+        $('#playerTable').append(playerHTMLLine);
+        showPlayerInfo();
+        var queryParams = new URLSearchParams(window.location.search);
+        queryParams.set("mundaneId", playerInfo.MundaneId);
+        history.replaceState(null, null, "?" + queryParams.toString());
+        setVotingText(votingText);
+        hideSearch();
+      });
+    });
   });
 }
 
