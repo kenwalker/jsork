@@ -3,6 +3,7 @@ var supportedKingdoms = [
     4,
     6,
     10,
+    14,
     20,
     25,
     27,
@@ -74,7 +75,10 @@ function clickedPlayer(mundaneId) {
             case 10:
               kingdom10(aPlayer);
               break;
-            case 20:
+            case 14:
+              kingdom14(aPlayer);
+              break;
+              case 20:
               kingdom20(aPlayer);
               break;
             case 25:
@@ -410,6 +414,68 @@ function kingdom10(player) {
                   hideSearch();
               });
           });
+      });
+  });
+}
+
+function kingdom14(player) {
+  $('#playerTable').empty();
+  var votingText = "In the Celestial Kingdom there can be Contributing or Active Members. A player must be waivered, be dues paid, have 7 attendance credits in the previous 6 months (Contributing), or 12 attendance credits in the last 6 months (Active).";
+  var startDate = moment(today).subtract(180, 'days');
+  var fourteenMonthsAgo = moment(today).subtract(14, "months");
+
+
+  jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+      var playerWeeks = {};
+      jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
+        allAttendance.reverse();
+        allAttendance.forEach(function (attendance) {
+            var dow = moment(attendance.Date).isoWeekday();
+            if (moment(attendance.Date) <= today) {
+                playerWeeks[Object.keys(playerWeeks).length.toString()] = moment(attendance.Date).format("ddd, MMM Do YYYY");
+            }
+        });
+        jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+              var duesForLife = false;
+              playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
+              playerInfo.attendance = playerWeeks;
+              playerInfo.duesForLife = duesForLife;
+              playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment();
+              var playerHTMLLine = '';
+              playerHTMLLine += '<tr>';
+              playerHTMLLine += '<th class="left">Player</th>';
+              playerHTMLLine += '<th class="middle">Contributing</th>';
+              playerHTMLLine += '<th class="middle">Active</th>';
+              playerHTMLLine += '<th class="middle">Signed Waiver</th>';
+              playerHTMLLine += '<th class="middle">Dues Paid</th>';
+              playerHTMLLine += '<th class="middle">Days of attendance</th>';
+              playerHTMLLine += '</tr>';
+              var attendanceNumber = Object.keys(playerInfo.attendance).length;
+              var contributing = playerInfo.DuesPaid && attendanceNumber >= 7 && playerInfo.Waivered;
+              var active = playerInfo.DuesPaid && attendanceNumber >= 12 && playerInfo.Waivered;
+      
+              if (active) {
+                  playerHTMLLine += '<tr class="lightgreen">';
+                } else {
+                  playerHTMLLine += '<tr>';
+                }
+              playerHTMLLine += '<td ' + (contributing ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+                  playerInfo.MundaneId + '">' + (playerInfo.Persona || 'No persona for ID ' + playerInfo.MundaneId) + '</a></td>';
+              playerHTMLLine += '<td ' + (contributing ? 'class="lightgreen"' : '') + '>' + (contributing ? 'Yes' : 'No') + '</td>';
+              playerHTMLLine += '<td ' + (contributing ? 'class="lightgreen"' : '') + '>' + (active ? 'Yes' : 'No') + '</td>';
+              playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+              playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
+              playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 7 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+              playerHTMLLine += '</tr>';
+                
+              $('#playerTable').append(playerHTMLLine);
+              showPlayerInfo();
+              var queryParams = new URLSearchParams(window.location.search);
+              queryParams.set("mundaneId", playerInfo.MundaneId);
+              history.replaceState(null, null, "?"+queryParams.toString());
+              setVotingText(votingText);
+              hideSearch();
+            });
       });
   });
 }
