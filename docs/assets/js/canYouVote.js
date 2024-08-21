@@ -843,22 +843,23 @@ function kingdom31(player) {
 
 function kingdom36(player) {
   $('#playerTable').empty();
-  var votingText = "In the Northreach a player must be waivered (2.1.1.d), be dues paid (A.2.2.a), have attended 12 different days (Saturdays/Sundays only) in the last 180 days at any event or park day within Northreach (A.2.2.b)";
+  var votingText = "In the Northreach a player must be waivered (2.1.1.d), be dues paid (A.2.2.a), have attended 12 different weeks in the last 180 days at any event or park day within Northreach (A.2.2.b)";
   var startDate = moment(today).subtract(180, 'days');
 
   jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
       var playerWeeks = {};
       jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
-          allAttendance.reverse();
-          allAttendance.forEach(function(attendance) {
-            var dow = moment(attendance.Date).isoWeekday();
-            if (moment(attendance.Date) <= today && (dow === 6 || dow === 7)) {
-              if (attendance.KingdomId === 36 || attendance.EventKingdomId === 36) {
-                playerWeeks[Object.keys(playerWeeks).length.toString()] = moment(attendance.Date).format("ddd, MMM Do YYYY");
+        allAttendance.forEach(function(attendance) {
+          if (moment(attendance.Date) <= today) {
+            if (attendance.KingdomId === 36 || attendance.EventKingdomId === 36) {
+              if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
+                playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
               }
+              playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
             }
-          });
-          jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+          }
+        });
+      jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
               var duesForLife = false;
               playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
               playerInfo.attendance = playerWeeks;
@@ -870,7 +871,7 @@ function kingdom36(player) {
               playerHTMLLine += '<th class="middle">Can Vote</th>';
               playerHTMLLine += '<th class="middle">Signed Waiver</th>';
               playerHTMLLine += '<th class="middle">Dues Paid</th>';
-              playerHTMLLine += '<th class="middle">Days of attendance</th>';
+              playerHTMLLine += '<th class="middle">Weeks of attendance</th>';
               playerHTMLLine += '</tr>';
               var attendanceNumber = Object.keys(playerInfo.attendance).length;
               var canVote = playerInfo.Waivered && playerInfo.DuesPaid && attendanceNumber >= 12;
@@ -885,7 +886,7 @@ function kingdom36(player) {
               playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
               playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
               playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
-              playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+              playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 12 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
               playerHTMLLine += '</tr>';
               $('#playerTable').append(playerHTMLLine);
               showPlayerInfo();

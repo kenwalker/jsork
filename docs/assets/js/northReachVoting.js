@@ -84,12 +84,13 @@ function parkSelect(event, ui) {
         if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) >= startDate) {
           var playerWeeks = {};
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
-            allAttendance.reverse();
             allAttendance.forEach(function(attendance) {
-              var dow = moment(attendance.Date).isoWeekday();
-              if (moment(attendance.Date) <= endDate && (dow === 6 || dow === 7)) {
+              if (moment(attendance.Date) <= endDate) {
                 if (attendance.KingdomId === 36 || attendance.EventKingdomId === 36) {
-                  playerWeeks[Object.keys(playerWeeks).length.toString()] = moment(attendance.Date).format("ddd, MMM Do YYYY");
+                  if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
+                    playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
+                  }
+                  playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
                 }
               }
             });
@@ -200,7 +201,8 @@ function donePlayers() {
     // playerHTMLLine += '<td class="middle ' + (aPlayer.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + aPlayer.firstAttendance + '</td>';
     $('#playerTable').append(playerHTMLLine);
     Object.keys(aPlayer.attendance).forEach(function(aKey, index) {
-      playerLine += aPlayer.attendance[aKey];
+      playerLine += aKey;
+      
       if (index < attendanceNumber - 1) {
         playerLine += ', ';
       }
@@ -243,7 +245,7 @@ function copyTextToClipboard(str) {
 }
 
 function copyToClipboard() {
-  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tDays of Attendance\tAll Attendances\r\n';
+  var allCSV = 'Persona\tCan Vote\tSigned Waiver\tDues Paid\tWeeks of Attendance\tAll Attendances\r\n';
   allCSV += playerContent;
   copyTextToClipboard(allCSV);
 }
