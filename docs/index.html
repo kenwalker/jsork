@@ -5,346 +5,352 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head>
-		<title>jsork Amtgard ORK API</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+<head>
+  <title>jsork Amtgard ORK API</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
 
-				<!-- Main -->
-					<div id="main">
-						<div class="inner">
+<body class="is-preload">
 
-							<!-- Header -->
-								<header id="header">
-									<a href="index.html" class="logo"><strong>jsork</strong> Javascript Amtgard ORK APIs</a>
-									<ul class="icons">
-										<li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span class="label">Github</span></a></li>
-										<li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-									</ul>
-								</header>
+  <!-- Wrapper -->
+  <div id="wrapper">
 
-							<!-- Banner -->
-								<section id="banner">
-									<div class="content">
-										<header>
-											<h1>jsork - JS Amtgard ORK APIs</h1>
-										</header>
-										<p>jsork is a collection of Javascript APIs that communicate to the Amtgard ORK. These APIs can be used to query
-                      many things in the ORK and can handle login authentication for manipulation or 
-                      creation of entities within the ORK. The APIs have been grown a bit organically by the requirements of mORK.
-                    </p>
-                    <p class="kismetsignin"></p>
-                    <p>See my <a href="todoList.html">JSORK Todo List</a> to see if your request or a new feature
-                    has been added recently.</p>
-									</div>
-									<!-- <span class="image object">
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
+
+        <!-- Header -->
+        <header id="header">
+          <a href="index.html" class="logo"><strong>jsork</strong> Javascript Amtgard ORK APIs</a>
+          <ul class="icons">
+            <li><a href="https://github.com/kenwalker/jsork" class="icon brands fa-github"><span
+                  class="label">Github</span></a></li>
+            <li><a href="https://www.facebook.com/mORKmobile" class="icon brands fa-facebook-f"><span
+                  class="label">Facebook</span></a></li>
+          </ul>
+        </header>
+
+        <!-- Banner -->
+        <section id="banner">
+          <div class="content">
+            <header>
+              <h1>jsork - JS Amtgard ORK APIs</h1>
+            </header>
+            <p>jsork is a collection of Javascript APIs that communicate to the Amtgard ORK. These APIs can be used to
+              query
+              many things in the ORK and can handle login authentication for manipulation or
+              creation of entities within the ORK. The APIs have been grown a bit organically by the requirements of
+              mORK.
+            </p>
+            <p class="kismetsignin"></p>
+            <p>See my <a href="todoList.html">JSORK Todo List</a> to see if your request or a new feature
+              has been added recently.</p>
+          </div>
+          <!-- <span class="image object">
 										<img src="images/pic10.jpg" alt="" />
 									</span> -->
-								</section>
+        </section>
 
-							<!-- Section -->
-								<section>
-									<header class="major">
-										<h2>Example Reports</h2>
-									</header>
-									<div class="features">
-										<article>
-											<span class="icon solid fa-signal"></span>
-											<div class="content">
-												<h3>Kingdom Ladder Status</h3>
-												<p>A report to generate the ladder status for the players within a specific Kingdom.</p>
-                        <ul class="actions">
-                          <li><a href="kingdomAwards.html" class="button">Open</a></li>
-                        </ul>
-                      </div>
-										</article>
-										<article>
-											<span class="icon solid fa-signal"></span>
-											<div class="content">
-												<h3>Kingdom NON-LADDER Awards</h3>
-												<p>A report to generate the non-ladder award status for the players within a specific Kingdom.</p>
-                        <ul class="actions">
-                          <li><a href="kingdomNonLadder.html" class="button">Open</a></li>
-                        </ul>
-                      </div>
-										</article>
-										<article>
-											<span class="icon solid fa-calendar"></span>
-											<div class="content">
-												<h3>Upcoming Events</h3>
-												<p>List all upcoming events in Amtgard</p>
-                        <ul class="actions">
-                          <li><a href="upcomingEvents.html" class="button">Open</a></li>
-                        </ul>
-                      </div>
-										</article>
-										<article>
-                        <span class="icon solid fa-thumbs-up"></span>
-                        <div class="content">
-                          <h3>About to Level</h3>
-                          <p>List of players in a park about to level a class</p>
-                          <ul class="actions">
-                            <li><a href="aboutToLevel.html" class="button">Open</a></li>
-                          </ul>
-                        </div>
-                      </article>
-                      <article>
-                        <span class="icon solid fa-thumbs-up"></span>
-                        <div class="content">
-                          <h3>Recently Leveled</h3>
-                          <p>List of players in a park who recently leveled</p>
-                          <ul class="actions">
-                            <li><a href="recentlyLeveled.html" class="button">Open</a></li>
-                          </ul>
-                        </div>
-                      </article>
-                      <article>
-                          <span class="icon solid fa-qrcode"></span>
-                          <div class="content">
-                            <h3>mORK QR Code Generator</h3>
-                            <p>Look up and generate a player card with QR Code</p>
-                            <ul class="actions">
-                              <li><a href="qrCodeGenerator.html" class="button">Open</a></li>
-                            </ul>
-                          </div>
-                        </article>
-                        <article>
-                            <span class="icon solid fa-list-ol"></span>
-                            <div class="content">
-                              <h3>Top 10 Park Averages</h3>
-                              <p>Generate the top 10 Parks by weekly averages</p>
-                              <ul class="actions">
-                                <li><a href="topTenAverageParks.html" class="button">Open</a></li>
-                              </ul>
-                            </div>
-                          </article>
-                          <article>
-                              <span class="icon solid fa-street-view"></span>
-                              <div class="content">
-                                <h3>Where do you play?</h3>
-                                <p>Year report on where your credits came from</p>
-                                <ul class="actions">
-                                  <li><a href="whereDoYouPlay.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Can You Vote?</h3>
-                                <p>Individual bookmarkable voting check if your Kingdom is supported</p>
-                                <ul class="actions">
-                                  <li><a href="canYouVote.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Nine Blades Voting</h3>
-                                <p>Who can vote in a Nine Blades Park?</p>
-                                <ul class="actions">
-                                  <li><a href="nineBladesVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Rising Winds Voting</h3>
-                                <p>Who can vote in a Rising Winds Park?</p>
-                                <ul class="actions">
-                                  <li><a href="rwVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Viridian Outlands Voting</h3>
-                                <p>Who can vote in a Viridian Outlands Park?</p>
-                                <ul class="actions">
-                                  <li><a href="voVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Emerald Hills Voting</h3>
-                                <p>Who can vote in an Emerald Hills Park?</p>
-                                <ul class="actions">
-                                  <li><a href="emeraldHillsVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Northern Lights Voting</h3>
-                                <p>Who can vote in a Northern Lights Park?</p>
-                                <ul class="actions">
-                                  <li><a href="nlVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>13 Roads Voting</h3>
-                                <p>Who can vote in a 13 Roads Park?</p>
-                                <ul class="actions">
-                                  <li><a href="13RoadsVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Goldenvale Voting</h3>
-                                <p>Who can vote in a Goldenvale park?</p>
-                                <ul class="actions">
-                                  <li><a href="gvVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Polaris Voting</h3>
-                                <p>Who can vote in a Polaris park?</p>
-                                <ul class="actions">
-                                  <li><a href="polarisVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Northreach Voting</h3>
-                                <p>Who can vote in a Northreach park?</p>
-                                <ul class="actions">
-                                  <li><a href="northReachVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Celestial Kingdom Voting</h3>
-                                <p>Who can vote in a Celestial Kingdom park?</p>
-                                <ul class="actions">
-                                  <li><a href="ckVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-vote-yea"></span>
-                              <div class="content">
-                                <h3>Tal Dagore Voting</h3>
-                                <p>Who can vote in a Tal Dagore park?</p>
-                                <ul class="actions">
-                                  <li><a href="tdVoting.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-chess"></span>
-                              <div class="content">
-                                <h3>All Kingdom/Principality Officers</h3>
-                                <p>List all the officers within a Kingdom or Principality</p>
-                                <ul class="actions">
-                                  <li><a href="kingdomOfficers.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                            </article>
-                            <article>
-                                <span class="icon solid fa-crown"></span>
-                                <div class="content">
-                                  <h3>Kingdom Titles</h3>
-                                  <p>List all the players and their titles within a Kingdom or Principality</p>
-                                  <ul class="actions">
-                                    <li><a href="kingdomTitles.html" class="button">Open</a></li>
-                                  </ul>
-                                </div>
-                            </article>
-                            <article>
-                                <span class="icon solid fa-clock"></span>
-                                <div class="content">
-                                  <h3>Recent Awards</h3>
-                                  <p>Show recent awards within 6 months in a park</p>
-                                  <ul class="actions">
-                                    <li><a href="recentAwards.html" class="button">Open</a></li>
-                                  </ul>
-                                </div>
-                            </article>
-                            <article>
-                              <span class="icon solid fa-list-ol"></span>
-                              <div class="content">
-                                <h3>Unique Attendance</h3>
-                                <p>Unique players between two dates at a park</p>
-                                <ul class="actions">
-                                  <li><a href="uniqueAttendance.html" class="button">Open</a></li>
-                                </ul>
-                              </div>
-                          </article>
-                          <article>
-                            <span class="icon solid fa-question-circle"></span>
-                            <div class="content">
-                              <h3>Retired but Active</h3>
-                              <p>Find players marked INACTIVE but are actually playing</p>
-                              <ul class="actions">
-                                <li><a href="activeRetired.html" class="button">Open</a></li>
-                              </ul>
-                            </div>
-                        </article>
-                        <article>
-                          <span class="icon solid fa-th-list"></span>
-                          <div class="content">
-                            <h3>Consolidate Credits</h3>
-                            <p>Check attendance vs given class credits</p>
-                            <ul class="actions">
-                              <li><a href="consolidateCredits.html" class="button">Open</a></li>
-                            </ul>
-                          </div>
-                      </article>
-                      <article>
-                        <span class="icon solid fa-user-minus"></span>
-                        <div class="content">
-                          <h3>Should be Retired</h3>
-                          <p>Find players that should be marked Retired</p>
-                          <ul class="actions">
-                            <li><a href="shouldBeRetired.html" class="button">Open</a></li>
-                          </ul>
-                        </div>
-                    </article>
-                    <article>
-                      <span class="icon solid fa-birthday-cake"></span>
-                      <div class="content">
-                        <h3>Park Birthdays</h3>
-                        <p>Show recent and upcoming Park Amtgard birthdays</p>
-                        <ul class="actions">
-                          <li><a href="parkBirthdays.html" class="button">Open</a></li>
-                        </ul>
-                      </div>
-                  </article>
-                  <article>
-                      <span class="icon solid fa-list-ol"></span>
-                      <div class="content">
-                        <h3>Kingdom Monthly Unique Attendance</h3>
-                        <p>Unique players in the Kingdom per month</p>
-                        <ul class="actions">
-                          <li><a href="monthlyUniques.html" class="button">Open</a></li>
-                        </ul>
-                      </div>
-                  </article>
-                  <!-- <article>
+        <!-- Section -->
+        <section>
+          <header class="major">
+            <h2>Example Reports</h2>
+          </header>
+          <div class="features">
+            <article>
+              <span class="icon solid fa-signal"></span>
+              <div class="content">
+                <h3>Kingdom Ladder Status</h3>
+                <p>A report to generate the ladder status for the players within a specific Kingdom.</p>
+                <ul class="actions">
+                  <li><a href="kingdomAwards.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-signal"></span>
+              <div class="content">
+                <h3>Kingdom NON-LADDER Awards</h3>
+                <p>A report to generate the non-ladder award status for the players within a specific Kingdom.</p>
+                <ul class="actions">
+                  <li><a href="kingdomNonLadder.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-calendar"></span>
+              <div class="content">
+                <h3>Upcoming Events</h3>
+                <p>List all upcoming events in Amtgard</p>
+                <ul class="actions">
+                  <li><a href="upcomingEvents.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-thumbs-up"></span>
+              <div class="content">
+                <h3>About to Level</h3>
+                <p>List of players in a park about to level a class</p>
+                <ul class="actions">
+                  <li><a href="aboutToLevel.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-thumbs-up"></span>
+              <div class="content">
+                <h3>Recently Leveled</h3>
+                <p>List of players in a park who recently leveled</p>
+                <ul class="actions">
+                  <li><a href="recentlyLeveled.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-qrcode"></span>
+              <div class="content">
+                <h3>mORK QR Code Generator</h3>
+                <p>Look up and generate a player card with QR Code</p>
+                <ul class="actions">
+                  <li><a href="qrCodeGenerator.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-list-ol"></span>
+              <div class="content">
+                <h3>Top 10 Park Averages</h3>
+                <p>Generate the top 10 Parks by weekly averages</p>
+                <ul class="actions">
+                  <li><a href="topTenAverageParks.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-street-view"></span>
+              <div class="content">
+                <h3>Where do you play?</h3>
+                <p>Year report on where your credits came from</p>
+                <ul class="actions">
+                  <li><a href="whereDoYouPlay.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Can You Vote?</h3>
+                <p>Individual bookmarkable voting check if your Kingdom is supported</p>
+                <ul class="actions">
+                  <li><a href="canYouVote.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Nine Blades Voting</h3>
+                <p>Who can vote in a Nine Blades Park?</p>
+                <ul class="actions">
+                  <li><a href="nineBladesVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Rising Winds Voting</h3>
+                <p>Who can vote in a Rising Winds Park?</p>
+                <ul class="actions">
+                  <li><a href="rwVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Viridian Outlands Voting</h3>
+                <p>Who can vote in a Viridian Outlands Park?</p>
+                <ul class="actions">
+                  <li><a href="voVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Emerald Hills Voting</h3>
+                <p>Who can vote in an Emerald Hills Park?</p>
+                <ul class="actions">
+                  <li><a href="emeraldHillsVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Northern Lights Voting</h3>
+                <p>Who can vote in a Northern Lights Park?</p>
+                <ul class="actions">
+                  <li><a href="nlVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>13 Roads Voting</h3>
+                <p>Who can vote in a 13 Roads Park?</p>
+                <ul class="actions">
+                  <li><a href="13RoadsVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Goldenvale Voting</h3>
+                <p>Who can vote in a Goldenvale park?</p>
+                <ul class="actions">
+                  <li><a href="gvVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Polaris Voting</h3>
+                <p>Who can vote in a Polaris park?</p>
+                <ul class="actions">
+                  <li><a href="polarisVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Northreach Voting</h3>
+                <p>Who can vote in a Northreach park?</p>
+                <ul class="actions">
+                  <li><a href="northReachVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Celestial Kingdom Voting</h3>
+                <p>Who can vote in a Celestial Kingdom park?</p>
+                <ul class="actions">
+                  <li><a href="ckVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Tal Dagore Voting</h3>
+                <p>Who can vote in a Tal Dagore park?</p>
+                <ul class="actions">
+                  <li><a href="tdVoting.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-chess"></span>
+              <div class="content">
+                <h3>All Kingdom/Principality Officers</h3>
+                <p>List all the officers within a Kingdom or Principality</p>
+                <ul class="actions">
+                  <li><a href="kingdomOfficers.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-crown"></span>
+              <div class="content">
+                <h3>Kingdom Titles</h3>
+                <p>List all the players and their titles within a Kingdom or Principality</p>
+                <ul class="actions">
+                  <li><a href="kingdomTitles.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-clock"></span>
+              <div class="content">
+                <h3>Recent Awards</h3>
+                <p>Show recent awards within 6 months in a park</p>
+                <ul class="actions">
+                  <li><a href="recentAwards.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-list-ol"></span>
+              <div class="content">
+                <h3>Unique Attendance</h3>
+                <p>Unique players between two dates at a park</p>
+                <ul class="actions">
+                  <li><a href="uniqueAttendance.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-question-circle"></span>
+              <div class="content">
+                <h3>Retired but Active</h3>
+                <p>Find players marked INACTIVE but are actually playing</p>
+                <ul class="actions">
+                  <li><a href="activeRetired.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Consolidate Credits</h3>
+                <p>Check attendance vs given class credits</p>
+                <ul class="actions">
+                  <li><a href="consolidateCredits.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-user-minus"></span>
+              <div class="content">
+                <h3>Should be Retired</h3>
+                <p>Find players that should be marked Retired</p>
+                <ul class="actions">
+                  <li><a href="shouldBeRetired.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-birthday-cake"></span>
+              <div class="content">
+                <h3>Park Birthdays</h3>
+                <p>Show recent and upcoming Park Amtgard birthdays</p>
+                <ul class="actions">
+                  <li><a href="parkBirthdays.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-list-ol"></span>
+              <div class="content">
+                <h3>Kingdom Monthly Unique Attendance</h3>
+                <p>Unique players in the Kingdom per month</p>
+                <ul class="actions">
+                  <li><a href="monthlyUniques.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <!-- <article>
                     <span class="icon solid fa-tree"></span>
                     <div class="content">
                       <h3>Family Trees</h3>
@@ -354,25 +360,35 @@
                       </ul>
                     </div>
                 </article> -->
-                <article>
-                  <span class="icon solid fa-th-list"></span>
-                  <div class="content">
-                    <h3>Nine Blades Circle of Paragons Report</h3>
-                    <p>List of active attendance Paragons</p>
-                    <ul class="actions">
-                      <li><a href="nbCircleOfParagons.html" class="button">Open</a></li>
-                    </ul>
-                  </div>
-              </article>
-              <article>
-                <span class="icon solid fa-th-list"></span>
-                <div class="content">
-                  <h3>Warrior Report</h3>
-                  <p>List of active players with at least 1 Order of the Warrior</p>
-                  <ul class="actions">
-                    <li><a href="warriorReport.html" class="button">Open</a></li>
-                  </ul>
-                </div>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Nine Blades Circle of Paragons Report</h3>
+                <p>List of active attendance Paragons</p>
+                <ul class="actions">
+                  <li><a href="nbCircleOfParagons.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Neverwinter Circle of Paragons Report</h3>
+                <p>List of active attendance Paragons</p>
+                <ul class="actions">
+                  <li><a href="nwCircleOfParagons.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Warrior Report</h3>
+                <p>List of active players with at least 1 Order of the Warrior</p>
+                <ul class="actions">
+                  <li><a href="warriorReport.html" class="button">Open</a></li>
+                </ul>
+              </div>
             </article>
             <article>
               <span class="icon solid fa-portrait"></span>
@@ -383,174 +399,176 @@
                   <li><a href="playerMatch.html" class="button">Open</a></li>
                 </ul>
               </div>
-          </article>
-          <article>
-            <span class="icon solid fa-clock"></span>
-            <div class="content">
-              <h3>When did they meet?</h3>
-              <p>Pick two players and see if and when they first met</p>
-              <ul class="actions">
-                <li><a href="whenDidTheyMeet.html" class="button">Open</a></li>
-              </ul>
-            </div>
-        </article>
-        <article>
-          <span class="icon solid fa-th-list"></span>
-          <div class="content">
-            <h3>Nine Blades Class Proficiency Report</h3>
-            <p>List of players with at least 3 or 6th in a class</p>
-            <ul class="actions">
-              <li><a href="nbProficiencies.html" class="button">Open</a></li>
-            </ul>
+            </article>
+            <article>
+              <span class="icon solid fa-clock"></span>
+              <div class="content">
+                <h3>When did they meet?</h3>
+                <p>Pick two players and see if and when they first met</p>
+                <ul class="actions">
+                  <li><a href="whenDidTheyMeet.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Nine Blades Class Proficiency Report</h3>
+                <p>List of players with at least 3 or 6th in a class</p>
+                <ul class="actions">
+                  <li><a href="nbProficiencies.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Winters Edge Class Proficiency Report</h3>
+                <p>List of players with 6 level in a class</p>
+                <ul class="actions">
+                  <li><a href="weProficiencies.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>New Kingdom Players</h3>
+                <p>List of players who have started and taken their first credit in the last 6 or 12 months</p>
+                <ul class="actions">
+                  <li><a href="newKingdomPlayers.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Park Herald Report</h3>
+                <p>Several reports in one handy Report for a park</p>
+                <ul class="actions">
+                  <li><a href="parkHerald.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-th-list"></span>
+              <div class="content">
+                <h3>Park Class Credit List</h3>
+                <p>All Active Players and their credits</p>
+                <ul class="actions">
+                  <li><a href="parkClassCredits.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Emerald Hills Active Knights</h3>
+                <p>A voting report on all Emerald Hills Knights</p>
+                <ul class="actions">
+                  <li><a href="emeraldHillsActiveKnights.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <span class="icon solid fa-vote-yea"></span>
+              <div class="content">
+                <h3>Celestial Kingdom Active Knights</h3>
+                <p>A voting report on all Celestial Kingdom Knights</p>
+                <ul class="actions">
+                  <li><a href="ckActiveKnights.html" class="button">Open</a></li>
+                </ul>
+              </div>
+            </article>
+
           </div>
-      </article>
-      <article>
-        <span class="icon solid fa-th-list"></span>
-        <div class="content">
-          <h3>Winters Edge Class Proficiency Report</h3>
-          <p>List of players with 6 level in a class</p>
-          <ul class="actions">
-            <li><a href="weProficiencies.html" class="button">Open</a></li>
-          </ul>
-        </div>
-    </article>
-    <article>
-        <span class="icon solid fa-th-list"></span>
-        <div class="content">
-          <h3>New Kingdom Players</h3>
-          <p>List of players who have started and taken their first credit in the last 6 or 12 months</p>
-          <ul class="actions">
-            <li><a href="newKingdomPlayers.html" class="button">Open</a></li>
-          </ul>
-        </div>
-    </article>
-    <article>
-      <span class="icon solid fa-th-list"></span>
-      <div class="content">
-        <h3>Park Herald Report</h3>
-        <p>Several reports in one handy Report for a park</p>
-        <ul class="actions">
-          <li><a href="parkHerald.html" class="button">Open</a></li>
-        </ul>
+        </section>
+
       </div>
-  </article>
-  <article>
-    <span class="icon solid fa-th-list"></span>
-    <div class="content">
-      <h3>Park Class Credit List</h3>
-      <p>All Active Players and their credits</p>
-      <ul class="actions">
-        <li><a href="parkClassCredits.html" class="button">Open</a></li>
-      </ul>
     </div>
-</article>
-<article>
-  <span class="icon solid fa-vote-yea"></span>
-  <div class="content">
-    <h3>Emerald Hills Active Knights</h3>
-    <p>A voting report on all Emerald Hills Knights</p>
-    <ul class="actions">
-      <li><a href="emeraldHillsActiveKnights.html" class="button">Open</a></li>
-    </ul>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="inner">
+
+        <!-- Menu -->
+        <nav id="menu">
+          <header class="major">
+            <h2>Menu</h2>
+          </header>
+          <ul>
+            <li><a href="index.html">Homepage</a></li>
+            <li>
+              <span class="opener">Reports</span>
+              <ul>
+                <li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
+                <li><a href="upcomingEvents.html">Upcoming Events</a></li>
+                <li><a href="aboutToLevel.html">About to Level</a></li>
+                <li><a href="recentlyLeveled.html">Recently leveled</a></li>
+                <li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
+                <li><a href="topTenAverageParks.html">Top 10 Parks by attendance</a></li>
+                <li><a href="whereDoYouPlay.html">Where do you play?</a></li>
+                <li><a href="emeraldHillsVoting.html">Emerald Hills Voting</a></li>
+                <li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
+                <li><a href="nlVoting.html">Northern Lights Voting</a></li>
+                <li><a href="rwVoting.html">Rising Winds Voting</a></li>
+                <li><a href="voVoting.html">Viridian Outlands Voting</a></li>
+                <li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
+                <li><a href="kingdomTitles.html">Kingdom Titles</a></li>
+                <li><a href="recentAwards.html">Recent Awards</a></li>
+                <li><a href="uniqueAttendance.html">Unique Attendance</a></li>
+                <li><a href="activeRetired.html">Retired but Active</a></li>
+                <li><a href="consolidateCredits.html">Consolidate Credits</a></li>
+                <li><a href="shouldBeRetired.html">Should be retired</a></li>
+                <li><a href="monthlyUniques.html">Monthly Kingdom Uniques</a></li>
+                <li><a href="parkHerald.html">Park Herald Report</a></li>
+                <li><a href="#">(more to come)</a></li>
+              </ul>
+            </li>
+            <li><a href="api.html">API Usage</a></li>
+            <!-- <li><a href="elements.html">(Leave for prototyping) Elements</a></li> -->
+          </ul>
+        </nav>
+
+        <!-- Section -->
+        <section>
+          <header class="major">
+            <h2>Try out mORK!</h2>
+          </header>
+          <div class="mini-posts">
+            <article>
+              <a href="https://itunes.apple.com/us/app/mork-mobile-amtgard/id1462457797" class="image"><img
+                  src="images/download_app_store.png" alt="" /></a>
+              <p>Download mORK from the Apple iOS App Store</p>
+            </article>
+            <article>
+              <a href="" class="image"><img src="images/en_badge_web_generic.png" alt="" /></a>
+              <p>Download mORK from the Android Google Play Store</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="footer">
+          <p class="copyright">jsork was written by Ken Walker.</p>
+        </footer>
+
+      </div>
+    </div>
+
   </div>
-</article>
-<article>
-  <span class="icon solid fa-vote-yea"></span>
-  <div class="content">
-    <h3>Celestial Kingdom Active Knights</h3>
-    <p>A voting report on all Celestial Kingdom Knights</p>
-    <ul class="actions">
-      <li><a href="ckActiveKnights.html" class="button">Open</a></li>
-    </ul>
-  </div>
-</article>
 
-</div>
-								</section>
+  <!-- Scripts -->
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/browser.min.js"></script>
+  <script src="assets/js/breakpoints.min.js"></script>
+  <script src="assets/js/util.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/jsork.js"></script>
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/lastsignin.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161484739-1"></script>
+  <script src="assets/js/google.js"></script>
+</body>
 
-						</div>
-					</div>
-
-				<!-- Sidebar -->
-					<div id="sidebar">
-						<div class="inner">
-
-							<!-- Menu -->
-								<nav id="menu">
-									<header class="major">
-										<h2>Menu</h2>
-									</header>
-									<ul>
-										<li><a href="index.html">Homepage</a></li>
-										<li>
-											<span class="opener">Reports</span>
-											<ul>
-												<li><a href="kingdomAwards.html">Kingdom Ladder Status</a></li>
-												<li><a href="upcomingEvents.html">Upcoming Events</a></li>
-												<li><a href="aboutToLevel.html">About to Level</a></li>
-                        <li><a href="recentlyLeveled.html">Recently leveled</a></li>
-                        <li><a href="qrCodeGenerator.html">mORK QR Code Generator</a></li>
-                        <li><a href="topTenAverageParks.html">Top 10 Parks by attendance</a></li>
-                        <li><a href="whereDoYouPlay.html">Where do you play?</a></li>
-                        <li><a href="emeraldHillsVoting.html">Emerald Hills Voting</a></li>
-                        <li><a href="nineBladesVoting.html">Nine Blades Voting</a></li>
-                        <li><a href="nlVoting.html">Northern Lights Voting</a></li>
-                        <li><a href="rwVoting.html">Rising Winds Voting</a></li>
-                        <li><a href="voVoting.html">Viridian Outlands Voting</a></li>
-                        <li><a href="kingdomOfficers.html">All Kingdom Officers</a></li>
-                        <li><a href="kingdomTitles.html">Kingdom Titles</a></li>
-                        <li><a href="recentAwards.html">Recent Awards</a></li>
-                        <li><a href="uniqueAttendance.html">Unique Attendance</a></li>
-                        <li><a href="activeRetired.html">Retired but Active</a></li>
-                        <li><a href="consolidateCredits.html">Consolidate Credits</a></li>
-                        <li><a href="shouldBeRetired.html">Should be retired</a></li>
-                        <li><a href="monthlyUniques.html">Monthly Kingdom Uniques</a></li>
-                        <li><a href="parkHerald.html">Park Herald Report</a></li>
-												<li><a href="#">(more to come)</a></li>
-											</ul>
-										</li>
-										<li><a href="api.html">API Usage</a></li>
-										<!-- <li><a href="elements.html">(Leave for prototyping) Elements</a></li> -->
-									</ul>
-								</nav>
-
-							<!-- Section -->
-								<section>
-									<header class="major">
-										<h2>Try out mORK!</h2>
-									</header>
-									<div class="mini-posts">
-										<article>
-											<a href="https://itunes.apple.com/us/app/mork-mobile-amtgard/id1462457797" class="image"><img src="images/download_app_store.png" alt="" /></a>
-											<p>Download mORK from the Apple iOS App Store</p>
-										</article>
-										<article>
-											<a href="" class="image"><img src="images/en_badge_web_generic.png" alt="" /></a>
-											<p>Download mORK from the Android Google Play Store</p>
-										</article>
-									</div>
-								</section>
-
-							<!-- Footer -->
-								<footer id="footer">
-									<p class="copyright">jsork was written by Ken Walker.</p>
-								</footer>
-
-						</div>
-					</div>
-
-			</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-      <script src="assets/js/jsork.js"></script>
-      <script src="assets/js/moment.js"></script>  
-      <script src="assets/js/lastsignin.js"></script>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161484739-1"></script>
-      <script src="assets/js/google.js"></script>
-	</body>
 </html>
