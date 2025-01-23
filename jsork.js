@@ -203,23 +203,15 @@
     return promise;
   };
 
-  jsork.kingdom.getAllParks = function() {
-    var kingdoms = jsork.kingdom.getKingdoms();
-    kingdoms.then(function(kingdomsArray) {
-      var allParkPromises = [];
-      kingdomsArray.forEach(function(aKingdom) {
-        allParkPromises.push(jsork.kingdom.getParks(aKingdom.KingdomId));
-      });
-      return Promise.all(allParkPromises).then(function(result) {
-        var toReturn = result.reduce(function(acc, val) {
-          return acc.concat(val.filter(function(park) {
-            return park.Active === 'Active';
-          }));
-        });
-        return toReturn;
-      });
-    });
-    return kingdoms;
+  jsork.kingdom.getAllParks = async function () {
+    const kingdomsArray = await jsork.kingdom.getKingdoms();
+
+    const parkPromises = kingdomsArray.map(
+      aKingdom => jsork.kingdom.getParks(aKingdom.KingdomId)
+    );
+    const parkResults = await Promise.all(parkPromises);
+
+    return parkResults.flat().filter(park => park.Active === 'Active');
   };
 
   jsork.kingdom.getParks = function(kingdomID) {
