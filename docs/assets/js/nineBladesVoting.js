@@ -83,7 +83,8 @@ function parkSelect(event, ui) {
           jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function(allAttendance) {
             allAttendance.forEach(function(attendance) {
               if (moment(attendance.Date) <= today) {
-                if (attendance.KingdomId === 31 || attendance.EventKingdomId === 31) {
+                // Temporarily adding Legends Library to the legitimate parks. Should be able to remove after 6 months.
+                if (attendance.KingdomId === 31 || attendance.EventKingdomId === 31 || attendance.ParkId === 1059) {
                   if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
                     playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
                   }
