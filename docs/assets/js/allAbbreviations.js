@@ -42,7 +42,6 @@ function startUp() {
             if (b.startsWith("The ")) {
                 b = b.slice("The ".length)
             }
-            console.log(a + " : " + b);
             return b.toLowerCase().localeCompare(a.toLowerCase());
         });
         nextKingdom();
