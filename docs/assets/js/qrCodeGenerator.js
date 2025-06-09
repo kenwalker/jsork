@@ -37,7 +37,7 @@ function doPlayer(mundaneId, element) {
     var playerDetails = player.Persona + '<br>' + player.UserName + '<br>' + ParkName + '<br>' + KingdomName;
     var playerImage = 'https://ork.amtgard.com/assets/heraldry/player/000000.jpg';
     if (player.HasImage) {
-      playerImage = 'https:' + player.Image;
+      playerImage = player.Image;
     }
     $('#playerImg').attr('src', playerImage);
     $('#playerDetails').html(playerDetails);
