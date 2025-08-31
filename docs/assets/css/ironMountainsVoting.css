@@ -1,0 +1,56 @@
+
+@media print {
+  #header {
+    border-bottom-width: 0;
+  }
+  .noprint {
+    display: none;
+  }
+  .noprintpadding {
+    padding-top: 0px;
+  }
+}
+
+th, td {
+  padding: 3px;
+  color: black;
+}
+
+.left {
+  text-align: left;
+}
+
+.middle {
+  text-align: center;
+}
+
+
+.smallbottommargin {
+  margin: 0 0 .1em 0;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+table th {
+  background-color: black;
+  color: white;
+}
+
+.lightgreen {
+  background-color: #DCECD2;
+}
+
+.lightred {
+  background-color: #DFA89F;
+}
+
+.lightyellow {
+  background-color: #FFFFE0;
+}
+
+.white {
+  background-color: white;
+}

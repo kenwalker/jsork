@@ -1,5 +1,6 @@
 var debounceSearch = debounce(searchForPlayer, 400);
 var supportedKingdoms = [
+    3,
     4,
     6,
     10,
@@ -67,6 +68,9 @@ function clickedPlayer(mundaneId) {
     gatheringInfo();
     jsork.player.getInfo(mundaneId).then(function(aPlayer) {
         switch (aPlayer.KingdomId) {
+            case 3:
+              kingdom3(aPlayer);
+              break;
             case 4:
               kingdom4(aPlayer);
               break;
@@ -194,6 +198,74 @@ function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
+}
+
+function kingdom3(player) {
+    $('#playerTable').empty();
+    var votingText = "In the Iron Mountains, a player must be 14 years or older (V.B.2.3), have a waiver signed (V.B.1.1), attended 6 different weeksin the last 6 months anywhere in the Iron Mountains (V.B.2.a.1), be dues paid (V.B.2.a.2) and not have joined within the last six months (V.B.2.a.5). This report assumes the week starts on Monday and ends on Sunday.";
+    var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
+    jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+        var playerWeeks = {};
+        jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
+            allAttendance.forEach(function (attendance) {
+                if (moment(attendance.Date) <= today) {
+                  // Temporarily adding Legends Library to the legitimate parks. Should be able to remove after 6 months.
+                    if (attendance.KingdomId === 3 || attendance.EventKingdomId === 3) {
+                        if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
+                            playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
+                        }
+                        playerWeeks[moment(attendance.Date).isoWeekday(1).week()].push(attendance);
+                    }
+                }
+            });
+            jsork.player.getInfo(player.MundaneId).then(function (playerInfo) {
+                var duesForLife = false;
+                playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
+                playerInfo.attendance = playerWeeks;
+                playerInfo.duesForLife = duesForLife;
+                playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment()
+                jsork.player.getFirstAttendance(playerInfo.MundaneId).then(function (attendance) {
+                    if (moment(attendance[0].Date) <= startDate) {
+                        playerInfo.sixMonthsPlayed = true;
+                    } else {
+                        playerInfo.sixMonthsPlayed = false;
+                    }
+                    playerInfo.firstAttendance = attendance[0].Date;
+                    var playerHTMLLine = '';
+                    playerHTMLLine += '<tr>';
+                    playerHTMLLine += '<th class="left">Player</th>';
+                    playerHTMLLine += '<th class="middle">Can Vote</th>';
+                    playerHTMLLine += '<th class="middle">Signed Waiver</th>';
+                    playerHTMLLine += '<th class="middle">Dues Paid</th>';
+                    playerHTMLLine += '<th class="middle">Weeks of attendance</th>';
+                    playerHTMLLine += '<th class="middle">First Attendance</th>';
+                    playerHTMLLine += '</tr>';
+                    var attendanceNumber = Object.keys(playerInfo.attendance).length;
+                    var canVote = playerInfo.Waivered && playerInfo.DuesPaid && attendanceNumber >= 6 && playerInfo.sixMonthsPlayed;
+                    if (canVote) {
+                        playerHTMLLine += '<tr class="lightgreen">';
+                      } else {
+                        playerHTMLLine += '<tr>';
+                      }
+                    playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '><a href="https://ork.amtgard.com/orkui/index.php?Route=Player/index/' +
+                    playerInfo.MundaneId + '" target="_blank">' +
+                    (playerInfo.Persona || 'No persona for ID ' + playerInfo.MundaneId) + '</a></td>';
+                    playerHTMLLine += '<td ' + (canVote ? 'class="lightgreen"' : '') + '>' + (canVote ? 'Vote' : 'Can\'t Vote') + '</td>';
+                    playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
+                    playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
+                    playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+                    playerHTMLLine += '<td class="middle ' + (playerInfo.sixMonthsPlayed ? 'lightgreen' : 'lightred') + '">' + playerInfo.firstAttendance + '</td>';
+                    $('#playerTable').append(playerHTMLLine);
+                    showPlayerInfo();
+                    var queryParams = new URLSearchParams(window.location.search);
+                    queryParams.set("mundaneId", playerInfo.MundaneId);
+                    history.replaceState(null, null, "?"+queryParams.toString());
+                    setVotingText(votingText);
+                    hideSearch();
+                });
+            });
+        });
+    });
 }
 
 function kingdom4(player) {
@@ -783,8 +855,7 @@ function kingdom31(player) {
         jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
             allAttendance.forEach(function (attendance) {
                 if (moment(attendance.Date) <= today) {
-                  // Temporarily adding Legends Library to the legitimate parks. Should be able to remove after 6 months.
-                    if (attendance.KingdomId === 31 || attendance.EventKingdomId === 31 || attendance.ParkId === 1059) {
+                    if (attendance.KingdomId === 31 || attendance.EventKingdomId === 31) {
                         if (!playerWeeks[moment(attendance.Date).isoWeekday(1).week()]) {
                             playerWeeks[moment(attendance.Date).isoWeekday(1).week()] = [];
                         }
