@@ -14,6 +14,7 @@ var dotCount = 1;
 var startTime = Date.now();
 var howManyPlayersChecked = 0;
 var totalPlayers = 0;
+var timeout = 2000;
 
 window.remembered = remembered;
 
@@ -153,7 +154,7 @@ function getNextPlayerAwards() {
       });
       nextPlayer.ladderawards = tempLadderAwards;
       resultPlayers.push(nextPlayer);
-      setTimeout(getNextPlayerAwards, 2000);
+      setTimeout(getNextPlayerAwards, timeout);
     });
 }
 
