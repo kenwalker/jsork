@@ -1,0 +1,105 @@
+@media print {
+  #header {
+    border-bottom-width: 0;
+  }
+  .noprint {
+    display: none;
+  }
+  .noprintpadding {
+    padding-top: 0px;
+  }
+}
+
+th, td {
+  padding: 3px;
+  color: black;
+}
+
+.left {
+  text-align: left;
+}
+
+.middle {
+  text-align: center;
+}
+
+.kingdom {
+  width: 400px;
+}
+
+.lightgreen {
+  background-color: #DCECD2;
+}
+.green {
+  background-color: lightgreen;
+}
+
+.lightpurple {
+  background-color: plum;
+}
+.purple {
+  background-color: mediumpurple;
+}
+
+.lightgrey {
+  background-color: lightgray;
+}
+.grey {
+  background-color: gray;
+}
+
+
+.lightred {
+  background-color: #DFA89F;
+}
+
+.red {
+  background-color: rgb(206, 92, 79);
+}
+
+.lightblue {
+  background-color: #C4D8F0;
+}
+
+.blue {
+  background-color: #93B3F1;
+}
+
+.gold {
+  background-color: goldenrod;
+}
+
+.lightgold {
+  background-color:rgb(245, 220, 138);
+}
+
+.smallbottommargin {
+  margin: 0 0 .1em 0;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+table tr:nth-child(even) {
+  background-color: #eee;
+}
+table tr:nth-child(odd) {
+ background-color: #fff;
+}
+
+.thething {
+    max-height: 500px; /* Or a suitable height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+table th {
+  background-color: black;
+  color: white;
+  position: sticky;
+  top: 0;
+}
+
+.allresults {
+
+}
