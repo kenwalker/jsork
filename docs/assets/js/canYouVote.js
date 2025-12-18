@@ -14,6 +14,14 @@ var supportedKingdoms = [
     38
 ];
 var today = moment();
+var nlParkIds = [];
+jsork.kingdom.getParks(20).then(function (data) {
+  data.forEach(function (park) {
+    if (park.Active === 'Active') {
+      nlParkIds.push(park.ParkId);
+    }
+  });
+});
 
 function startUp() {
   $('#query').on('keydown input', debounceSearch);
@@ -662,15 +670,20 @@ function kingdom19(player) {
 
 function kingdom20(player) {
   $('#playerTable').empty();
-  var votingText = "In the Northern Lights a player must have attended 6 different days in the last 6 months anywhere in the Kingdom, have signed a waiver, and be dues paid.";
+  var votingText = "In the Northern Lights a player must have attended 6 different days in the last 6 months anywhere in the Kingdom, have signed a waiver, and be dues paid. Online events do not count towards these credits.";
   var startDate = moment(today).subtract(6, 'months').isoWeekday(1).startOf('isoWeek');
   jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
       var playerWeeks = {};
+      var onlineEvents = 0;
       jsork.player.getAttendanceFrom(player.MundaneId, startDate.format('MM/DD/YYYY')).then(function (allAttendance) {
           allAttendance.forEach(function(attendance) {
             if (moment(attendance.Date) <= today) {
-              if (attendance.KingdomId === 20 || attendance.EventKingdomId === 20) {
-                playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+              if (attendance.KingdomId === 20 || attendance.EventKingdomId === 20 || nlParkIds.includes(attendance.ParkId) || nlParkIds.includes(attendance.EventParkId)) {
+                if (attendance.EventName && attendance.EventName.toLowerCase().indexOf("online") !== -1) {
+                      onlineEvents++;
+                } else {
+                  playerWeeks[Object.keys(playerWeeks).length.toString()] = [];
+                }
               }
             }
           });
@@ -679,6 +692,7 @@ function kingdom20(player) {
               playerInfo.DuesPaidList.forEach(function (dues) { if (dues.DuesForLife) { duesForLife = true } });
               playerInfo.attendance = playerWeeks;
               playerInfo.duesForLife = duesForLife;
+              playerInfo.onlineEvents = onlineEvents;
               playerInfo.DuesPaid = duesForLife || moment(playerInfo.DuesThrough) > moment();
               var playerHTMLLine = '';
               playerHTMLLine += '<tr>';
@@ -687,6 +701,7 @@ function kingdom20(player) {
               playerHTMLLine += '<th class="middle">Signed Waiver</th>';
               playerHTMLLine += '<th class="middle">Dues Paid</th>';
               playerHTMLLine += '<th class="middle">Days of attendance</th>';
+              playerHTMLLine += '<th class="middle">Online Events</th>';
               playerHTMLLine += '</tr>';
               var attendanceNumber = Object.keys(playerInfo.attendance).length;
               var canVote = playerInfo.Waivered && playerInfo.DuesPaid && attendanceNumber >= 6;
@@ -702,6 +717,7 @@ function kingdom20(player) {
               playerHTMLLine += '<td class="middle ' + (playerInfo.Waivered ? 'lightgreen' : 'lightred') + '">' + (playerInfo.Waivered ? 'Waivered' : 'Sign Waiver') + '</td>';
               playerHTMLLine += '<td class="middle ' + (playerInfo.DuesPaid ? 'lightgreen' : 'lightred') + '">' + (playerInfo.DuesPaid ? (playerInfo.duesForLife ? "Dues for Life" : playerInfo.DuesThrough) : 'Pay Dues') + '</td>';
               playerHTMLLine += '<td class="middle ' + (attendanceNumber >= 6 ? 'lightgreen' : 'lightred') + '">' + attendanceNumber + '</td>';
+              playerHTMLLine += '<td class="middle">' + onlineEvents + '</td>';
               playerHTMLLine += '</tr>';
               $('#playerTable').append(playerHTMLLine);
               showPlayerInfo();
