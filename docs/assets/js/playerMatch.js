@@ -144,10 +144,10 @@ function donePlayers() {
         playerHTMLLine += '<td class="match noselect namecolumn"></td>';
         if (aPlayer.HasImage) {
             playerHTMLLine += '<td class="noselect imagecolumn" style="width:130px; height:130px;text-align:center; vertical-align:middle">';
-            playerHTMLLine += '<img src="https:' + aPlayer.Image + '" style="max-height:100%; max-width:100%" /></td></tr>';
+            playerHTMLLine += '<img src="' + aPlayer.Image + '" style="max-height:100%; max-width:100%" /></td></tr>';
         } else {
             playerHTMLLine += '<td class="noselect imagecolumn" style="width:130px; height:130px;text-align:center; vertical-align:middle">';
-            playerHTMLLine += '<img src="https:' + aPlayer.Heraldry + '" style="max-height:100%; max-width:100%" /></td></tr>';
+            playerHTMLLine += '<img src="' + aPlayer.Heraldry + '" style="max-height:100%; max-width:100%" /></td></tr>';
         }
         $('#playerTable').append(playerHTMLLine);
         lastPlayer = aPlayer;
