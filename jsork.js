@@ -42,16 +42,8 @@
   jsork.TIMEOUT = null;
 
 
-  // var ork = 'http://localhost/ork/orkservice/Json/index.php';
-
-  // var ork = 'http://192.168.2.21/ork/orkservice/Json/index.php';
-  // var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
-  // var ork = 'https://staging.amtgard.com/ork/orkservice/Json/index.php';
-  // var ork = 'https://ork.stage.amtgard.com/orkservice/Json/index.php';
-  
+  // var ork = 'http://localhost:19080/orkservice/Json/index.php';
   var ork = 'https://ork.amtgard.com/orkservice/Json/index.php';
-
-  // ork = 'https://ork7.dev.amtgard.com/orkservice/Json/index.php'
 
   jsork.filters = {
     ACTIVE: 0,
@@ -65,6 +57,9 @@
     ROSE: ''
   };
 
+  jsork.setOrk = function(url) {
+    ork = url;
+  };
 
   jsork.login = function(username, password) {
     $.ajaxSetup({timeout: 20000});
@@ -82,11 +77,17 @@
         },
         function(data) {
           if (data.Status.Status === 0) {
+            // if (!data.Token || !data.UserId) {
+            //   reject("Invalid info returned after login");
+            //   return;
+            // }
             jsork.TOKEN = data.Token;
             jsork.player.getInfo(data.UserId).then(function(player) {
               player.Timeout = data.Timeout;
               player.Token = data.Token;
               resolve(player);
+            // }).catch(function(error) {
+            //   reject("failed to retried player info after login");
             });
           } else {
             reject(data);
@@ -179,6 +180,35 @@
 
   // Define all the Kingdom applicable APIs
   jsork.kingdom = {};
+
+  jsork.kingdom.getAttendance = function(kingdomId, date) {
+    var promise = new Promise(function(resolve, reject) {
+      var month = date.getMonth() + 1; //months from 1-12
+      var day = date.getUTCDate();
+      var year = date.getFullYear();
+      var requestDate = year + '-' + month + '-' + day;
+      var request =
+          {
+            KingdomId: kingdomId,
+            Date: requestDate
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/AttendanceForDate',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
 
   jsork.kingdom.getKingdoms = function() {
     var promise = new Promise(function(resolve, reject) {
@@ -326,6 +356,24 @@
         function(data) {
           if (data.Status.Status === 0 || data.Status === true) {
             resolve(data.Roster);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.kingdom.getReeveQualified = function(kingdomId) {
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/GetReeveQualified',
+          request: {KingdomId: kingdomId}
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            resolve(data.ReeveQualified);
           } else {
             resolve([]);
           }
@@ -745,27 +793,6 @@
     });
     return promise;
   };
-
-  jsork.pronouns = {};
-
-  jsork.pronouns.getList = function() {
-    var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?request=',
-        {
-          call: 'Pronoun/GetPronounList'
-        },
-        function(data) {
-          if (data.Status.Status === 0 || data.Status === true) {
-            resolve(data.Pronouns);
-          } else {
-            reject('Error retrieving pronouns');
-          }
-        }).fail(function(error, textStatus) {
-        reject(textStatus);
-      });
-    });
-    return promise;    
-  }
 
   // Define all the Player applicable APIs
   jsork.player = {};
@@ -1307,22 +1334,22 @@
           call: 'Attendance/AddAttendance',
           request: {
             Token: jsork.TOKEN,
-					          MundaneId: mundane_id,
-					          Persona: persona,
-					          ClassId: class_id,
+                              MundaneId: mundane_id,
+                              Persona: persona,
+                              ClassId: class_id,
             Credits: credits,
-					          Date: date,
-					          Flavor: flavor,
-					          Note: null,
-					          ParkId: 0,
-					          EventCalendarDetailId: calendar_event_id
-				        }
+                              Date: date,
+                              Flavor: flavor,
+                              Note: null,
+                              ParkId: 0,
+                              EventCalendarDetailId: calendar_event_id
+                        }
         },
         function(data) {
-				        if (data.Status === 0) {
+                        if (data.Status === 0) {
             resolve(data);
           } else {
-					  reject(data);
+                      reject(data);
           }
         });
     });
