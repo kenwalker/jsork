@@ -59,33 +59,25 @@ function parkSelect(event, ui) {
   $('.working').text('Getting players....');
   jsork.park.getPlayers(parseInt(event.target.value, 10), jsork.filters.INACTIVE).then(function(data) {
     data = data.filter(function(aPlayer) { return aPlayer.Suspended === 0 });
-    var playersLeft = data.length;
-    if (playersLeft === 0) {
-      document.getElementById('kingdom').disabled = false;
-      document.getElementById('park').disabled = false;
-      $('.working').attr('hidden', true);
-      $('.noplayers').text('There are no inactive players');
-      return;
-    }
-    data.forEach(function(player) {
-      jsork.player.getLastAttendance(player.MundaneId).then(function(lastAttendance) {
-        if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) > moment().subtract(8, 'months')) {
-            player.lastAttendance = lastAttendance[0].Date;
-            playerList.push(player);
-            $('.working').text('Number of players left to check ' + playersLeft);
-            if (--playersLeft <= 0) {
-                donePlayers();  
-            }
-        } else {
-          $('.working').text('Number of players left to check ' + playersLeft);
-          if (--playersLeft <= 0) {
-            donePlayers();
-          }
-        }
-      });
-    });
+    nextPlayer(data);
   });
 }
+
+function nextPlayer(playersLeftToCheck) {
+  $('.working').text('Number of players left to check ' + playersLeftToCheck.length);
+  if (playersLeftToCheck.length === 0) {
+    donePlayers();
+    return;
+  }
+  var player = playersLeftToCheck.pop();
+  jsork.player.getLastAttendance(player.MundaneId).then(function (lastAttendance) {
+    if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) > moment().subtract(8, 'months')) {
+      player.lastAttendance = lastAttendance[0].Date;
+      playerList.push(player);
+    }
+    nextPlayer(playersLeftToCheck);
+  });
+};
 
 function donePlayers() {
   if (playerList.length === 0) {
