@@ -7,6 +7,8 @@ function startUp() {
       eventHTMLLine = eventHTMLLine + '<td> ' + event.Name || '' + '</td>';
       eventHTMLLine = eventHTMLLine + '<td> ' + moment(event.NextDate).format('ddd, MMM Do, YYYY') + '</td>';
       eventHTMLLine = eventHTMLLine + '<td> ' + event.ShortDescription + '</td>';
+      eventHTMLLine = eventHTMLLine + '<td> ' + event.RsvpInterested + '</td>';
+      eventHTMLLine = eventHTMLLine + '<td> ' + event.RsvpGoing + '</td>';
       eventHTMLLine = eventHTMLLine + '</tr> ';
       $('#eventTable').append(eventHTMLLine);
       $('.working').attr('hidden', true);
