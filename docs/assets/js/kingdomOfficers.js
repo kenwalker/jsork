@@ -214,5 +214,5 @@ function copySwordToClipboard() {
 }
 
 $(document).ready(function() {
-  startUp();
+  // startUp();
 });
