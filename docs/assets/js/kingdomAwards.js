@@ -2,9 +2,14 @@
 /* global jsork, $ */
 
 var remembered = [];
+var allPlayers = [];
+var removePlayers = [];
 var numberOfPlayers = 0;
 var minimumRank = 0;
 var battleContent, crownContent, serpentContent, flameContent, swordContent;
+// var today = moment("2020-12-31");
+var startDate = moment().subtract(8, 'months').isoWeekday(1).startOf('isoWeek');
+
 
 window.remembered = remembered;
 
@@ -83,7 +88,30 @@ function getAwards(kingdomId) {
         }
       }
     });
-    var allPlayers = Object.values(players);
+    allPlayers = Object.values(players);
+    trimInactivePlayers(0);
+  })
+}
+
+function trimInactivePlayers(nextIndex) {
+  if (nextIndex >= allPlayers.length) {
+    doComputations();
+    return;
+  }
+  jsork.player.getLastAttendance(allPlayers[nextIndex].MundaneId).then(function(lastAttendance) {
+    if (lastAttendance.length > 0 && moment(lastAttendance[0].Date) >= startDate) {
+      // player is ok
+    } else {
+      removePlayers.push(allPlayers[nextIndex].MundaneId);
+    }
+    nextIndex++;
+    trimInactivePlayers(nextIndex);
+  });
+}
+function doComputations() {
+  allPlayers = allPlayers.filter(function(aPlayer) {
+    return !removePlayers.includes(aPlayer.MundaneId);
+  });
     allPlayers.sort(function(a, b) {
       return a.Persona.localeCompare(b.Persona);
     });
@@ -422,7 +450,6 @@ function getAwards(kingdomId) {
     $('#kingdom').selectmenu('option', 'disabled', false);
 
     window.output = Object.values(allPlayers);
-  });
 }
 
 function ladderAwards() {
@@ -511,5 +538,4 @@ function copySwordToClipboard() {
 }
 
 $(document).ready(function() {
-  startUp();
 });
