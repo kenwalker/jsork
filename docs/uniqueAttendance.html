@@ -45,57 +45,9 @@
 							want just local players, and run. If it's not quite what you want, reach out to me and we can get the new report tweaked. It's way
 							faster and not any where near as hard on the ORK.<br>
 							<br>
-							<b>TLDR: GO USE THE NEW REPORT!</b>
+							<b>Note:</b> This jsork report is being decommissioned.
 						</blockquote>
-						<p class="smallbottommargin">This report will generate a list of players who have played
-							in the park between the dates entered. Often this is handy for computing event attendance
-							but can also be used for unique monthly attendance. You can limit the players to those only
-							from the chosen park. <br>Can be copied to the clipboard after the
-							report has run or printed.
-						</p>
-						<br>
-						<input type="checkbox" id="localonly" name="localonly" >
-						<label for="localonly">Only include local players</label>
-						<label>
-							<h2>Choose start and stop date</h2>
-						</label>
-						<div id="dateselect">
-							<label for="startdate">Start Date:</label>
-							<input type="date" id="startdate" name="startdate">
-							<label for="enddate">End Date:</label>
-							<input type="date" id="enddate" name="enddate">
-						</div>
-						<div class="rerunbutton" hidden="hidden">
-							<br>
-							<button onclick="rerunQuery()">Rerun Query</button>
-						</div>
-						<label for="kingdom">
-							<h2>Choose a Kingdom or Principality</h2>
-						</label>
-						<select name="kingdom" id="kingdom"></select>
-						<div id="parkselect" hidden="hidden">
-							<label for="park">
-								<h2>Choose a Park</h2>
-							</label>
-							<select name="park" id="park"></select>
-						</div>
-						<h2 class="working" hidden="hidden">Retrieving dates.....</h2>
-					</div>
-					<h2 class="noplayers"></h2>
-					<div class="allresults" hidden>
-						<h3 class="printtitle smallbottommargin"></h3>
-						<div class="generateddate"></div>
-						<div class="numberofuniqueplayers"></div>
-						<button class="noprint smallbottommargin primary icon fa-copy" onclick="copyToClipboard()">Copy
-							to CSV</button>
-						<table id="playerTable" style="width:100%">
-							<tr>
-								<th class='left'>Player</th>
-								<th class='left'>Park</th>
-								<th class='left'>Kingdom</th>
-							</tr>
-						</table>
-					</div>
+
 				</section>
 			</div>
 		</div>
