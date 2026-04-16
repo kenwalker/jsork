@@ -228,5 +228,5 @@ function copyToClipboard() {
 }
 
 $(document).ready(function () {
-  startUp();
+  // startUp();
 });
