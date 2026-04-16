@@ -37,5 +37,5 @@ function displayResults(allResults) {
 }
 
 $(document).ready(function() {
-  startUp();
+  // startUp();
 });
