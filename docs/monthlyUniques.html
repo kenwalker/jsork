@@ -35,13 +35,31 @@
 						<header class="main">
 							<h2>Monthly Kingdom Unique Attendances</h2>
 						</header>
-						<blockquote>HEY! There's a new report on the ORK Proper that can do this much faster!! Every Kingdom page has
-							a <b>Park Attendance Explorer</b> Report. Set dates like you would here, the park you want, set minimum attendance to 1, decide if you
-							want just local players, and run. If it's not quite what you want, reach out to me and we can get the new report tweaked. It's way
-							faster and not any where near as hard on the ORK.<br>
-							<br>
-							<b>Note:</b> This jsork report is being decommissioned.
-						</blockquote>
+						<p class="smallbottommargin">This report will generate the unique Kingdom attendances per Park, per month between
+							two dates. The report also include unique signins across the Kingdom overall within a month. Can be copied to the clipboard after the report has run.<br>
+							<b>NOTE:</b> You can choose to limit this report to local player attendance only by toggling the first
+							checkbox below. For Parks this means only those from the park count, for the Kingdom overall, only if a player is from
+							the Kingdom will they be in the uniques for that month. Otherwise, if you leave it unchecked, everyone counts for both Parks and the Kingdom.<br>
+							<b>WARNING:</b> This report can use a lot of data, do NOT run it on your cellular data plan.
+						</p>
+						<br>
+						<input type="checkbox" id="localonly" name="localonly" >
+						<label for="localonly">Only include local players</label>
+						<br>
+						<label>
+							<h2>Choose start and stop month. All months between these two will be computed.</h2>
+						</label>
+						<div id="dateselect">
+							<label for="startdate">Start Month:</label>
+							<input type="month" id="startdate" name="startdate">
+							<label for="enddate">End Month:</label>
+							<input type="month" id="enddate" name="enddate">
+						</div>
+						<label for="kingdom">
+							<h2>Choose a Kingdom or Principality</h2>
+						</label>
+						<select name="kingdom" id="kingdom"></select>
+						<h2 class="working" hidden="hidden">Retrieving dates.....</h2>
 					</div>
 					<h2 class="noplayers"></h2>
 					<div class="allresults" hidden>

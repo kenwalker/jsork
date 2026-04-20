@@ -39,34 +39,10 @@
               <h2>Polaris Voting</h2>
             </header>
             <p class="smallbottommargin">
-              This report will generate a list of
-              players within a Polaris park that can vote because they meet Citizenship requirements (sometimes called Member in Good Standing or MiGS).
-              <ul>
-                <li>Must be at least 14 years old (2.3.2.1) but the ORK does not track age so you have to do this manually</li>
-                <li>Must be dues paid (2.3.2.3)</li>
-                <li>Must sign a waiver with their Chapter and/or the Kingdom (2.3.2.4)</li>
-                <li>Have attended 6 different weeks in the last 6 months within the Kingdom (2.3.2.5)</li>
-                <li>Be an attending member of their home chapter for at least three months (2.3.2.6)</li>
-                <li>Not be suspended (2.5.3)</li>
-              </ul>
-              Only players that have taken at least 1 credit in the last 6 months are shown.
-              If a player is <b>Not</b> marked as a valid voter, see the highlighted red areas for why. This report uses the <b>Active</b> player list from
-              the ORK. If a player should be showing up here, check the <a href="https://kenwalker.github.io/jsork/activeRetired.html">Active but Marked Retired</a> report for your park.</a><br>
-              The whole list is provided here but the CSV export provides the week numbers that a person has attended
-              for verification.
-							Choose the date from which to look back six months. Dues and Waiver status reflect only the current values. Weeks for 
-              Polaris start on Sunday and end on Saturday. The start is adjusted to include the whole week.
+              This report has been superceded by a report right in the ORK. Please see the link in Kingdom/Park -> Reports -> Players -> Voting Eligible.
+              <br><br>
+              <b>This report is deprecated</b>
             </p>
-						<div id="dateselect">
-							<input type="date" id="enddate" name="enddate"> <b>Choose the End date of the six month window (defaults to today)</b>
-						</div>
-            <div class="reportspan"></div>
-            <div id="parkselect" hidden="hidden">
-              <label for="park">
-                <h2>Choose a Park</h2>
-              </label>
-              <select name="park" id="park"></select>
-            </div>
             <h2 class="working" hidden="hidden">Generating player list.....</h2>
           </div>
           <h2 class="noplayers"></h2>
