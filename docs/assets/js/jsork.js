@@ -40,6 +40,7 @@
   jsork.VERSION = '1.0';
   jsork.TOKEN = null;
   jsork.TIMEOUT = null;
+  jsork.CLIENT = 'jsork';
 
 
   // var ork = 'http://localhost/ork/orkservice/Json/index.php';
@@ -75,7 +76,8 @@
           call: 'Authorization/Authorize',
           request: {
             UserName: username,
-            Password: password
+            Password: password,
+            Client: jsork.CLIENT
           }
         },
         function(data) {
