@@ -47,7 +47,7 @@
   // var ork = 'http://192.168.2.21/ork/orkservice/Json/index.php';
   // var ork = 'https://amtgard.com/ork/orkservice/Json/index.php';
   // var ork = 'https://staging.amtgard.com/ork/orkservice/Json/index.php';
-  
+
   var ork = 'https://ork.amtgard.com/orkservice/Json/index.php';
   // ork = 'https://ork7.dev.amtgard.com/orkservice/Json/index.php'
 
@@ -70,8 +70,8 @@
     username = username.trim();
     password = password.trim();
     var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?request=',
-        { 
+      $.post(ork + '?request=',
+        {
           call: 'Authorization/Authorize',
           request: {
             UserName: username,
@@ -106,7 +106,7 @@
 
   jsork.getAuthorizations = function(mundaneId) {
     var promise = new Promise(function(resolve) {
-      $.getJSON(ork + '?request=',
+      $.post(ork + '?request=',
         {
           call: 'Authorization/GetAuthorizations',
           request: {
@@ -123,7 +123,7 @@
 
   jsork.removeParkAttendance = function (attendanceId) {
     var promise = new Promise(function (resolve, reject) {
-      $.getJSON(ork + '?request=',
+      $.post(ork + '?request=',
         {
           call: 'Attendance/RemoveAttendance',
           request: {
@@ -146,7 +146,7 @@
 
   jsork.addParkAttendance = function (mundane_id, persona, class_id, date, credits, flavor, park_id, calendar_event_id) {
     var promise = new Promise(function (resolve, reject) {
-      $.getJSON(ork + '?request=',
+      $.post(ork + '?request=',
         {
           call: 'Attendance/AddAttendance',
           request: {
@@ -324,7 +324,7 @@
             Type: 'Kingdom'
           };
       jsork._priv.addFilterToPlayerRequest(request, filter);
-      $.getJSON(ork + '?request=',
+      $.post(ork + '?request=',
         {
           call: 'Report/GetPlayerRoster',
           request: request
@@ -701,7 +701,7 @@
 
   jsork.park.createPlayer = function(parkID, userName, givenName, surname, persona, email, waivered) {
     var promise = new Promise(function(resolve) {
-      $.getJSON(ork + '?request=',
+      $.post(ork + '?request=',
         {
           call: 'Player/CreatePlayer',
           request: {
@@ -762,7 +762,7 @@
             Token: jsork.TOKEN,
             MundaneId: mundaneID
           };
-      $.getJSON(ork + '?request=',
+      $.post(ork + '?request=',
         {
           call: 'Player/GetPlayer',
           request: request
@@ -1285,9 +1285,9 @@
     return promise;
   };
 
-  jsork.event.addAttendance = function(mundane_id, persona, class_id, credits, date, flavor, calendar_event_id) {  
+  jsork.event.addAttendance = function(mundane_id, persona, class_id, credits, date, flavor, calendar_event_id) {
     var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?request=',
+      $.post(ork + '?request=',
         {
           call: 'Attendance/AddAttendance',
           request: {
@@ -1319,7 +1319,7 @@
 
   jsork.searchservice.searchPlayer = function(searchTerm) {
     var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?',
+      $.post(ork + '?',
         {
           call: 'SearchService/Player',
           type: 'All',
@@ -1342,7 +1342,7 @@
 
   jsork.searchservice.searchPlayerUsername = function(userName) {
     var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?',
+      $.post(ork + '?',
         {
           call: 'SearchService/Player',
           type: 'USER',
@@ -1363,9 +1363,9 @@
 
   jsork.searchservice.searchKingdomEvent = function(kingdomId, searchTerm) {
     var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?',
+      $.post(ork + '?',
         {
-          call: 'SearchService/Event', 
+          call: 'SearchService/Event',
           kingdom_id: kingdomId,
           date_order: 'true',
           name: searchTerm,
@@ -1387,7 +1387,7 @@
 
   jsork.searchservice.searchParkEvent = function(parkId, searchTerm) {
     var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?',
+      $.post(ork + '?',
         {
           call: 'SearchService/Event',
           park_id: parkId,
@@ -1411,7 +1411,7 @@
 
   jsork.searchservice.allEvents = function() {
     var promise = new Promise(function(resolve, reject) {
-      $.getJSON(ork + '?',
+      $.post(ork + '?',
         {
           call: 'SearchService/Event',
           date_order: 'true',
@@ -1560,4 +1560,3 @@
     });
   }
 }());
-
