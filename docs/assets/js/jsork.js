@@ -40,7 +40,7 @@
   jsork.VERSION = '1.0';
   jsork.TOKEN = null;
   jsork.TIMEOUT = null;
-  jsork.CLIENT = 'jsork';
+  jsork.CLIENT = 'jsork/' + jsork.VERSION;
 
 
   // var ork = 'http://localhost/ork/orkservice/Json/index.php';
@@ -51,6 +51,19 @@
 
   var ork = 'https://ork.amtgard.com/orkservice/Json/index.php';
   // ork = 'https://ork7.dev.amtgard.com/orkservice/Json/index.php'
+
+  // Every ORK request carries X-ORK-Client (the same string sent as the
+  // Client body field at login): the ORK identifies clients by
+  // HTTP_X_ORK_CLIENT for its Platform Trends tally, falling back to the
+  // User-Agent, which buckets jsork traffic under generic browsers. Same
+  // convention as the mORK apps. The API's CORS config allows this header.
+  if (typeof $ !== 'undefined' && $.ajaxPrefilter) {
+    $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+      if (options.url && options.url.indexOf(ork) === 0) {
+        jqXHR.setRequestHeader('X-ORK-Client', jsork.CLIENT);
+      }
+    });
+  }
 
   jsork.filters = {
     ACTIVE: 0,
