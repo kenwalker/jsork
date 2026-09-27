@@ -1264,7 +1264,7 @@
         },
         function(data) {
           if (data.Status.Status === 0 || data.Status === true) {
-            resolve(data);
+            resolve(data.CalendarEventDetails || []);
           } else {
             resolve([]);
           }
