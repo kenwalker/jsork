@@ -41,6 +41,11 @@
   jsork.TOKEN = null;
   jsork.TIMEOUT = null;
   jsork.CLIENT = 'jsork/' + jsork.VERSION;
+  // Optional Cloudflare access key (X-Ork-Key), sent only when a consuming
+  // site sets it after load, same as overriding jsork.CLIENT. Never put a
+  // real key in this file — it is served publicly. The mORK apps inject
+  // theirs into the built bundle at package time instead.
+  jsork.ORK_KEY = null;
 
 
   // var ork = 'http://localhost/ork/orkservice/Json/index.php';
@@ -59,8 +64,16 @@
   // convention as the mORK apps. The API's CORS config allows this header.
   if (typeof $ !== 'undefined' && $.ajaxPrefilter) {
     $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-      if (options.url && options.url.indexOf(ork) === 0) {
+      if (options.url && (options.url.indexOf(ork) === 0 || options.url.indexOf('ork.amtgard.com') !== -1)) {
+        // No network at all (e.g. airplane mode): fail fast instead of
+        // hanging for the full ajax timeout before falling back to offline.
+        if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+          options.timeout = 1;
+        }
         jqXHR.setRequestHeader('X-ORK-Client', jsork.CLIENT);
+        if (jsork.ORK_KEY) {
+          jqXHR.setRequestHeader('X-Ork-Key', jsork.ORK_KEY);
+        }
       }
     });
   }
@@ -109,6 +122,34 @@
       });
     });
     return promise;
+  };
+
+  jsork.resumeSession = function(token) {
+    $.ajaxSetup({timeout: 20000});
+    return new Promise(function(resolve, reject) {
+      $.post(ork + '?request=',
+        {
+          call: 'Authorization/Authorize',
+          request: {
+            Token: token,
+            Client: jsork.CLIENT
+          }
+        },
+        function(data) {
+          if (data.Status.Status === 0) {
+            jsork.TOKEN = data.Token;
+            resolve({
+              MundaneId: data.UserId,
+              Token: data.Token,
+              Timeout: data.Timeout
+            });
+          } else {
+            reject(data);
+          }
+        }, 'json').fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
   };
 
   jsork.logout = function() {
@@ -474,6 +515,59 @@
     return promise;
   };
 
+  jsork.kingdom.getAttendance = function(kingdomId, numMonths) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            KingdomId: kingdomId,
+            PerMonths: 1,
+            Periods: numMonths
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/AttendanceSummary',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Dates);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.kingdom.getAttendanceForDate = function(kingdomId, date) {
+    var promise = new Promise(function(resolve, reject) {
+      var month = date.getUTCMonth() + 1; //months from 1-12
+      var day = date.getUTCDate();
+      var year = date.getFullYear();
+      var requestDate = year + '-' + month + '-' + day;
+      var request =
+          {
+            KingdomId: kingdomId,
+            Date: requestDate
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/AttendanceForDate',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
   // Define all the Report applicable APIs
   jsork.reports = {};
 
@@ -763,6 +857,56 @@
             resolve([]);
           }
         });
+    });
+    return promise;
+  };
+
+  jsork.park.getGuilds = function(parkID) {
+    var request = {
+      ParkId: parkID,
+      PerMonths: 1,
+      Periods: 6
+    };
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/Guilds',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Guilds);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.park.getRecentAttendees = function(parkID) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            Token: jsork.TOKEN,
+            ParkId: parkID
+          };
+      // POST (not getJSON) so the session Token travels in the request body
+      // instead of the URL query string, keeping it out of access/WAF logs.
+      $.post(ork + '?request=',
+        {
+          call: 'Report/RecentParkAttendees',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendees || []);
+          } else {
+            resolve([]);
+          }
+        }, 'json').fail(function(error, textStatus) {
+        reject(textStatus);
+      });
     });
     return promise;
   };
@@ -1116,6 +1260,71 @@
     return promise;
   };
 
+  jsork.player.getGuilds = function(mundaneID) {
+    var request = {
+      MundaneId: mundaneID,
+      PerMonths: 1,
+      Periods: 6
+    };
+    var promise = new Promise(function(resolve) {
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Report/Guilds',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Guilds);
+          } else {
+            resolve([]);
+          }
+        });
+    });
+    return promise;
+  };
+
+  jsork.player.getLastAttendanceFrom = function(mundaneID, dateStart) {
+    var promise = new Promise(function(resolve, reject) {
+      var request =
+          {
+            MundaneId: mundaneID,
+            date_start: dateStart
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Player/AttendanceForPlayer',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Attendance);
+          } else {
+            resolve([]);
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
+  jsork.player.votingEligible = function(mundaneId) {
+    var promise = new Promise(function(resolve, reject) {
+      $.getJSON(
+        'https://ork.amtgard.com/orkui/index.php?Route=PlayerAjax/voting_eligible/' + mundaneId,
+        function(data) {
+          if (data && data.status === 0) {
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        }).fail(function(error, textStatus) {
+        reject(textStatus);
+      });
+    });
+    return promise;
+  };
+
   jsork.heraldry = {};
   jsork.heraldry.getHeraldryUrl = function(id, type) {
     var promise = new Promise(function(resolve) {
@@ -1443,6 +1652,29 @@
         }).fail(function (error, textStatus) {
         reject(textStatus);
       });
+    });
+    return promise;
+  };
+
+  jsork.unit = {};
+  jsork.unit.getUnit = function(unitId) {
+    var promise = new Promise(function(resolve) {
+      var request =
+          {
+            UnitId: unitId
+          };
+      $.getJSON(ork + '?request=',
+        {
+          call: 'Unit/GetUnit',
+          request: request
+        },
+        function(data) {
+          if (data.Status.Status === 0 || data.Status === true) {
+            resolve(data.Unit);
+          } else {
+            resolve([]);
+          }
+        });
     });
     return promise;
   };
