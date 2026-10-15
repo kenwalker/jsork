@@ -18,5 +18,5 @@ function startUp() {
 }
 
 $(document).ready(function() {
-  startUp();
+  // startUp();
 });

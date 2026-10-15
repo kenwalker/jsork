@@ -422,5 +422,5 @@ function copyHardcoreToClipboard() {
   }
   
   $(document).ready(function() {
-  startUp();
+  // startUp();
 });
