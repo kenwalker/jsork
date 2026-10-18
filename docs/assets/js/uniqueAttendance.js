@@ -96,37 +96,50 @@ function runQuery(parkId) {
   $('.working').attr('hidden', false);
   $('.working').text('Getting ' + numberOfDays + ' days of attendance....');
 
-  for (var m = startDate; startDate.isSameOrBefore(endDate); startDate.add(1, 'days')) {
-    jsork.park.getAttendance(parkId, startDate.toDate()).then(function(attendanceForDay) {
-      attendanceForDay.forEach(function(player) {
-        if (localPlayersOnly && player.FromParkId !== parkId) {
+  getAttendanceFor(startDate, parkId);
+}
 
-        } else {
-          if (!uniquePlayerIDs[player.MundaneId]) {
-            uniquePlayerIDs[player.MundaneId] = player;
-          }
+function getAttendanceFor(aDate, parkId) {
+  $('.working').text('Getting ' + numberOfDays + ' days of attendance....');
+  jsork.park.getAttendance(parkId, aDate.toDate()).then(function(attendanceForDay) {
+    attendanceForDay.forEach(function(player) {
+      if (localPlayersOnly && player.FromParkId !== parkId) {
+        // do nothing
+      } else {
+        if (!uniquePlayerIDs[player.MundaneId]) {
+          uniquePlayerIDs[player.MundaneId] = player;
         }
-      });
-      numberOfDays--;
-      if (numberOfDays ===0) {
-        playerList = Object.values(uniquePlayerIDs);
-
-        playerList.sort(function(a, b) {
-          var personaSort = a.Persona.toLowerCase().localeCompare(b.Persona.toLowerCase());
-          var parkSort = a.FromParkName.toLowerCase().localeCompare(b.FromParkName.toLowerCase());
-          var kingdomSort = a.FromKingdomName.toLowerCase().localeCompare(b.FromKingdomName.toLowerCase());
-          if (kingdomSort !== 0) {
-            return kingdomSort;
-          }
-          if (parkSort !== 0) {
-            return parkSort;
-          }
-          return personaSort;
-        });
-        donePlayers();
       }
     });
-  }
+    numberOfDays--;
+    if (numberOfDays > 0) {
+      getAttendanceFor(aDate.add(1, 'days'), parkId);
+    } else {
+      playerList = Object.values(uniquePlayerIDs);
+
+      playerList.sort(function(a, b) {
+        var aPersona = a.Persona ? a.Persona.toString().toLowerCase() : "(unknownPersona)";
+        var bPersona = b.Persona ? b.Persona.toString().toLowerCase() : "(unknownPersona)";
+        var personaSort = aPersona.localeCompare(bPersona);
+
+        var aFromParkName = a.FromParkName ? a.FromParkName.toString().toLowerCase() : "(unknownPark)";
+        var bFromParkName = b.FromParkName ? b.FromParkName.toString().toLowerCase() : "(unknownPark)";
+        var parkSort = aFromParkName.localeCompare(bFromParkName);
+
+        var aFromKingdomName = a.FromKingdomName ? a.FromKingdomName.toString().toLowerCase() : "(unknownKingdom)";
+        var bFromKingdomName = b.FromKingdomName ? b.FromKingdomName.toString().toLowerCase() : "(unknownKingdom)";
+        var kingdomSort = aFromKingdomName.localeCompare(bFromKingdomName);
+        if (kingdomSort !== 0) {
+          return kingdomSort;
+        }
+        if (parkSort !== 0) {
+          return parkSort;
+        }
+        return personaSort;
+      });
+      donePlayers();
+    }
+  });
 }
 
 function donePlayers() {
